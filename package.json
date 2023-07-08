@@ -19,6 +19,9 @@
         "vue": "^3.2.31"
     },
     "dependencies": {
-        "pinia": "^2.1.4"
+        "@popperjs/core": "^2.11.8",
+        "pinia": "^2.1.4",
+        "v-calendar": "^3.0.3",
+        "vue-tel-input": "^8.1.1"
     }
 }

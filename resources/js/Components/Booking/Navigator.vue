@@ -1,44 +1,92 @@
 <script setup>
   import { Link } from '@inertiajs/vue3'
-  import { ref } from 'vue';
   import CalendarIcon from '@/Components/Icons/CalendarIcon.vue';
   import TagIcon from '@/Components/Icons/TagIcon.vue';
   import UserIcon from '@/Components/Icons/UserIcon.vue';
   import FileIcon from '@/Components/Icons/FileIcon.vue';
+</script>
 
+<script>
+  export default {
+    data() {
+      return {
+        url: this.$page.url,
+      };
+    },
+    computed: {
+      currentStep() {
+        if(this.url === '/') return 1;
+        else if(this.url === '/rooms') return 2;
+        else if(this.url === '/booking-details') return 3;
+        else if(this.url === '/payment') return 4;
+        else return 1;
+      },
+    },
+    methods: {
+      isCurrentStep(step) {
+        if(step >= this.currentStep) {
+          return true;
+        }
+        return false;
+      }
+    }
+  }
 </script>
 <template>
-  <div class="m-6">
-    <div class="border border-gray-200 w-full bg-white">
-      <div class="grid grid-cols-4">
-        <Link href="/" class="flex flex-col items-center border border-black py-5 hover:bg-gray-200 cursor-pointer">
-          <CalendarIcon></CalendarIcon>
-          <span class="text-[0.875rem] font-bold mt-1">Dates</span>
-        </Link>
-        <Link href="/rooms" class="flex flex-col items-center border border-black border-l-0 py-5 hover:bg-gray-200 cursor-pointer">
-          <TagIcon></TagIcon>
-          <span class="text-[0.875rem] font-bold mt-1">Room</span>
-        </Link>
-        <Link href="/booking-details" class="flex flex-col items-center border border-black border-l-0 py-5 hover:bg-gray-200 cursor-pointer">
-          <UserIcon></UserIcon>
-          <span class="text-[0.875rem] font-bold mt-1">Personal Data</span>
-        </Link>
-        <Link href="/payment" class="flex flex-col items-center border border-black border-l-0 py-5 hover:bg-gray-200 cursor-pointer">
-          <FileIcon></FileIcon>
-          <span class="text-[0.875rem] font-bold mt-1">Payment</span>
-        </Link>
+  <div class="border border-gray-200 w-full bg-white">
+    <div class="grid grid-cols-4">
+      <Link 
+        href="/" 
+        class="text-black flex flex-col items-center border border-black md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
+        <CalendarIcon class="md:w-auto w-5 h-5"></CalendarIcon>
+        <span class="md:text-[0.875rem] text-[0.7rem] font-bold mt-1">Dates</span>
+      </Link>
+      <Link 
+        href="/rooms" 
+        class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
+        <TagIcon class="md:w-auto w-5 h-5"></TagIcon>
+        <span 
+          class="md:text-[0.875rem] text-[0.7rem] mt-1"
+          :class="{ 'font-bold' : !isCurrentStep(1) }">
+            Room
+          </span>
+      </Link>
+      <Link 
+        href="/booking-details" 
+        class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
+        <UserIcon class="md:w-auto w-5 h-5"></UserIcon>
+        <span 
+          class="md:text-[0.875rem] text-[0.7rem] mt-1"
+          :class="{ 'font-bold' : !isCurrentStep(2) }">
+          Details
+        </span>
+      </Link>
+      <Link 
+        href="/payment" 
+        class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
+        <FileIcon class="md:w-auto w-5 h-5"></FileIcon>
+        <span 
+          class="md:text-[0.875rem] text-[0.7rem] mt-1"
+          :class="{ 'font-bold' : !isCurrentStep(3) }">
+            Payment
+          </span>
+      </Link>
+    </div>
+    <div class="grid grid-cols-4">
+      <div class="border-b-4 border-black">
       </div>
-      <div class="grid grid-cols-4">
-        <div class="border-b-4 border-black">
+      <div 
+        class="border-b-4 border-black"
+        :class="{ 'border-opacity-25' : isCurrentStep(1) }">
         </div>
-        <div 
-          class="border-b-4 border-black" >
-          </div>
-        <div 
-          class="border-b-4 border-black">
-          </div>
-        <div class="border-b-4 border-black border-opacity-25"></div>
-      </div>
+      <div 
+        class="border-b-4 border-black"
+        :class="{ 'border-opacity-25' : isCurrentStep(2) }">
+        </div>
+      <div 
+        class="border-b-4 border-black"
+        :class="{ 'border-opacity-25' : isCurrentStep(3) }">
+        </div>
     </div>
   </div>
 </template>
