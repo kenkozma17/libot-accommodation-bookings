@@ -4,25 +4,29 @@ export default {
     return {
       date: null,
       showDatePicker: false,
+      showPanel: true,
     }
   },
   methods: {
     toggleDatePicker() {
       this.showDatePicker = !this.showDatePicker;
     }
-  }
+  },
+  mounted() {
+    if(this.$page.url === '/') this.showPanel = false;
+  },
 }
 </script>
 <template>
-  <div>
+  <div v-if="showPanel">
     <div class="relative border-black border w-full grid grid-cols-4 bg-white">
       <div class="flex flex-col py-4 px-6 cursor-pointer">
         <span class="font-bold text-[.75rem]">Hotel</span>
         <span class="text-[.75rem]">Catanduanes Midtown Inn</span>
       </div>
       <div class="border-black border-l flex flex-col py-4 px-6 cursor-pointer">
-        <span class="font-bold text-[.75rem]">Guests/Room</span>
-        <span class="text-[.75rem]">2 Guests/1 Room</span>
+        <span class="font-bold text-[.75rem]">Guests</span>
+        <span class="text-[.75rem]">2 Guests</span>
       </div>
       <div @click="toggleDatePicker" class="border-black border-l flex flex-col py-4 px-6 cursor-pointer">
         <span class="font-bold text-[.75rem]">Check In</span>

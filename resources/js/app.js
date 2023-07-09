@@ -2,6 +2,8 @@ import './bootstrap';
 import '../css/app.css';
 
 import { createApp, h } from 'vue';
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
@@ -11,6 +13,8 @@ import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -21,6 +25,7 @@ createInertiaApp({
             .use(ZiggyVue, Ziggy)
             .use(VueTelInput)
             .use(VCalendar, {})
+            .use(pinia)
             .mount(el);
     },
     progress: {
