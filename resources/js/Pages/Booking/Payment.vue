@@ -1,6 +1,9 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import SummaryPanel from '@/Components/Booking/SummaryPanel.vue';
+  import { useBookingStore } from '@/stores/booking';
+
+  const bookingStore = useBookingStore();
 </script>
 <template>
   <BookingLayout>
@@ -13,27 +16,39 @@
           <div class="grid grid-cols-3 py-8 px-6 gap-4">
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Name</span>
-              <span class="text-[0.875rem]">Ken Kozma</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.guests.contactDetails.firstName + ' ' + bookingStore.guests.contactDetails.lastName }}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Arrival</span>
-              <span class="text-[0.875rem]">December 6, 2023</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.checkInDate }}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Departure</span>
-              <span class="text-[0.875rem]">December 12, 2023</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.checkOutDate }}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Email Address</span>
-              <span class="text-[0.875rem]">kenkozma@gmail.com</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.guests.contactDetails.email }}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Phone Number</span>
-              <span class="text-[0.875rem]">+1 405 371 1742</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.guests.contactDetails.phone }}
+              </span>
             </div>
             <div class="flex flex-col">
               <span class="text-[1rem] font-bold">Nationality</span>
-              <span class="text-[0.875rem]">United States</span>
+              <span class="text-[0.875rem]">
+                {{ bookingStore.guests.contactDetails.nationality }}
+              </span>
             </div>
           </div>
           <div class="border-b border-t border-black text-center py-5 px-2">

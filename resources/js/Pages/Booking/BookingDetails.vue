@@ -1,14 +1,25 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import SummaryPanel from '@/Components/Booking/SummaryPanel.vue';
-</script>
-<script>
-  export default {
-    data() {
-      return {
-        phone: null,
-      }
-    }
+  import { ref, reactive } from 'vue';
+  import { router } from '@inertiajs/vue3';
+  import { useBookingStore } from '@/stores/booking';
+
+  const bookingStore = useBookingStore();
+
+  const phone = ref(null);
+  const contactDetails = reactive({
+    firstName: null,
+    lastName: null,
+    nationality: null,
+    email: null,
+    phone: null,
+    requests: null,
+  });
+
+  function submitContact() {
+    bookingStore.setContactDetails(contactDetails);
+    router.get('/payment', contactDetails);
   }
 </script>
 <template>
@@ -16,12 +27,13 @@
     <div class="grid grid-cols-12 my-5 gap-7">
       <div class="col-span-8">
         <div class="border border-black bg-white p-5">
-          <form action="">
+          <form @submit.prevent="submitContact">
             <h1 class="text-[2.5rem] font-bold">Booking Details</h1>
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">First Name*</span>
                 <input 
+                  v-model="contactDetails.firstName"
                   type="text" 
                   placeholder="First Name"
                   class="border-black border bg-white text-[.875rem] p-3.5">
@@ -29,6 +41,7 @@
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Last Name*</span>
                 <input 
+                  v-model="contactDetails.lastName"
                   type="text" 
                   placeholder="Last Name"
                   class="border-black border bg-white text-[.875rem] p-3.5">
@@ -38,15 +51,17 @@
               <div class="input-field col-span-6 flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Nationality*</span>
                 <select 
+                  v-model="contactDetails.nationality"
                   name="" 
                   id="" 
                   class="border-black border bg-white text-[.875rem] p-3.5">
-                  <option value="">Philippines</option>
+                  <option value="Philippines">Philippines</option>
                 </select>
               </div>
               <div class="input-field col-span-6 flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Email*</span>
                 <input 
+                  v-model="contactDetails.email"
                   type="text" 
                   placeholder="Enter your email"
                   class="border-black border bg-white text-[.875rem] p-3.5">
@@ -62,12 +77,13 @@
                 }"
                 styleClasses="border-black border rounded-none bg-white text-[.875rem] p-2.5"
                 mode="international"
-                v-model="phone">
+                v-model="contactDetails.phone">
                 </vue-tel-input>
             </div>
             <div class="input-field flex flex-col mt-4">
               <span class="text-[.75rem] font-bold mb-1">Special Requests*</span>
               <textarea 
+                v-model="contactDetails.requests"
                 rows="3"
                 placeholder="Please let us know if you have any special requests"
                 class="border-black border bg-white text-[.875rem] p-3.5"></textarea>

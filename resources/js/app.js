@@ -11,10 +11,15 @@ import VueTelInput from 'vue-tel-input';
 import 'vue-tel-input/vue-tel-input.css';
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
+import { createVfm } from 'vue-final-modal';
+import 'vue-final-modal/style.css';
+
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
+
+const vfm = createVfm();
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -26,6 +31,7 @@ createInertiaApp({
             .use(VueTelInput)
             .use(VCalendar, {})
             .use(pinia)
+            .use(vfm)
             .mount(el);
     },
     progress: {

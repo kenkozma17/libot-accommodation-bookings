@@ -1,3 +1,8 @@
+<script setup>
+  import { useBookingStore } from '@/stores/booking';
+
+  const bookingStore = useBookingStore();
+</script>
 <template>
   <div>
     <div class="border border-black bg-white">
@@ -10,12 +15,15 @@
         <div class="ml-3 mt-2 pl-2 border-l-2 border-black border-opacity-25 ">
           <div>
             <p class="text-[.85rem] font-bold">Check In & Out Dates</p>
-            <span class="text-[.7rem]">December 6 - 13, 2023 ( 6 nights x PHP 1,000.00 )</span>
+            <span class="text-[.7rem]">{{ bookingStore.checkInDate }} - {{ bookingStore.checkOutDate }} 
+              ( {{ bookingStore.stayCount }} nights x PHP 1,000.00 )</span>
           </div>
 
           <div class="mt-2.5">
             <p class="text-[.85rem] font-bold">Guests</p>
-            <span class="text-[.7rem]">2 Adults, 0 Children</span>
+            <span class="text-[.7rem]">
+              {{ bookingStore.guestsCountDetailed }}
+            </span>
           </div>
         </div>
       </div>
