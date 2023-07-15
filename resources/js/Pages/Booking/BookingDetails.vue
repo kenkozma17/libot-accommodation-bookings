@@ -1,26 +1,45 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import SummaryPanel from '@/Components/Booking/SummaryPanel.vue';
-  import { ref, reactive } from 'vue';
+  import { reactive, computed } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
+  import { useToast } from 'vue-toast-notification';
 
   const bookingStore = useBookingStore();
+  const $toast = useToast({
+    position: 'top-right'
+  })
 
-  const phone = ref(null);
-  const contactDetails = reactive({
+  const props = defineProps({ errors: Object })
+
+  let contactDetails = reactive({
     firstName: null,
     lastName: null,
-    nationality: null,
+    nationality: "Philippines",
     email: null,
     phone: null,
+    terms: false,
     requests: null,
   });
 
   function submitContact() {
     bookingStore.setContactDetails(contactDetails);
-    router.get('/payment', contactDetails);
+    router.post('/payment', {
+      contactDetails, 
+      room: bookingStore.room,
+    }, {
+      onError: (errors) => {
+        for(let key in errors) {
+          $toast.error(errors[key]);
+        }
+      }
+    });
   }
+
+  const validationErrors = computed(() => {
+    return props.errors;
+  });
 </script>
 <template>
   <BookingLayout>
@@ -36,7 +55,8 @@
                   v-model="contactDetails.firstName"
                   type="text" 
                   placeholder="First Name"
-                  class="border-black border bg-white text-[.875rem] p-3.5">
+                  :class="validationErrors['contactDetails.firstName'] ? 'border-red-700' : 'border-black'"
+                  class="border bg-white text-[.875rem] p-3.5">
               </div>
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Last Name*</span>
@@ -44,7 +64,8 @@
                   v-model="contactDetails.lastName"
                   type="text" 
                   placeholder="Last Name"
-                  class="border-black border bg-white text-[.875rem] p-3.5">
+                  :class="validationErrors['contactDetails.lastName'] ? 'border-red-700' : 'border-black'"
+                  class="border bg-white text-[.875rem] p-3.5">
               </div>
             </div>
             <div class="grid grid-cols-12 gap-4 mt-4">
@@ -54,7 +75,8 @@
                   v-model="contactDetails.nationality"
                   name="" 
                   id="" 
-                  class="border-black border bg-white text-[.875rem] p-3.5">
+                  :class="validationErrors['contactDetails.nationality'] ? 'border-red-700' : 'border-black'"
+                  class="border bg-white text-[.875rem] p-3.5">
                   <option value="Philippines">Philippines</option>
                 </select>
               </div>
@@ -62,9 +84,10 @@
                 <span class="text-[.75rem] font-bold mb-1">Email*</span>
                 <input 
                   v-model="contactDetails.email"
-                  type="text" 
+                  type="email" 
                   placeholder="Enter your email"
-                  class="border-black border bg-white text-[.875rem] p-3.5">
+                  :class="validationErrors['contactDetails.email'] ? 'border-red-700' : 'border-black'"
+                  class="border bg-white text-[.875rem] p-3.5">
               </div>
             </div>
             <div class="flex flex-col mt-4">
@@ -75,13 +98,14 @@
                   showDialCode: true,
                   maxlength: 15,
                 }"
-                styleClasses="border-black border rounded-none bg-white text-[.875rem] p-2.5"
+                :class="validationErrors['contactDetails.phone'] ? 'error' : 'border-black'"
+                styleClasses="border rounded-none bg-white text-[.875rem] p-2.5"
                 mode="international"
                 v-model="contactDetails.phone">
                 </vue-tel-input>
             </div>
             <div class="input-field flex flex-col mt-4">
-              <span class="text-[.75rem] font-bold mb-1">Special Requests*</span>
+              <span class="text-[.75rem] font-bold mb-1">Special Requests</span>
               <textarea 
                 v-model="contactDetails.requests"
                 rows="3"
@@ -91,7 +115,7 @@
 
             <div class="mt-4">
               <label for="terms" class="cursor-pointer">
-                <input name="terms" id="terms" type="checkbox">
+                <input name="terms" id="terms" type="checkbox" v-model="contactDetails.terms">
                 <span class="text-[.75rem] ml-2">
                   I agree to have read the Terms & 
                     <a href="" class="font-bold">Cancellation Policy</a>,
@@ -119,5 +143,8 @@
   .phone {
     border-radius: 0;
     border-color: black;
+  }
+  .phone.error {
+    border-color: rgb(185 28 28);
   }
 </style>

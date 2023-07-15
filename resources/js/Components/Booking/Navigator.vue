@@ -4,6 +4,10 @@
   import TagIcon from '@/Components/Icons/TagIcon.vue';
   import UserIcon from '@/Components/Icons/UserIcon.vue';
   import FileIcon from '@/Components/Icons/FileIcon.vue';
+
+  import { useBookingStore } from '@/stores/booking';
+
+  const bookingStore = useBookingStore();
 </script>
 
 <script>
@@ -44,6 +48,7 @@
       <Link 
         preserve-state
         href="/rooms" 
+        :data="{ dates: bookingStore.dates }" 
         class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
         <TagIcon class="md:w-auto w-5 h-5"></TagIcon>
         <span 
@@ -54,7 +59,8 @@
       </Link>
       <Link 
         preserve-state
-        href="/booking-details" 
+        href="/booking-details"
+        :data="bookingStore.room" 
         class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
         <UserIcon class="md:w-auto w-5 h-5"></UserIcon>
         <span 
@@ -64,7 +70,7 @@
         </span>
       </Link>
       <Link 
-        href="/payment" 
+        href="#" 
         class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
         <FileIcon class="md:w-auto w-5 h-5"></FileIcon>
         <span 

@@ -4,8 +4,8 @@ import dayjs from 'dayjs';
 export const useBookingStore = defineStore('booking', {
   state: () => ({ 
     dates: {
-      checkIn: null,
-      checkOut: null,
+      start: null,
+      end: null,
     },
     guests: {
       adults: 1,
@@ -16,33 +16,34 @@ export const useBookingStore = defineStore('booking', {
         nationality: null,
         email: null,
         phone: null,
+        terms: false,
         requests: null,
       }
     },
     room: {
-      id: 1,
-      name: "Superior Grand Suite",
-      description: "Our Essence double room: cosy 30-35m² for feel-good moments. For you and your favourite person.",
+      id: null,
+      name: null,
+      description: null,
       images: [],
-      price: 1000,
-      currency: "PHP"
+      price: null,
+      currency: null
     }
    }),
    getters: {
     checkInDate(state) {
-      if(state.dates.checkIn) {
-        return dayjs(state.dates.checkIn).format('MMMM D, YYYY');
+      if(state.dates.start) {
+        return dayjs(state.dates.start).format('MMMM D, YYYY');
       }
     },
     checkOutDate(state) {
-      if(state.dates.checkOut) {
-        return dayjs(state.dates.checkOut).format('MMMM D, YYYY');
+      if(state.dates.end) {
+        return dayjs(state.dates.end).format('MMMM D, YYYY');
       }
     },
     stayCount(state) {
-      if(state.dates.checkIn && state.dates.checkOut) {
-        const checkIn = dayjs(state.dates.checkIn);
-        const checkOut = dayjs(state.dates.checkOut);
+      if(state.dates.start && state.dates.end) {
+        const checkIn = dayjs(state.dates.start);
+        const checkOut = dayjs(state.dates.end);
 
         return checkOut.diff(checkIn, 'day');
       }
@@ -55,14 +56,17 @@ export const useBookingStore = defineStore('booking', {
     },
     guestsCountDetailed(state) {
       return `${state.guests.adults} Adult(s), ${state.guests.children} Child(s)`
+    },
+    subTotal(state) {
+      return state.room.price * this.stayCount;
     }
    },
    actions: {
     setCheckIn(date) {
-      this.dates.checkIn = date;
+      this.dates.start = date;
     },
     setCheckOut(date) {
-      this.dates.checkOut = date;
+      this.dates.end = date;
     },
     setAdultGuests(adults) {
       this.guests.adults = adults;

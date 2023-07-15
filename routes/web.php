@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\BookingDetailsController;
+use App\Http\Controllers\RoomSelectionController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,17 +22,11 @@ Route::get('/', function () {
     return Inertia::render('Booking/RoomFinder');
 });
 
-Route::get('/rooms', function () {
-  return Inertia::render('Booking/RoomSelection');
-});
+Route::resource('/rooms', RoomSelectionController::class);
 
-Route::get('/booking-details', function () {
-  return Inertia::render('Booking/BookingDetails');
-});
+Route::resource('/booking-details', BookingDetailsController::class);
 
-Route::get('/payment', function () {
-  return Inertia::render('Booking/Payment');
-});
+Route::resource('/payment', PaymentController::class);
 
 
 Route::middleware([

@@ -13,7 +13,7 @@ import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
 import { createVfm } from 'vue-final-modal';
 import 'vue-final-modal/style.css';
-
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 const pinia = createPinia();

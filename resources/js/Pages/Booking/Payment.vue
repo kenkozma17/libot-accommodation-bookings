@@ -52,17 +52,25 @@
             </div>
           </div>
           <div class="border-b border-t border-black text-center py-5 px-2">
-            <p class="text-[.875rem] font-bold uppercase tracking-widest">Travel Details</p>
+            <p class="text-[.875rem] font-bold uppercase tracking-widest">Room Details</p>
           </div>
           <div class="room-details p-8 grid grid-cols-12 space-x-4">
             <div class="col-span-4">
               <img src="/storage/images/room.jpg" class="w-full" alt="">
             </div>
-            <div class="col-span-8">
-              <h3 class="text-[1.25rem] font-bold tracking-wider">Superior Grand Suite</h3>
-              <p class="text-[.875rem] mt-2">Our Essence double room: cosy 30-35m² for feel-good moments. For you and your favourite person.</p>
-              <div class="flex items-end">
-                <div>test</div>
+            <div class="col-span-8 flex flex-col justify-between">
+              <div>
+                <h3 class="text-[1.25rem] font-bold tracking-wider">
+                  {{ bookingStore.room.name }}
+                </h3>
+                <p class="text-[.875rem] mt-2">
+                  {{ bookingStore.room.description }}
+                </p>
+              </div>
+              <div class="flex">
+                <a href="#" @click="open" class="text-black font-bold text-[1rem] bg-back-gray px-4 py-3.5">
+                  Room Details
+                </a>
               </div>
             </div>
           </div>

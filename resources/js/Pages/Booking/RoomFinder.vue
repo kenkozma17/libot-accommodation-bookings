@@ -8,7 +8,7 @@
   const bookingStore = useBookingStore();
 
   const bookingDetails = reactive({
-    date: {
+    dates: {
       start: dayjs().format(),
       end: dayjs().add(3, 'day').format(),
     },
@@ -19,23 +19,23 @@
   });
 
   const checkIn = computed(() => {
-    if(bookingDetails.date.start) {
-      return dayjs(bookingDetails.date.start);
+    if(bookingDetails.dates.start) {
+      return dayjs(bookingDetails.dates.start);
     }
   })
 
   const checkOut = computed(() => {
-    if(bookingDetails.date.end) {
-      return dayjs(bookingDetails.date.end);
+    if(bookingDetails.dates.end) {
+      return dayjs(bookingDetails.dates.end);
     }
   })
 
   function setBookingDates() {
     bookingStore.setCheckIn(
-      dayjs(bookingDetails.date.start).toISOString()
+      dayjs(bookingDetails.dates.start).toISOString()
     );
     bookingStore.setCheckOut(
-      dayjs(bookingDetails.date.end).toISOString()
+      dayjs(bookingDetails.dates.end).toISOString()
     );
   }
 
@@ -54,9 +54,9 @@
     const bookingDates = bookingStore.dates;
     const bookingGuests = bookingStore.guests;
 
-    if(bookingDates.checkIn && bookingDates.checkOut) {
-      bookingDetails.date.start = bookingDates.checkIn;
-      bookingDetails.date.end = bookingDates.checkOut;
+    if(bookingDates.start && bookingDates.end) {
+      bookingDetails.dates.start = bookingDates.start;
+      bookingDetails.dates.end = bookingDates.end;
     }
 
     if(bookingGuests.adults && bookingGuests.children) {
@@ -79,7 +79,7 @@
               borderless
               :step="1"
               :min-date="new Date()"
-              v-model.range.string="bookingDetails.date"
+              v-model.range.string="bookingDetails.dates"
               mode="date"
               :columns="2" />
           </div>

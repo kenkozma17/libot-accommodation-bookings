@@ -33,7 +33,7 @@
   };
 
   function isRoomSelected(id) {
-    if(bookingStore.roomId == id) {
+    if(bookingStore.room.id == id) {
       return true;
     }
     return false;
@@ -49,7 +49,7 @@
     slots: {
       default: '<p>UseModal: The content of the modal</p>',
     },
-  })
+  });
 </script>
 <template>
   <BookingLayout>
@@ -73,7 +73,7 @@
         </div>
       </div>
       <div class="col-span-3 border-l border-black flex flex-col justify-end items-end p-4 space-y-3">
-        <p class="text-dark-green font-bold text-[1.25rem]">{{ room.currency }} {{ room.price }} / night</p>
+        <p class="text-dark-green font-bold text-[1.25rem]">{{ room.currency }} {{ room.price.toLocaleString() }} / night</p>
         <button
           @click="selectRoom(room)" 
           :class="{'bg-dark-green text-white' : isRoomSelected(room.id) }"

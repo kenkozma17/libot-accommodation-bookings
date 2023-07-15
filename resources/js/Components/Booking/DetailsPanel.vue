@@ -7,7 +7,7 @@
   const bookingStore = useBookingStore();
 
   const bookingDetails = reactive({
-    date: {
+    dates: {
       start: null,
       end: null,
     },
@@ -18,83 +18,134 @@
   });
 
   const showDatePicker = ref(false);
+  const showGuestsAdjust = ref(false);
   const showPanel = ref(true);
 
   const checkInDate = computed(() => {
-    return dayjs(bookingDetails.date.start).format('MMMM D, YYYY');
+    return dayjs(bookingDetails.dates.start).format('MMMM D, YYYY');
   });
 
   const checkOutDate = computed(() => {
-    return dayjs(bookingDetails.date.end).format('MMMM D, YYYY');
+    return dayjs(bookingDetails.dates.end).format('MMMM D, YYYY');
   });
 
   function toggleDatePicker() {
     showDatePicker.value = !showDatePicker.value;
+    showGuestsAdjust.value = false;
+  }
+
+  function toggleGuestsAdjust() {
+    showGuestsAdjust.value = !showGuestsAdjust.value;
+    showDatePicker.value = false;
   }
 
   function updateDates() {
     bookingStore.setCheckIn(
-      dayjs(bookingDetails.date.start).toISOString()
+      dayjs(bookingDetails.dates.start).toISOString()
     );
     bookingStore.setCheckOut(
-      dayjs(bookingDetails.date.end).toISOString()
+      dayjs(bookingDetails.dates.end).toISOString()
     );
     toggleDatePicker();
+    unselectRoom();
+  }
+
+  function unselectRoom() {
+    bookingStore.setRoom({});
+  }
+
+  function updateGuests() {
+    bookingStore.setAdultGuests(bookingDetails.guests.adults);
+    bookingStore.setChildrenGuests(bookingDetails.guests.children);
+    toggleGuestsAdjust();
+    unselectRoom();
   }
 
   onBeforeMount(() => {
-    if(router.page.url === '/') showPanel.value = false;
+    if(router.page.url === '/' || router.page.url.includes('booking-details') || router.page.url.includes('payment')) showPanel.value = false;
+    if(router.page.url.includes('edit=true')) showDatePicker.value = true;
 
     const bookingDates = bookingStore.dates;
-    const bookingGuests = bookingStore.guests;
 
-    if(bookingDates.checkIn && bookingDates.checkOut) {
-      bookingDetails.date.start = bookingDates.checkIn;
-      bookingDetails.date.end = bookingDates.checkOut;
-    }
+    bookingDetails.guests = bookingStore.guests;
 
-    if(bookingGuests.adults && bookingGuests.children) {
-      bookingDetails.guests = bookingGuests;
+    if(bookingDates.start && bookingDates.end) {
+      bookingDetails.dates.start = bookingDates.start;
+      bookingDetails.dates.end = bookingDates.end;
     }
   })
 </script>
 <template>
   <div v-if="showPanel">
-    <div class="relative border-black border w-full grid grid-cols-4 bg-white">
-      <div class="flex flex-col py-4 px-6 border-black border-r-[.5px] cursor-pointer">
+    <div class="relative border-black border bg-black w-full grid grid-cols-4 gap-[1px]">
+      <div class="flex flex-col py-4 px-6 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Hotel</span>
         <span class="text-[.75rem]">Catanduanes Midtown Inn</span>
       </div>
-      <div class="border-black border-r border-l-[.5px] flex flex-col py-4 px-6 cursor-pointer relative">
+      <div @click="toggleGuestsAdjust" class="flex flex-col py-4 px-6 cursor-pointer relative bg-white">
         <span class="font-bold text-[.75rem]">Guests</span>
         <span class="text-[.75rem]">{{ bookingStore.guestsCount }}</span>
       </div>
-      <div @click="toggleDatePicker" class="border-black border-r flex flex-col py-4 px-6 cursor-pointer">
+      <div @click="toggleDatePicker" class="flex flex-col py-4 px-6 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Check In</span>
         <span class="text-[.75rem]">{{ checkInDate }}</span>
       </div>
-      <div @click="toggleDatePicker" class="border-black flex flex-col py-4 px-6 cursor-pointer">
+      <div @click="toggleDatePicker" class="flex flex-col py-4 px-6 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Check Out</span>
         <span class="text-[.75rem]">{{ checkOutDate }}</span>
       </div>
     </div>
     <div class="w-full grid grid-cols-4 relative">
-      <div v-if="showDatePicker" class="bg-white border-black border border-t-0 block absolute right-0 top-full w-1/2 z-50">
-        <VDatePicker
-          expanded
-          transparent
-          borderless
-          :step="1"
-          :min-date="new Date()"
-          v-model.range="bookingDetails.date"
-          mode="date"
-          :columns="2" />
-          <div class="w-full">
-            <button 
-              @click="updateDates"
-              class="w-full transition-colors ease-in-out hover:bg-opacity-90 py-4 px-2 bg-dark-green justify-center text-white uppercase flex text-[1rem] font-bold tracking-widest"
-                >Update Availabiltiy
-            </button>
+      <div v-if="showGuestsAdjust" class="col-start-2 col-end-3 absolute w-full">
+        <div class="mx-2 p-4 bg-white border border-t-0 border-black">
+          <form>
+            <div class="input-field">
+              <select 
+                name="adults" 
+                id="adults" 
+                v-model="bookingDetails.guests.adults"
+                class="border-black border bg-white text-[.875rem] p-3.5 w-full">
+                <option value="1">1 Adult</option>
+                <option value="2">2 Adults</option>
+                <option value="3">3 Adults</option>
+                <option value="4">4 Adults</option>
+              </select>
+            </div>
+            <div class="input-field mt-3">
+              <select 
+                name="children" 
+                id="children" 
+                v-model="bookingDetails.guests.children"
+                class="border-black border bg-white text-[.875rem] p-3.5 w-full">
+                <option value="0">0 Children</option>
+                <option value="1">1 Children</option>
+                <option value="2">2 Children</option>
+                <option value="3">3 Children</option>
+              </select>
+            </div>
+            <div class="w-full mt-3">
+              <button 
+                @click="updateGuests"
+                class="w-full transition-colors ease-in-out hover:bg-opacity-90 py-4 px-2 bg-dark-green justify-center text-white uppercase flex text-[1rem] font-bold tracking-widest"
+                  >Update Availabiltiy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div v-if="showDatePicker" class="col-start-3 w-full col-span-2 absolute">
+        <div class="mx-2 bg-white border-black border border-t-0">
+          <VDatePicker
+            expanded
+            transparent
+            borderless
+            :input-debounce="0"
+            :step="1"
+            :min-date="new Date()"
+            v-model.range="bookingDetails.dates"
+            mode="date"
+            @update:modelValue="updateDates"
+            :columns="2" />
           </div>
       </div>
     </div>
