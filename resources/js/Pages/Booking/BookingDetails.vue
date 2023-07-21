@@ -25,7 +25,7 @@
 
   function submitContact() {
     bookingStore.setContactDetails(contactDetails);
-    router.post('/payment', {
+    router.post('/booking-details', {
       contactDetails, 
       room: bookingStore.room,
     }, {
