@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\BookingDetailsController;
 use App\Http\Controllers\RoomSelectionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Admin\GuestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,11 +22,8 @@ use App\Http\Controllers\PaymentController;
 Route::get('/', function () {
     return Inertia::render('Booking/RoomFinder');
 });
-
 Route::resource('/rooms', RoomSelectionController::class);
-
 Route::resource('/booking-details', BookingDetailsController::class);
-
 Route::resource('/payment', PaymentController::class);
 
 
@@ -37,4 +35,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    
+    Route::resource('/guests', GuestController::class, ['names' => 'guests']);
 });
