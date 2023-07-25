@@ -8,6 +8,8 @@
             <p class="mt-1 text-sm text-gray-600">
                 <slot name="description" />
             </p>
+
+            <slot name="image"></slot>
         </div>
 
         <div class="px-4 sm:px-0">

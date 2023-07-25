@@ -16,6 +16,9 @@ const hasActions = computed(() => !! useSlots().actions);
             <template #description>
                 <slot name="description" />
             </template>
+            <template #image>
+              <slot name="image"></slot>
+            </template>
         </SectionTitle>
 
         <div class="mt-5 md:mt-0 md:col-span-2">

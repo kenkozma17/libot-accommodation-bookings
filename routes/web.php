@@ -7,6 +7,7 @@ use App\Http\Controllers\BookingDetailsController;
 use App\Http\Controllers\RoomSelectionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\GuestController;
+use App\Http\Controllers\Admin\RoomsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,4 +38,5 @@ Route::middleware([
     })->name('dashboard');
     
     Route::resource('/guests', GuestController::class, ['names' => 'guests']);
+    Route::resource('/rooms', RoomsController::class, ['names' => 'rooms']);
 });

@@ -27,7 +27,9 @@ class GuestController extends Controller
               ->get();
           }
         }]
-      ])->paginate(config('pagination.default'))->withQueryString();;
+      ])->orderBy('last_name', 'asc')
+        ->paginate(config('pagination.default'))
+        ->withQueryString();;
       return Inertia::render('Admin/Guests/GuestsList', [
         'guests' => $guests,
         'search' => $search

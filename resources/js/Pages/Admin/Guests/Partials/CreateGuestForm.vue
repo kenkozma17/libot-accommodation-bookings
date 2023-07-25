@@ -1,17 +1,21 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import { reactive } from 'vue';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import countries from '@/countries';
+
+const listOfCountries = reactive(countries);
 
 const form = useForm({
     first_name: '',
     last_name: '',
     email: '',
     phone: '',
-    nationality: 'Philippines',
+    nationality: 'Philippines (the)',
 });
 
 const createGuest = () => {
@@ -83,7 +87,7 @@ const createGuest = () => {
                 v-model="form.nationality"
                 name="nationality"
                 id="nationality">
-                <option value="Philippines">Philippines</option>
+                <option v-for="country in listOfCountries" :value="country">{{ country }}</option>
               </select>
               <InputError :message="form.errors.nationality" class="mt-2" />
           </div>
