@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('room_unavailabilities', function (Blueprint $table) {
           $table->id();
           $table->foreignId('room_id')->constrained();
-          $table->json('dates');
+          $table->foreignId('booking_id')->constrained()->nullable();
+          $table->datetime('start_date');
+          $table->datetime('end_date')->nullable();
+          $table->boolean('is_range')->default(0);
           $table->text('notes')->nullable();
           $table->timestamps();
         });

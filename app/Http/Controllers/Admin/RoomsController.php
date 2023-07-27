@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomStoreRequest;
 use App\Models\Room;
+use App\Models\RoomUnavailability;
 use Inertia\Inertia;
+use Carbon\Carbon;
 
 class RoomsController extends Controller
 {
@@ -101,6 +103,26 @@ class RoomsController extends Controller
         report($e);
       }
     }
+
+    public function markUnavailable(Request $request, string $id) {
+      try {
+        $dates = $request->new_unavailable_dates;
+        foreach($dates as $date) {
+          $date = Carbon::parse($date)->format('Y-m-d');
+          $newUnavailability = new RoomUnavailability();
+          $newUnavailability->start_date = $date;
+          $newUnavailability->notes = $request->notes;
+          $newUnavailability->is_range = 0;
+          $newUnavailability->room_id = $id;
+          $newUnavailability->save();
+        }
+
+        return to_route('rooms.show', $id);
+
+      } catch(Throwable $e) {
+
+      }
+    } 
 
     /**
      * Remove the specified resource from storage.

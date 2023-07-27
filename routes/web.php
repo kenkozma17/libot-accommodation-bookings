@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomSelectionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\RoomsController;
+use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,7 @@ Route::middleware([
     
     Route::resource('/guests', GuestController::class, ['names' => 'guests']);
     Route::resource('/rooms', RoomsController::class, ['names' => 'rooms']);
+    Route::post('/rooms/mark-unavailable/{id}', [RoomsController::class, 'markUnavailable'])
+      ->name('rooms.mark-unavailable');
+    Route::resource('/payments', AdminPaymentController::class, ['names' => 'payments']);
 });

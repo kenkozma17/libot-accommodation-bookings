@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Booking;
+use App\Models\RoomUnavailability;
 
 class Room extends Model
 {
@@ -31,9 +32,16 @@ class Room extends Model
       'rate_formatted',
       'cover_image_url',
     ];
+    protected $with = [
+      'unavailableDates'
+    ];
 
     public function bookings(): HasMany {
       return $this->hasMany(Booking::class);
+    }
+
+    public function unavailableDates(): HasMany {
+      return $this->hasMany(RoomUnavailability::class);
     }
 
     public function getRateFormattedAttribute() {

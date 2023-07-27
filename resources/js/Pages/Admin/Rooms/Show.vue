@@ -1,8 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import UpdateRoomForm from '@/Pages/Admin/Rooms/Partials/UpdateRoomForm.vue';
-import GuestBookings from '@/Pages/Admin/Guests/Partials/GuestBookings.vue';
-import GuestPayments from '@/Pages/Admin/Guests/Partials/GuestPayments.vue';
+import RoomAvailability from '@/Pages/Admin/Rooms/Partials/RoomAvailability.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 
 const props = defineProps({
@@ -22,11 +21,9 @@ const props = defineProps({
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
               <UpdateRoomForm :room="room" />
 
-              <!-- <template v-if="guest.bookings.length">
-                <SectionBorder /> -->
-                
-                <!-- <GuestBookings :bookings="guest.bookings" /> -->
-              <!-- </template> -->
+              <SectionBorder />
+              
+              <RoomAvailability :room="room" />
             </div>
         </div>
     </AppLayout>
