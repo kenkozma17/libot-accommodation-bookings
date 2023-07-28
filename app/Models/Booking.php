@@ -21,15 +21,20 @@ class Booking extends Model
     protected $appends = [
       'check_in_formatted',
       'check_out_formatted',
-      'created_at_formatted'
+      'created_at_formatted',
+      'rate_per_night_formatted'
     ];
 
     public function guest(): BelongsTo {
       return $this->belongsTo(Guest::class);
     }
 
-    public function payment(): HasOne {
-      return $this->hasOne(Payment::class);
+    public function payment(): BelongsTo {
+      return $this->belongsTo(Payment::class);
+    }
+
+    public function getRatePerNightFormattedAttribute() {
+      return number_format($this->rate_per_night, 2);
     }
 
     public function getCheckInFormattedAttribute() {

@@ -1,5 +1,6 @@
 <script setup>
 import FormSection from '@/Components/FormSection.vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps({
   payments: Array,
@@ -21,14 +22,14 @@ const props = defineProps({
             Payments
           </h3>
           <div class="relative z-0 mt-1 border border-gray-200 rounded-lg cursor-pointer">
-            <button
+            <Link
               v-for="(payment, i) in payments"
-              type="button"
+              :href="route('payments.show', payment.id)"
               :class="{'border-t border-gray-200 focus:border-none rounded-t-none': i > 0, 'rounded-b-none': i != Object.keys(payments).length - 1}"
               class="hover:bg-gray-100 relative px-4 py-3 inline-flex w-full rounded-lg focus:z-10 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
               <div class="w-full">
                   <div class="flex items-center justify-between">
-                      <div class="text-sm text-gray-600">
+                      <div class="text-sm text-gray-600 font-semibold">
                           {{ payment.payment_amount_formatted }}
                       </div>
                       <div class="text-xs text-gray-600">
@@ -40,7 +41,7 @@ const props = defineProps({
                       #{{ payment.transaction_id }}
                   </div>
               </div>
-            </button>
+            </Link>
           </div>
         </div>
       </template>

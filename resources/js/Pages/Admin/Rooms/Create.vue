@@ -1,6 +1,10 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import CreateRoomForm from '@/Pages/Admin/Rooms/Partials/CreateRoomForm.vue';
+
+const props = defineProps({
+  amenities: Array,
+});
 </script>
 
 <template>
@@ -13,7 +17,9 @@ import CreateRoomForm from '@/Pages/Admin/Rooms/Partials/CreateRoomForm.vue';
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <CreateRoomForm />
+                <CreateRoomForm
+                  :amenities="amenities"
+                  />
             </div>
         </div>
     </AppLayout>

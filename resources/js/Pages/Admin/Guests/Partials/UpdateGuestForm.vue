@@ -10,7 +10,11 @@ import TextInput from '@/Components/TextInput.vue';
 import countries from '@/countries';
 
 const props = defineProps({
-  guest: Object
+  guest: Object,
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const isReadOnly = ref(true);
@@ -118,6 +122,7 @@ const updateGuest = () => {
 
       <template #actions>
           <SecondaryButton 
+            :disabled="props.isDisabled"
             @click="resetForm">
             {{ isReadOnly ? 'Edit' : 'Cancel'}}
           </SecondaryButton>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\RoomStoreRequest;
 use App\Models\Room;
+use App\Models\Amenity;
 use App\Models\RoomUnavailability;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -39,7 +40,10 @@ class RoomsController extends Controller
      */
     public function create()
     {
-      return Inertia::render('Admin/Rooms/Create');
+      $amenities = Amenity::all();
+      return Inertia::render('Admin/Rooms/Create', [
+        'amenities' => $amenities
+      ]);
     }
 
     /**
@@ -50,17 +54,27 @@ class RoomsController extends Controller
       try {
         $room = new Room; 
 
-        $imageName = time().'.'.$request->cover_image->extension();
-        $request->cover_image->move(public_path('images'), $imageName);
+        if(isset($request->cover_image) && $request->cover_image) {
+          $imageName = time().'.'.$request->cover_image->extension();
+          $request->cover_image->move(public_path('images'), $imageName);
+          $room->cover_image = $imageName;
+        }
         
         $room->fill($request->validated());
-        $room->cover_image = $imageName;
         $room->save();
+
+        $amenities = $request->amenities;
+        if(isset($amenities) && count($amenities)) {
+          $amenities = collect($amenities)->map(function ($amenity) {
+            return $amenity['id'];
+          });
+          $room->amenities()->sync($amenities);
+        }
 
         session()->flash('flash.banner', 'Room Created Successfully!');
         session()->flash('flash.bannerStyle', 'success');
 
-        return redirect()->route('rooms.index');
+        return redirect()->route('rooms.show', $room->id);
       } catch(Throwable $e) {
         report($e);
       }
@@ -72,8 +86,10 @@ class RoomsController extends Controller
     public function show(string $id)
     {
       $room = Room::where('id', $id)->with(['bookings'])->first();
+      $amenities = Amenity::all();
       return Inertia::render('Admin/Rooms/Show', [
         'room' => $room,
+        'amenities' => $amenities,
       ]);
     }
 
@@ -93,6 +109,14 @@ class RoomsController extends Controller
       try {
         $room = Room::find($id);
         $room->update($request->validated());
+
+        $amenities = $request->amenities;
+        if(isset($amenities) && count($amenities)) {
+          $amenities = collect($amenities)->map(function ($amenity) {
+            return $amenity['id'];
+          });
+          $room->amenities()->sync($amenities);
+        }
         $room->save();
 
         session()->flash('flash.banner', 'Room Updated Successfully!');

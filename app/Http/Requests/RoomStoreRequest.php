@@ -29,7 +29,7 @@ class RoomStoreRequest extends FormRequest
           'max_occupancy' => 'required|numeric',
           'is_available' => 'required|boolean',
           'status' => 'nullable|string',
-          'cover_image' => 'exclude_if:cover_image,null|nullable|image|mimes:jpeg,png,jpg,gif',
+          'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
           'size' => 'nullable|numeric',
           'floor' => 'nullable|numeric',
           'beds' => 'nullable|numeric',

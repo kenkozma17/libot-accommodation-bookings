@@ -7,6 +7,10 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 
+const props = defineProps({
+  amenities: Array,
+});
+
 const form = useForm({
     name: '',
     rate: '',
@@ -19,7 +23,24 @@ const form = useForm({
     size: 0,
     floor: 1,
     beds: 1,
+    amenities: [],
 });
+
+const isAmenitySelected = (amenityId) => {
+  return form.amenities.some(amenity => {
+    return amenity.id === amenityId;
+  });
+};
+
+const handleAmenityChange = (amenity) => {
+  const amenityIndex = form.amenities.findIndex((a) => a.id === amenity.id);
+
+  if (amenityIndex !== -1) {
+    form.amenities.splice(amenityIndex, 1);
+  } else {
+    form.amenities.push(amenity);
+  }
+};
 
 const createRoom = () => {
     form.post(route('rooms.store'), {
@@ -157,6 +178,29 @@ const createRoom = () => {
               <InputLabel for="cover_image" value="Main Image" />
               <input type="file" @input="form.cover_image = $event.target.files[0]">
               <InputError :message="form.errors.cover_image" class="mt-2" />
+          </div>
+
+          <div class="col-span-6 sm:col-span-4">
+              <InputLabel for="amenities" value="Amenities" />
+              <div class="grid-cols-2 grid gap-x-8">
+                <div
+                  v-for="(amenity, key) in props.amenities" 
+                  :key="key"
+                  class="col-span-1">
+                  <label class="flex items-center">
+                      <Checkbox
+                        :disabled="isReadOnly"
+                        :class="{'bg-gray-100': isReadOnly}"
+                        :checked="isAmenitySelected(amenity.id)"
+                        @change="handleAmenityChange(amenity)"
+                       />
+                      <span class="ml-2 text-sm text-gray-600">
+                        {{ amenity.name }}
+                      </span>
+                  </label>
+                </div>
+              </div>
+              <InputError :message="form.errors.amenities" class="mt-2" />
           </div>
 
           <div class="col-span-6 sm:col-span-4">

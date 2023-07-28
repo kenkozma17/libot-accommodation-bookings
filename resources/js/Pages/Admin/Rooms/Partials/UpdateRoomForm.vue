@@ -1,5 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
+import { useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import FormSection from '@/Components/FormSection.vue';
 import InputError from '@/Components/InputError.vue';
@@ -13,6 +13,7 @@ const isReadOnly = ref(true);
 
 const props = defineProps({
   room: Object,
+  amenities: Array,
 });
 
 const form = useForm({
@@ -27,7 +28,24 @@ const form = useForm({
     size: props.room.size,
     floor: props.room.floor,
     beds: props.room.beds,
+    amenities: props.room.amenities ?? []
 });
+
+const isAmenitySelected = (amenityId) => {
+  return form.amenities.some(amenity => {
+    return amenity.id === amenityId;
+  });
+};
+
+const handleAmenityChange = (amenity) => {
+  const amenityIndex = form.amenities.findIndex((a) => a.id === amenity.id);
+
+  if (amenityIndex !== -1) {
+    form.amenities.splice(amenityIndex, 1);
+  } else {
+    form.amenities.push(amenity);
+  }
+};
 
 function resetForm() {
   isReadOnly.value = !isReadOnly.value;
@@ -38,6 +56,7 @@ const updateRoom = () => {
     form.put(route('rooms.update', props.room.id), {
         errorBag: 'updateRoom',
         preserveScroll: true,
+        onSuccess: () => isReadOnly.value = true,
     });
 };
 </script>
@@ -191,13 +210,36 @@ const updateRoom = () => {
               />
               <InputError :message="form.errors.floor" class="mt-2" />
           </div>
+          
+          <div class="col-span-6 sm:col-span-4">
+              <InputLabel for="amenities" value="Amenities" />
+              <div class="grid-cols-2 grid gap-x-8">
+                <div
+                  v-for="(amenity, key) in props.amenities" 
+                  :key="key"
+                  class="col-span-1">
+                  <label class="flex items-center">
+                      <Checkbox
+                        :disabled="isReadOnly"
+                        :class="{'bg-gray-100': isReadOnly}"
+                        :checked="isAmenitySelected(amenity.id)"
+                        @change="handleAmenityChange(amenity)"
+                       />
+                      <span class="ml-2 text-sm text-gray-600">
+                        {{ amenity.name }}
+                      </span>
+                  </label>
+                </div>
+              </div>
+              <InputError :message="form.errors.amenities" class="mt-2" />
+          </div>
 
           <div class="col-span-6 sm:col-span-4">
               <label class="flex items-center">
                   <Checkbox
                     :disabled="isReadOnly"
                     :class="{'bg-gray-100': isReadOnly}"
-                     v-model:checked="form.is_available"
+                     v-model="form.is_available"
                       name="is_available" />
                   <span class="ml-2 text-sm text-gray-600">Is Room Public?</span>
               </label>
