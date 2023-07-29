@@ -12,7 +12,7 @@ watch(message, async () => {
 </script>
 
 <template>
-    <div>
+    <div class="fixed left-0 right-0 top-0">
         <div v-if="show && message" :class="{ 'bg-green-700': style == 'success', 'bg-red-700': style == 'danger' }">
             <div class="max-w-screen-xl mx-auto py-2 px-3 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between flex-wrap">

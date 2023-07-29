@@ -36,8 +36,13 @@ class Room extends Model
     ];
     protected $with = [
       'unavailableDates',
-      'amenities'
+      'amenities',
+      'images'
     ];
+
+    public function images(): HasMany {
+      return $this->hasMany(RoomImage::class);
+    }
 
     public function amenities(): BelongsToMany {
       return $this->belongsToMany(Amenity::class, 'room_amenities');

@@ -40,9 +40,19 @@ Route::middleware([
     })->name('dashboard');
     
     Route::resource('/guests', GuestController::class, ['names' => 'guests']);
+
     Route::resource('/rooms', RoomsController::class, ['names' => 'rooms']);
-    Route::post('/rooms/mark-unavailable/{id}', [RoomsController::class, 'markUnavailable'])
-      ->name('rooms.mark-unavailable');
+    Route::post('/rooms/block-date/{id}', [RoomsController::class, 'blockDate'])
+      ->name('rooms.block-date');
+    Route::post('/rooms/unblock-date/{id}', [RoomsController::class, 'unblockDate'])
+      ->name('rooms.unblock-date');
+    Route::post('rooms/upload-image/{id}', [RoomsController::class, 'uploadImage'])
+      ->name('rooms.upload-image');
+    Route::delete('rooms/delete-image/{imageId}', [RoomsController::class, 'deleteImage'])
+      ->name('rooms.delete-image');
+    Route::post('rooms/set-primary-image/{imageId}', [RoomsController::class, 'setPrimaryImage'])
+      ->name('rooms.set-primary-image');
+
     Route::resource('/payments', AdminPaymentController::class, ['names' => 'payments']);
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
 });

@@ -3,7 +3,9 @@
   import { computed } from 'vue';
   import { useForm, Link } from '@inertiajs/vue3';
   import PrimaryButton from '@/Components/PrimaryButton.vue';
+  import SecondaryButton from '@/Components/SecondaryButton.vue';
   import InputLabel from '@/Components/InputLabel.vue';
+  import InputError from '@/Components/InputError.vue';
   import dayjs from 'dayjs';
 
   const props = defineProps({
@@ -31,11 +33,22 @@ const form = useForm({
   notes: ''
 });
 
-const markUnavailable = () => {
-    form.post(route('rooms.mark-unavailable', props.room.id), {
-        errorBag: 'markUnavailable',
+const form2 = useForm({});
+
+const blockDate = () => {
+    form.post(route('rooms.block-date', props.room.id), {
+        errorBag: 'blockDate',
         preserveScroll: true,
+        onSuccess: () => form.reset(),
     });
+};
+
+const unblockDate = (unavailabilityId) => {
+  form2.post(route('rooms.unblock-date', unavailabilityId), {
+    errorBag: 'unblockDate',
+    preserveScroll: true,
+    onSuccess: () => form.reset(),
+  });
 };
 
 function select(e) {
@@ -46,7 +59,7 @@ function select(e) {
 }
 </script>
 <template>
-  <FormSection @submitted="markUnavailable"> 
+  <FormSection @submitted="blockDate"> 
     <template #title>
         Room Availability
     </template>
@@ -57,35 +70,43 @@ function select(e) {
 
     <template #form>
       <div class="col-span-6">
-        <VDatePicker 
+        <VDatePicker
           :disabled="true"
           :is-dark="true"
+          :min-date="new Date()"
           expanded
-          :columns="2"
+          :columns="1"
           @dayclick="select"
           :attributes="unavailableDates">
-            <template #day-popover="{ dayTitle, attributes }">
+            <template #day-popover="{ attributes }">
               <div class="px-2" 
                   v-for="{ key, customData } in attributes"
                   :key="key">
-                <Link href="#" class="dark:text-gray-300">
                   <div
                     class="block text-xs text-gray-700 dark:text-gray-300">
                     <div v-if="customData.booking">
-                      <p class="text-center font-semibold" v-if="customData.booking">
-                        {{ dayjs(customData.start_date).format('MMMM D, YYYY') }} 
-                        - {{ dayjs(customData.end_date).format('MMMM D, YYYY') }}
-                      </p>
-                      <p class="font-semibold">
-                        {{ customData.booking.guest.full_name }} (#{{ customData.booking.booking_confirmation }})
-                      </p>
+                      <Link 
+                        :href="route('bookings.show', customData.booking.id)" 
+                        class="dark:text-gray-300">
+                        <p class="text-center font-semibold" v-if="customData.booking">
+                          {{ dayjs(customData.start_date).format('MMMM D, YYYY') }} 
+                          - {{ dayjs(customData.end_date).format('MMMM D, YYYY') }}
+                        </p>
+                        <p class="font-semibold">
+                          {{ customData.booking.guest.full_name }} (#{{ customData.booking.booking_confirmation }})
+                        </p>
+                      </Link>
                     </div>
                     <div v-else>
                       <p class="font-semibold">Blocked Off</p>
                       <p>Notes: {{ customData.notes ? customData.notes : 'N/A' }}</p>
+                      <SecondaryButton
+                        @click="unblockDate(customData.id)"
+                        class="mt-2">
+                        Unblock
+                      </SecondaryButton>
                     </div>
                   </div>
-                </Link>
                 <hr class="my-2">
               </div>
             </template>
@@ -105,11 +126,17 @@ function select(e) {
     </template>
 
     <template #actions>
-          <PrimaryButton 
-            :class="{ 'opacity-25': form.processing }" 
-            :disabled="form.processing">
-              Update
-          </PrimaryButton>
-      </template>
+        <SecondaryButton 
+          v-if="form.new_unavailable_dates.length"
+          @click="form.reset()">
+          {{ isReadOnly ? 'Edit' : 'Cancel'}}
+        </SecondaryButton>
+        <PrimaryButton 
+          :class="{ 'opacity-25': form.processing }" 
+          class="ml-2"
+          :disabled="form.processing">
+            Update
+        </PrimaryButton>
+    </template>
   </FormSection>
 </template>

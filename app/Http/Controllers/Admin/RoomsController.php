@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RoomStoreRequest;
 use App\Models\Room;
 use App\Models\Amenity;
+use App\Models\RoomImage;
 use App\Models\RoomUnavailability;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -128,7 +129,7 @@ class RoomsController extends Controller
       }
     }
 
-    public function markUnavailable(Request $request, string $id) {
+    public function blockDate(Request $request, string $id) {
       try {
         $dates = $request->new_unavailable_dates;
         foreach($dates as $date) {
@@ -147,6 +148,45 @@ class RoomsController extends Controller
 
       }
     } 
+
+    public function unblockDate(Request $request, string $id) {
+      try {
+        $unavailability = RoomUnavailability::destroy($id);
+      } catch(Throwable $e) {
+
+      }
+    }
+
+    public function uploadImage(Request $request, string $id) {
+      try {
+        $images = $request->images;
+        if(isset($images) && count($images)) {
+          foreach($images as $image) {
+            $imageName = uniqid().time().'.'.$image->extension();
+            $image->move(public_path('images/rooms'), $imageName);
+            $roomImage = RoomImage::create([
+              'room_id' => $id,
+              'image_url' => $imageName
+            ]);
+          }
+        }
+      } catch(Throwable $e) {
+
+      }
+    }
+
+    public function deleteImage(string $imageId) {
+      $roomImage = RoomImage::destroy($imageId);
+    }
+
+    public function setPrimaryImage(string $imageId) {
+      $roomImage = RoomImage::find($imageId);
+      $room = Room::find($roomImage->room_id);
+      $room->cover_image = $roomImage->image_url;
+      $room->save();
+
+      return to_route('rooms.show', $roomImage->room_id);
+    }
 
     /**
      * Remove the specified resource from storage.

@@ -2,6 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import UpdateRoomForm from '@/Pages/Admin/Rooms/Partials/UpdateRoomForm.vue';
 import RoomAvailability from '@/Pages/Admin/Rooms/Partials/RoomAvailability.vue';
+import ImageManager from '@/Pages/Admin/Rooms/Partials/ImageManager.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 
 const props = defineProps({
@@ -27,6 +28,10 @@ const props = defineProps({
               <SectionBorder />
               
               <RoomAvailability :room="room" />
+
+              <SectionBorder />
+
+              <ImageManager :room="room" />
             </div>
         </div>
     </AppLayout>
