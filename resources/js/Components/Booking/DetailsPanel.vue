@@ -4,6 +4,10 @@
   import { useBookingStore } from '@/stores/booking';
   import dayjs from 'dayjs';
   import { useToast } from 'vue-toast-notification';
+  import { useScreens } from 'vue-screen-utils';
+
+  const { mapCurrent } = useScreens({ xs: '0px', sm: '640px', md: '768px', lg: '1024px' });
+  const columns = mapCurrent({ lg: 2 }, 1);
 
   const $toast = useToast({
     position: 'top-right'
@@ -94,25 +98,25 @@
 <template>
   <div v-if="showPanel">
     <div class="relative border-black border bg-black w-full grid grid-cols-4 gap-[1px]">
-      <div class="flex flex-col py-4 px-6 cursor-pointer bg-white">
+      <div class="md:col-span-1 col-span-4 flex flex-col md:py-4 py-3 md:px-6 px-3 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Hotel</span>
         <span class="text-[.75rem]">Catanduanes Midtown Inn</span>
       </div>
-      <div @click="toggleGuestsAdjust" class="flex flex-col py-4 px-6 cursor-pointer relative bg-white">
+      <div @click="toggleGuestsAdjust" class="md:col-span-1 col-span-4 flex flex-col md:py-4 py-3 md:px-6 px-3 cursor-pointer relative bg-white">
         <span class="font-bold text-[.75rem]">Guests</span>
         <span class="text-[.75rem]">{{ bookingStore.guestsCount }}</span>
       </div>
-      <div @click="toggleDatePicker" class="flex flex-col py-4 px-6 cursor-pointer bg-white">
+      <div @click="toggleDatePicker" class="md:col-span-1 col-span-4 flex flex-col md:py-4 py-3 md:px-6 px-3 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Check In</span>
         <span class="text-[.75rem]">{{ checkInDate }}</span>
       </div>
-      <div @click="toggleDatePicker" class="flex flex-col py-4 px-6 cursor-pointer bg-white">
+      <div @click="toggleDatePicker" class="md:col-span-1 col-span-4 flex flex-col md:py-4 py-3 md:px-6 px-3 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Check Out</span>
         <span class="text-[.75rem]">{{ checkOutDate }}</span>
       </div>
     </div>
     <div class="w-full grid grid-cols-4 relative">
-      <div v-if="showGuestsAdjust" class="col-start-2 col-end-3 absolute w-full">
+      <div v-if="showGuestsAdjust" class="md:col-start-2 md:col-end-3 absolute w-full">
         <div class="mx-2 p-4 bg-white border border-t-0 border-black">
           <div class="input-field">
             <select 
@@ -141,13 +145,13 @@
           <div class="w-full mt-3">
             <button 
               @click="updateGuests"
-              class="w-full transition-colors ease-in-out hover:bg-opacity-90 py-4 px-2 bg-dark-green justify-center text-white uppercase flex text-[1rem] font-bold tracking-widest"
+              class="w-full transition-colors ease-in-out hover:bg-opacity-90 py-3 px-2 bg-dark-green justify-center text-white uppercase flex text-[1rem] font-bold tracking-widest"
                 >Update Availabiltiy
             </button>
           </div>
         </div>
       </div>
-      <div v-if="showDatePicker" class="col-start-3 w-full col-span-2 absolute">
+      <div v-if="showDatePicker" class="md:col-start-3 w-full col-span-2 absolute">
         <div class="mx-2 bg-white border-black border border-t-0">
           <VDatePicker
             expanded
@@ -159,8 +163,15 @@
             v-model.range="bookingDetails.dates"
             mode="date"
             @update:modelValue="updateDates"
-            :columns="2" />
-          </div>
+            :columns="columns" />
+            <div class="w-full mt-3">
+              <button 
+                @click="updateDates"
+                class="w-full transition-colors ease-in-out hover:bg-opacity-90 py-3 px-2 bg-dark-green justify-center text-white uppercase flex text-[1rem] font-bold tracking-widest"
+                  >Update Availabiltiy
+              </button>
+            </div>
+        </div>
       </div>
     </div>
   </div>

@@ -8,43 +8,43 @@
 <template>
   <BookingLayout>
     <div class="grid grid-cols-12 my-5 gap-7">
-      <div class="col-span-8">
+      <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white">
           <div class="border-b border-black text-center py-5 px-2">
             <p class="text-[.875rem] font-bold uppercase tracking-widest">Travel Details</p>
           </div>
-          <div class="grid grid-cols-3 py-8 px-6 gap-4">
-            <div class="flex flex-col">
+          <div class="grid grid-cols-6 py-8 px-6 gap-4">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Name</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.guests.contactDetails.firstName + ' ' + bookingStore.guests.contactDetails.lastName }}
               </span>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Arrival</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.checkInDate }}
               </span>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Departure</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.checkOutDate }}
               </span>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Email Address</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.guests.contactDetails.email }}
               </span>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Phone Number</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.guests.contactDetails.phone }}
               </span>
             </div>
-            <div class="flex flex-col">
+            <div class="flex flex-col lg:col-span-2 col-span-3">
               <span class="text-[1rem] font-bold">Nationality</span>
               <span class="text-[0.875rem]">
                 {{ bookingStore.guests.contactDetails.nationality }}
@@ -78,7 +78,7 @@
         
         <div class="border border-black bg-white p-5 mt-8">
           <form action="">
-            <h1 class="text-[2.5rem] font-bold">Payment Details</h1>
+            <h1 class="md:text-[2.5rem] text-[1.5rem] font-bold">Payment Details</h1>
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">First Name*</span>
@@ -130,7 +130,7 @@
           </form>
         </div>
       </div>
-      <div class="col-span-4">
+      <div class="md:col-span-4 col-span-12 md:order-last order-first">
         <SummaryPanel></SummaryPanel>
       </div>
     </div>

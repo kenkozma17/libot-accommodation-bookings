@@ -5,6 +5,10 @@
   import { useBookingStore } from '@/stores/booking';
   import { onBeforeMount, reactive, computed } from 'vue';
   import { useToast } from 'vue-toast-notification';
+  import { useScreens } from 'vue-screen-utils';
+
+  const { mapCurrent } = useScreens({ xs: '0px', sm: '640px', md: '768px', lg: '1024px' });
+  const columns = mapCurrent({ lg: 2 }, 1);
 
   const $toast = useToast({
     position: 'top-right'
@@ -77,7 +81,7 @@
 <template>
   <BookingLayout>
     <div class="grid grid-cols-12 my-5 gap-7">
-      <div class="col-span-8">
+      <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white">
           <div class="border-b border-black text-center py-5 px-2">
             <p class="text-[.875rem] font-bold uppercase tracking-widest">Select your dates</p>
@@ -91,11 +95,11 @@
               :min-date="new Date()"
               v-model.range.string="bookingDetails.dates"
               mode="date"
-              :columns="2" />
+              :columns="columns" />
           </div>
         </div>
       </div>
-      <div class="col-span-4">
+      <div class="md:col-span-4 col-span-12">
         <div class="grid grid-cols-2 border-black border bg-white min-h-[11rem]">
           <div class="border-black border-r">
             <div class="bg-light-brown py-1 text-center">

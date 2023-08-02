@@ -5,6 +5,9 @@
   import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
   import { useToast } from 'vue-toast-notification';
+  import countries from '@/countries';
+
+  const listOfCountries = reactive(countries);
 
   const bookingStore = useBookingStore();
   const $toast = useToast({
@@ -16,7 +19,7 @@
   let contactDetails = reactive({
     firstName: null,
     lastName: null,
-    nationality: "Philippines",
+    nationality: "Philippines (the)",
     email: null,
     phone: null,
     terms: false,
@@ -44,12 +47,12 @@
 <template>
   <BookingLayout>
     <div class="grid grid-cols-12 my-5 gap-7">
-      <div class="col-span-8">
+      <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white p-5">
           <form @submit.prevent="submitContact">
             <h1 class="text-[2.5rem] font-bold">Booking Details</h1>
             <div class="grid grid-cols-2 gap-4 mt-2">
-              <div class="input-field flex flex-col">
+              <div class="input-field flex flex-col md:col-span-1 col-span-2">
                 <span class="text-[.75rem] font-bold mb-1">First Name*</span>
                 <input 
                   v-model="contactDetails.firstName"
@@ -58,7 +61,7 @@
                   :class="validationErrors['contactDetails.firstName'] ? 'border-red-700' : 'border-black'"
                   class="border bg-white text-[.875rem] p-3.5">
               </div>
-              <div class="input-field flex flex-col">
+              <div class="input-field flex flex-col md:col-span-1 col-span-2">
                 <span class="text-[.75rem] font-bold mb-1">Last Name*</span>
                 <input 
                   v-model="contactDetails.lastName"
@@ -69,18 +72,18 @@
               </div>
             </div>
             <div class="grid grid-cols-12 gap-4 mt-4">
-              <div class="input-field col-span-6 flex flex-col">
+              <div class="input-field md:col-span-6 col-span-12 flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Nationality*</span>
                 <select 
                   v-model="contactDetails.nationality"
-                  name="" 
-                  id="" 
                   :class="validationErrors['contactDetails.nationality'] ? 'border-red-700' : 'border-black'"
                   class="border bg-white text-[.875rem] p-3.5">
-                  <option value="Philippines">Philippines</option>
+                  <option 
+                    v-for="country in listOfCountries" 
+                    :value="country">{{country}}</option>
                 </select>
               </div>
-              <div class="input-field col-span-6 flex flex-col">
+              <div class="input-field md:col-span-6 col-span-12 flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Email*</span>
                 <input 
                   v-model="contactDetails.email"
@@ -133,7 +136,7 @@
           </form>
         </div>
       </div>
-      <div class="col-span-4">
+      <div class="md:col-span-4 col-span-12 md:order-last order-first">
         <SummaryPanel></SummaryPanel>
       </div>
     </div>

@@ -3,8 +3,8 @@
   import RoomDetailsModal from '@/Components/Modals/RoomDetailsModal.vue';
   import PaginationList from '@/Components/PaginationList.vue';
   import { useModal } from 'vue-final-modal';
-  import { reactive } from 'vue';
   import { router } from '@inertiajs/vue3';
+  import { reactive } from 'vue';
   import { useBookingStore } from '@/stores/booking';
 
   const bookingStore = useBookingStore();
@@ -28,45 +28,46 @@
     return false;
   }
 
-  const { open, close } = useModal({
-    component: RoomDetailsModal,
-    attrs: {
-      onConfirm() {
-        close()
+  const openModal = (room) => {
+    const modal = useModal({
+      component: RoomDetailsModal,
+      attrs: {
+        room,
+        onConfirm() {
+          modal.close()
+        },
       },
-    },
-    slots: {
-      default: '<p>UseModal: The content of the modal</p>',
-    },
-  });
+    });
+    modal.open();
+  };
 </script>
 <template>
   <BookingLayout>
     <div class="border-black border grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
-      <div class="col-span-4">
+      <div class="md:col-span-4 col-span-12">
         <img src="/storage/images/room.jpg" class="w-full" alt="">
       </div>
-      <div class="col-span-5 p-4 flex flex-col justify-between">
+      <div class="md:col-span-5 col-span-12 p-4 flex flex-col justify-between">
         <div>
-          <h2 class="text-[1.5rem] font-bold tracking-wide">
+          <h2 class="md:text-[1.5rem] text-[1.25rem] font-bold tracking-wide">
             {{ room.name }}
           </h2>
           <p class="text-[.75rem]">
             {{ room.description }}
           </p>
         </div>
-        <div class="flex">
-          <a href="#" @click="open" class="text-black font-bold text-[1rem] bg-back-gray px-4 py-3.5">
+        <div class="flex mt-6">
+          <a href="#" @click="openModal(room)" class="text-black font-bold md:text-[1rem] text-[.85rem] bg-back-gray md:px-4 md:py-3.5 px-2 py-2">
             Room Details
           </a>
         </div>
       </div>
-      <div class="col-span-3 border-l border-black flex flex-col justify-end items-end p-4 space-y-3">
-        <p class="text-dark-green font-bold text-[1.25rem]">{{ room.currency }} {{ room.rate_formatted }} / night</p>
+      <div class="md:col-span-3 col-span-12 md:border-l md:border-t-0 border-t border-black flex md:flex-col flex-row md:justify-end justify-between items-end p-4 md:space-y-3">
+        <p class="text-dark-green font-bold md:text-[1.25rem] text-[1rem]">{{ room.currency }} {{ room.rate_formatted }} / night</p>
         <button
           @click="selectRoom(room)" 
           :class="{'bg-dark-green text-white' : isRoomSelected(room.id) }"
-          class="uppercase border-2 border-dark-green font-bold text-[1rem] p-2.5 w-full">
+          class="uppercase border-2 border-dark-green font-bold md:text-[1rem] text-[.85rem] md:p-2.5 p-2 md:w-full w-1/2">
           {{ isRoomSelected(room.id) ? 'Selected' : 'Select' }}
         </button>
       </div>
