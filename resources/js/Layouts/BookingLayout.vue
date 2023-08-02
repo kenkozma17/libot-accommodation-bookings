@@ -4,12 +4,14 @@
   import { ModalsContainer } from 'vue-final-modal';
 </script>
 <template>
-  <div class="m-4">
-    <ModalsContainer />
-    <Navigator></Navigator>
-    <DetailsPanel class="my-4"></DetailsPanel>
-    <div>
-      <slot></slot>
+  <div class="max-w-7xl mx-auto">
+    <div class="m-4">
+      <ModalsContainer />
+      <Navigator></Navigator>
+      <DetailsPanel class="my-4"></DetailsPanel>
+      <div>
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>

@@ -19,7 +19,7 @@ const form = useForm({
     max_occupancy: '',
     is_available: false,
     status: 'Available',
-    cover_image: '',
+    // cover_image: '',
     size: 0,
     floor: 1,
     beds: 1,
@@ -174,11 +174,11 @@ const createRoom = () => {
               <InputError :message="form.errors.floor" class="mt-2" />
           </div>
 
-          <div class="col-span-6 sm:col-span-4">
+          <!-- <div class="col-span-6 sm:col-span-4">
               <InputLabel for="cover_image" value="Main Image" />
               <input type="file" @input="form.cover_image = $event.target.files[0]">
               <InputError :message="form.errors.cover_image" class="mt-2" />
-          </div>
+          </div> -->
 
           <div class="col-span-6 sm:col-span-4">
               <InputLabel for="amenities" value="Amenities" />

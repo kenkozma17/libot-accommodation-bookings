@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Booking;
 use App\Models\Amenity;
 use App\Models\RoomUnavailability;
+use Carbon\Carbon;
 
 class Room extends Model
 {
@@ -33,6 +34,7 @@ class Room extends Model
     protected $appends = [
       'rate_formatted',
       'cover_image_url',
+      'full_room_name',
     ];
     protected $with = [
       'unavailableDates',
@@ -56,12 +58,19 @@ class Room extends Model
       return $this->hasMany(RoomUnavailability::class);
     }
 
+    public function getFullRoomNameAttribute() {
+      return $this->name . ' (' . $this->room_number . ')'; 
+    }
+
     public function getRateFormattedAttribute() {
       return number_format($this->rate, 2);
     }
 
     public function getCoverImageUrlAttribute() {
-      return '/images/' . $this->cover_image;
+      if($this->cover_image) {
+        return '/images/rooms/' . $this->cover_image;
+      } 
+      return '/images/room/default-image.jpeg';
     }
     
 }

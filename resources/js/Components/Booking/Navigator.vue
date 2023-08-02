@@ -20,7 +20,7 @@
     computed: {
       currentStep() {
         if(this.url === '/') return 1;
-        else if(this.url.includes('/rooms')) return 2;
+        else if(this.url.includes('/available-rooms')) return 2;
         else if(this.url.includes('/booking-details')) return 3;
         else if(this.url.includes('/payment')) return 4;
         else return 1;
@@ -46,9 +46,9 @@
         <span class="md:text-[0.875rem] text-[0.7rem] font-bold mt-1">Dates</span>
       </Link>
       <Link 
-        preserve-state
-        href="/rooms" 
-        :data="{ dates: bookingStore.dates }" 
+        replace
+        href="/available-rooms" 
+        :data="{ dates: bookingStore.dates, guests: bookingStore.guests }" 
         class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">
         <TagIcon class="md:w-auto w-5 h-5"></TagIcon>
         <span 

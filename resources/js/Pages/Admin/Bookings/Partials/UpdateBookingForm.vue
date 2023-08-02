@@ -25,6 +25,7 @@ const form = useForm({
     special_requests: props.booking.special_requests,
     adults_count: props.booking.adults_count,
     children_count: props.booking.children_count,
+    stay_length: props.booking.stay_length,
 });
 </script>
 <template>
@@ -79,6 +80,21 @@ const form = useForm({
               />
               <InputError :message="form.errors.check_out" class="mt-2" />
           </div>
+
+          <div class="col-span-6 sm:col-span-4">
+              <InputLabel for="stay_length" value="Stay Length" />
+              <TextInput
+                  :disabled="isReadOnly"
+                  :class="{'bg-gray-100': isReadOnly}"
+                  id="stay_length"
+                  v-model="form.stay_length"
+                  type="text"
+                  class="block w-full mt-1"
+                  autofocus
+              />
+              <InputError :message="form.errors.stay_length" class="mt-2" />
+          </div>
+
 
           <div class="col-span-6 sm:col-span-4">
               <InputLabel for="rate_per_night" value="Rate (Per Night PHP)" />

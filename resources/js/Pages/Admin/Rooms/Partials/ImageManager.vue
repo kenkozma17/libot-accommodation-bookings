@@ -20,7 +20,7 @@
     images: props.room.images ?? [],
   });
 
-  const deleteForm = useForm({});
+  const imageForm = useForm({});
   const fileInputRef = ref(null);
 
   const handleFileUpload = (event) => {
@@ -40,7 +40,7 @@
   }
 
   const removeImage = (imageId) => {
-    deleteForm.delete(route('rooms.delete-image', imageId), {
+    imageForm.delete(route('rooms.delete-image', imageId), {
       errorBag: 'imageDelete',
       preserveScroll: true,
       onSuccess: () => {
@@ -52,13 +52,16 @@
   }
 
   const setPrimaryImage = (image) => {
-    router.post(route('rooms.set-primary-image', image.id), {
+    imageForm.post(route('rooms.set-primary-image', image.id), {
       errorBag: 'setPrimary',
       preserveScroll: true,
     });
   };
 
-  const isPrimaryImage = (image) => (props.room.cover_image === image.image_url)
+  const isPrimaryImage = (image) => {
+    console.log(props.room.cover_image === image.image_url);
+    return props.room.cover_image === image.image_url;
+  };
 
 </script>
 <template>
@@ -89,12 +92,13 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
-            <PrimaryButton 
-              class="absolute bottom-0 left-0 text-[10px] px-1 py-1 font-semibold"
-              @click="setPrimaryImage(image)">
-              {{ isPrimaryImage(image) ? 'Make Primary' : 'Primary'}}
-            </PrimaryButton>
             <img :src="image.image_url_path" alt="">
+            <PrimaryButton 
+              type="button"
+              class="absolute bottom-2 left-2 text-[10px] px-1 py-1 font-semibold"
+              @click="setPrimaryImage(image)">
+              {{ isPrimaryImage(image) ? 'Primary' : 'Make Primary'}}
+            </PrimaryButton>
           </div>
         </div>
         <div v-else>

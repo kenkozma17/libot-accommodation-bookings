@@ -4,6 +4,11 @@
   import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
   import { onBeforeMount, reactive, computed } from 'vue';
+  import { useToast } from 'vue-toast-notification';
+
+  const $toast = useToast({
+    position: 'top-right'
+  })
 
   const bookingStore = useBookingStore();
 
@@ -32,10 +37,10 @@
 
   function setBookingDates() {
     bookingStore.setCheckIn(
-      dayjs(bookingDetails.dates.start).toISOString()
+      dayjs(bookingDetails.dates.start).format('YYYY-MM-DD')
     );
     bookingStore.setCheckOut(
-      dayjs(bookingDetails.dates.end).toISOString()
+      dayjs(bookingDetails.dates.end).format('YYYY-MM-DD')
     );
   }
 
@@ -45,9 +50,14 @@
   }
 
   function checkAvailability() {
-    setBookingDates();
-    setGuestDetails();
-    router.get('/rooms', bookingDetails);
+    const daysDifference = dayjs(bookingDetails.dates.end).diff(dayjs(bookingDetails.dates.start), 'day');
+    if(daysDifference > 0 ){
+      setBookingDates();
+      setGuestDetails();
+      router.get(route('available-rooms.index'), bookingDetails);
+    } else {
+      $toast.warning('Stay must be at least 1 night');
+    }
   }
 
   onBeforeMount(() => {

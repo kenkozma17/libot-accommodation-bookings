@@ -1,6 +1,7 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import RoomDetailsModal from '@/Components/Modals/RoomDetailsModal.vue';
+  import PaginationList from '@/Components/PaginationList.vue';
   import { useModal } from 'vue-final-modal';
   import { reactive } from 'vue';
   import { router } from '@inertiajs/vue3';
@@ -8,24 +9,12 @@
 
   const bookingStore = useBookingStore();
 
-  const availableRooms = reactive([
-    {
-      id: 1,
-      name: "Superior Grand Suite",
-      description: "Our Essence double room: cosy 30-35m² for feel-good moments. For you and your favourite person.",
-      images: [],
-      price: 1000,
-      currency: "PHP"
-    },
-    {
-      id: 2,
-      name: "Big Grand Suite",
-      description: "Our Essence double room: cosy 30-35m² for feel-good moments. For you and your favourite person.",
-      images: [],
-      price: 3000,
-      currency: "PHP"
-    },
-  ]);
+  const props = defineProps({
+    availableRooms: {
+      type: Array,
+      default: []
+    }
+  });
 
   function selectRoom(room) {
     bookingStore.setRoom(room);
@@ -53,7 +42,7 @@
 </script>
 <template>
   <BookingLayout>
-    <div class="border-black border grid grid-cols-12 bg-white mb-6" v-for="room in availableRooms">
+    <div class="border-black border grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
       <div class="col-span-4">
         <img src="/storage/images/room.jpg" class="w-full" alt="">
       </div>
@@ -73,7 +62,7 @@
         </div>
       </div>
       <div class="col-span-3 border-l border-black flex flex-col justify-end items-end p-4 space-y-3">
-        <p class="text-dark-green font-bold text-[1.25rem]">{{ room.currency }} {{ room.price.toLocaleString() }} / night</p>
+        <p class="text-dark-green font-bold text-[1.25rem]">{{ room.currency }} {{ room.rate_formatted }} / night</p>
         <button
           @click="selectRoom(room)" 
           :class="{'bg-dark-green text-white' : isRoomSelected(room.id) }"
@@ -81,6 +70,9 @@
           {{ isRoomSelected(room.id) ? 'Selected' : 'Select' }}
         </button>
       </div>
+    </div>
+    <div class="flex justify-center bg-white rounded p-2">
+      <PaginationList :links="props.availableRooms.links" />
     </div>
   </BookingLayout>
 </template>

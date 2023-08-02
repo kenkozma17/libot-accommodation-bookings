@@ -25,7 +25,7 @@ export const useBookingStore = defineStore('booking', {
       name: null,
       description: null,
       images: [],
-      price: null,
+      rate: null,
       currency: null
     }
    }),
@@ -58,7 +58,7 @@ export const useBookingStore = defineStore('booking', {
       return `${state.guests.adults} Adult(s), ${state.guests.children} Child(s)`
     },
     subTotal(state) {
-      return state.room.price * this.stayCount;
+      return state.room.rate * this.stayCount;
     }
    },
    actions: {

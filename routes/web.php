@@ -25,7 +25,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 Route::get('/', function () {
     return Inertia::render('Booking/RoomFinder');
 });
-Route::resource('/rooms', RoomSelectionController::class);
+Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);
 Route::resource('/payment', PaymentController::class);
 

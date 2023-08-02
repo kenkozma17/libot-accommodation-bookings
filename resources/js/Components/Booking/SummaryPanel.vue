@@ -20,8 +20,8 @@
           </div>
           <div class="flex justify-end items-start"> 
             <Link 
-              href="/rooms"
-              :data="{ edit: true, dates: bookingStore.dates }"
+              href="/available-rooms"
+              :data="{ edit: true, dates: bookingStore.dates, guests: bookingStore.guests }"
               class="text-[.85rem] font-bold">
               Edit
             </Link>
@@ -31,7 +31,7 @@
           <div>
             <p class="text-[.85rem] font-bold">Check In & Out Dates</p>
             <span class="text-[.7rem]">{{ bookingStore.checkInDate }} - {{ bookingStore.checkOutDate }} 
-              ( {{ bookingStore.stayCount }} nights x {{ bookingStore.room.currency }} {{ bookingStore.room.price.toLocaleString() }} )
+              ( {{ bookingStore.stayCount }} nights x {{ bookingStore.room.currency }} {{ bookingStore.room.rate_formatted }} )
             </span>
           </div>
 

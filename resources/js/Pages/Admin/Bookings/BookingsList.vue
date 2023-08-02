@@ -49,8 +49,10 @@
                     <tr>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Booking Confirmation</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Guest</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Room Name (Room Number)</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check In</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Check Out</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stay Length</th>
                       <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Action</th>
                     </tr>
                   </template>
@@ -62,13 +64,23 @@
                         </Link>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        {{ booking.guest.full_name }}
+                        <Link :href="route('guests.show', booking.guest.id)">
+                          {{ booking.guest.full_name }}
+                        </Link>
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <Link :href="route('rooms.show', booking.room.id)">
+                          {{ booking.room.full_room_name }}
+                        </Link>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
                         {{ booking.check_in_formatted }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
                         {{ booking.check_out_formatted }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        {{ booking.stay_length }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <Link :href="route('bookings.show', booking.id)">View</Link>
