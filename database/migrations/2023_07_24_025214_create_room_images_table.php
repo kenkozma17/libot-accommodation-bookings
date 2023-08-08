@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('room_id')->constrained();
             $table->string('image_url');
             $table->text('description')->nullable();
+            $table->boolean('is_primary')->default(0);
             $table->timestamps();
         });
     }

@@ -27,7 +27,8 @@ class RoomsController extends Controller
               ->get();
           }
         }]
-      ])->orderBy('name', 'asc')
+      ])->where('is_available', true)
+      ->orderBy('name', 'asc')
       ->paginate(config('pagination.default'))
       ->withQueryString();;
       return Inertia::render('Admin/Rooms/RoomsList', [
@@ -181,6 +182,12 @@ class RoomsController extends Controller
 
     public function setPrimaryImage(string $imageId) {
       $roomImage = RoomImage::find($imageId);
+
+      // Set all room images to not primary before updating primary
+      RoomImage::where('room_id', $roomImage->room_id)->update(['is_primary' => 0]);
+      $roomImage->is_primary = 1;
+      $roomImage->save();
+
       $room = Room::find($roomImage->room_id);
       $room->cover_image = $roomImage->image_url;
       $room->save();

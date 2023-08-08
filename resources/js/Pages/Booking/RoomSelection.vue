@@ -28,14 +28,23 @@
     return false;
   }
 
+  const isMainAmenity = (amenityName) => {
+    const amenities = ['Free Wi-Fi', 'Air-Conditioned Unit', 'Satellite/Cable TV', 'Intercom'];
+    return amenities.includes(amenityName);
+  };
+
   const openModal = (room) => {
     const modal = useModal({
       component: RoomDetailsModal,
       attrs: {
         room,
-        onConfirm() {
+        onClose() {
           modal.close()
         },
+        onSelectRoom() {
+          selectRoom(room);
+          modal.close();
+        }
       },
     });
     modal.open();
@@ -43,9 +52,9 @@
 </script>
 <template>
   <BookingLayout>
-    <div class="border-black border grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
-      <div class="md:col-span-4 col-span-12">
-        <img src="/storage/images/room.jpg" class="w-full" alt="">
+    <div class="drop-shadow-lg grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
+      <div class="md:col-span-4 col-span-12 relative img-container">
+        <img :src="room.cover_image_url" class="w-full" alt="">
       </div>
       <div class="md:col-span-5 col-span-12 p-4 flex flex-col justify-between">
         <div>
@@ -53,8 +62,16 @@
             {{ room.name }}
           </h2>
           <p class="text-[.75rem]">
-            {{ room.description }}
+            {{ room.short_description }}
           </p>
+          <ul class="text-[.75rem] mt-2">
+            <template 
+              v-for="amenity in room.amenities">
+              <li v-if="isMainAmenity(amenity.name)">
+                {{ amenity.name }}
+              </li>
+            </template>
+          </ul>
         </div>
         <div class="flex mt-6">
           <a href="#" @click="openModal(room)" class="text-black font-bold md:text-[1rem] text-[.85rem] bg-back-gray md:px-4 md:py-3.5 px-2 py-2">
@@ -72,8 +89,31 @@
         </button>
       </div>
     </div>
-    <div class="flex justify-center bg-white rounded p-2">
+    <div class="flex justify-center bg-white rounded drop-shadow p-2">
       <PaginationList :links="props.availableRooms.links" />
     </div>
   </BookingLayout>
 </template>
+<style scoped>
+  .img-container {
+    min-height: 250px;
+  }
+  
+  img {
+    position: absolute;
+    inset: 0px;
+    box-sizing: border-box;
+    padding: 0px;
+    border: none;
+    margin: auto;
+    display: block;
+    width: 0px;
+    height: 0px;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+</style>

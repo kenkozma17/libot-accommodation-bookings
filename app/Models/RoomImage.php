@@ -12,6 +12,7 @@ class RoomImage extends Model
     protected $fillable = [
       'room_id',
       'image_url',
+      'is_primary'
     ];
 
     protected $appends = [

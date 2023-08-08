@@ -59,8 +59,7 @@
   };
 
   const isPrimaryImage = (image) => {
-    console.log(props.room.cover_image === image.image_url);
-    return props.room.cover_image === image.image_url;
+    return image.is_primary;
   };
 
 </script>

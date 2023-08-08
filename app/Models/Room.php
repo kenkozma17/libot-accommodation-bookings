@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Amenity;
 use App\Models\RoomUnavailability;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class Room extends Model
 {
@@ -35,6 +36,10 @@ class Room extends Model
       'rate_formatted',
       'cover_image_url',
       'full_room_name',
+      'size_formatted',
+      'beds_formatted',
+      'primary_image_url',
+      'short_description',
     ];
     protected $with = [
       'unavailableDates',
@@ -43,7 +48,7 @@ class Room extends Model
     ];
 
     public function images(): HasMany {
-      return $this->hasMany(RoomImage::class);
+      return $this->hasMany(RoomImage::class)->orderBy('is_primary', 'desc');
     }
 
     public function amenities(): BelongsToMany {
@@ -58,6 +63,14 @@ class Room extends Model
       return $this->hasMany(RoomUnavailability::class);
     }
 
+    public function getBedsFormattedAttribute() {
+      return ($this->beds === 1) ? $this->beds . ' bed' : $this->beds . ' beds';
+    }
+
+    public function getSizeFormattedAttribute() {
+      return number_format($this->size, 0) . ' sqm';
+    }
+
     public function getFullRoomNameAttribute() {
       return $this->name . ' (' . $this->room_number . ')'; 
     }
@@ -70,7 +83,16 @@ class Room extends Model
       if($this->cover_image) {
         return '/images/rooms/' . $this->cover_image;
       } 
-      return '/images/room/default-image.jpeg';
+      return '/images/rooms/default-image.jpeg';
+    }
+
+    public function getPrimaryImageUrlAttribute() {
+      $primaryImage = $this->images()->where('is_primary', 1)->first();
+      return $primaryImage ? $primaryImage : '/images/room/default-image.jpeg';
+    }
+
+    public function getShortDescriptionAttribute() {
+      return Str::words($this->description, 20, '...');
     }
     
 }

@@ -24,9 +24,10 @@
         "pinia": "^2.1.4",
         "pinia-plugin-persistedstate": "^3.1.0",
         "v-calendar": "^3.0.3",
-        "vue-final-modal": "^3.4.11",
+        "vue-final-modal": "^4.4.5",
         "vue-screen-utils": "^1.0.0-beta.13",
         "vue-tel-input": "^8.1.1",
-        "vue-toast-notification": "^3.1.1"
+        "vue-toast-notification": "^3.1.1",
+        "vue3-carousel": "^0.3.1"
     }
 }
