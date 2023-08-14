@@ -1,9 +1,47 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import SummaryPanel from '@/Components/Booking/SummaryPanel.vue';
+  import RoomDetailsModal from '@/Components/Modals/RoomDetailsModal.vue';
   import { useBookingStore } from '@/stores/booking';
+  import { useForm } from '@inertiajs/vue3';
+  import { reactive } from 'vue';
+  import { useModal } from 'vue-final-modal';
 
   const bookingStore = useBookingStore();
+
+  const form = useForm({
+    reservation: { 
+      dates: bookingStore.dates, 
+      guests: bookingStore.guests,
+      room: bookingStore.room,
+      stayCount: bookingStore.stayCount
+    }
+  });
+
+  const submit = () => {
+    form.post(route('payment.create'), {
+      errorBag: 'createPayment',
+      preserveScroll: true,
+    });
+  };
+
+  const openModal = (room) => {
+    const modal = useModal({
+      component: RoomDetailsModal,
+      attrs: {
+        room,
+        onClose() {
+          modal.close()
+        },
+        onSelectRoom() {
+          selectRoom(room);
+          modal.close();
+        }
+      },
+    });
+    modal.open();
+  };
+
 </script>
 <template>
   <BookingLayout>
@@ -54,30 +92,38 @@
           <div class="border-b border-t border-black text-center py-5 px-2">
             <p class="text-[.875rem] font-bold uppercase tracking-widest">Room Details</p>
           </div>
-          <div class="room-details p-8 grid grid-cols-12 space-x-4">
-            <div class="col-span-4">
-              <img src="/storage/images/room.jpg" class="w-full" alt="">
+          <div class="room-details relative p-8 grid grid-cols-12 space-x-4">
+            <div class="col-span-4 relative">
+              <img :src="bookingStore.room.cover_image_url" class="w-full cover-image" alt="">
             </div>
             <div class="col-span-8 flex flex-col justify-between">
-              <div>
+              <div class="mb-2">
                 <h3 class="text-[1.25rem] font-bold tracking-wider">
                   {{ bookingStore.room.name }}
                 </h3>
                 <p class="text-[.875rem] mt-2">
-                  {{ bookingStore.room.description }}
+                  {{ bookingStore.room.short_description }}
                 </p>
               </div>
               <div class="flex">
-                <a href="#" @click="open" class="text-black font-bold text-[1rem] bg-back-gray px-4 py-3.5">
+                <a @click="openModal(bookingStore.room)" 
+                  class="cursor-pointer text-black font-bold text-[1rem] bg-back-gray px-4 py-3.5">
                   Room Details
                 </a>
               </div>
             </div>
           </div>
+          <form class="pb-4 px-8" @submit.prevent="submit">
+            <div>
+              <button 
+                class="w-full hover:bg-opacity-90 transition-colors ease-in-out p-4 text-white bg-dark-green uppercase tracking-widest font-bold">
+                Continue to Payment
+              </button>
+            </div>
+          </form>
         </div>
         
-        <div class="border border-black bg-white p-5 mt-8">
-          <form action="">
+        <!-- <div class="border border-black bg-white p-5 mt-8">
             <h1 class="md:text-[2.5rem] text-[1.5rem] font-bold">Payment Details</h1>
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div class="input-field flex flex-col">
@@ -121,14 +167,15 @@
               </div>
             </div>
 
-            <div class="mt-4">
-              <button 
-                class="w-full hover:bg-opacity-90 transition-colors ease-in-out p-4 text-white bg-dark-green uppercase tracking-widest font-bold">
-                Complete Reservation
-              </button>
-            </div>
-          </form>
-        </div>
+            <form @submit.prevent="submit">
+              <div class="mt-4">
+                <button 
+                  class="w-full hover:bg-opacity-90 transition-colors ease-in-out p-4 text-white bg-dark-green uppercase tracking-widest font-bold">
+                  Continue to Payment
+                </button>
+              </div>
+            </form>
+        </div> -->
       </div>
       <div class="md:col-span-4 col-span-12 md:order-last order-first">
         <SummaryPanel></SummaryPanel>

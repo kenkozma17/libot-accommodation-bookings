@@ -31,7 +31,7 @@
           <div>
             <p class="text-[.85rem] font-bold">Check In & Out Dates</p>
             <span class="text-[.7rem]">{{ bookingStore.checkInDate }} - {{ bookingStore.checkOutDate }} 
-              ( {{ bookingStore.stayCount }} nights x {{ bookingStore.room.currency }} {{ bookingStore.room.rate_formatted }} )
+              ( {{ bookingStore.stayCount }} nights x PHP {{ bookingStore.room.rate_formatted }} )
             </span>
           </div>
 
@@ -47,7 +47,7 @@
     <div class="bg-white border-black border border-t-0 py-5 px-5 grid grid-cols-2">
       <p class="text-[.875rem] font-bold uppercase tracking-widest">Total</p>
       <p class="text-[.875rem] font-bold uppercase tracking-widest text-right">
-        {{ bookingStore.room.currency }} {{ bookingStore.subTotal.toLocaleString() }}
+        PHP {{ bookingStore.subTotal.toLocaleString() }}
       </p>
     </div>
   </div>

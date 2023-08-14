@@ -25,5 +25,8 @@
           <span>Dashboard</span>
       </Link>
     </div>
+    <div v-else>
+      
+    </div>
   </div>
 </template>

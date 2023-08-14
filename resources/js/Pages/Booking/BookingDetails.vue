@@ -130,7 +130,7 @@
             <div class="mt-4">
               <button 
                 class="w-full hover:bg-opacity-90 transition-colors ease-in-out p-4 text-white bg-dark-green uppercase tracking-widest font-bold">
-                Continue to payment
+                Review Your Stay
               </button>
             </div>
           </form>

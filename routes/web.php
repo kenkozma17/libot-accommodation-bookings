@@ -28,6 +28,8 @@ Route::get('/', function () {
 Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);
 Route::resource('/payment', PaymentController::class);
+Route::post('/create-payment', [PaymentController::class, 'createPayMongoSession'])
+  ->name('payment.create');
 
 
 Route::middleware([

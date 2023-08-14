@@ -26,7 +26,7 @@ export const useBookingStore = defineStore('booking', {
       description: null,
       images: [],
       rate: null,
-      currency: null
+      currency: 'PHP'
     }
    }),
    getters: {

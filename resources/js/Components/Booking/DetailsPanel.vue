@@ -116,7 +116,7 @@
       </div>
     </div>
     <div class="w-full grid grid-cols-4 relative">
-      <div v-if="showGuestsAdjust" class="md:col-start-2 md:col-end-3 absolute w-full">
+      <div v-if="showGuestsAdjust" class="md:col-start-2 md:col-end-3 absolute w-full z-50">
         <div class="mx-2 p-4 bg-white border border-t-0 border-black">
           <div class="input-field">
             <select 
@@ -151,7 +151,7 @@
           </div>
         </div>
       </div>
-      <div v-if="showDatePicker" class="md:col-start-3 w-full col-span-2 absolute">
+      <div v-if="showDatePicker" class="md:col-start-3 w-full col-span-2 absolute z-50">
         <div class="mx-2 bg-white border-black border border-t-0">
           <VDatePicker
             expanded
