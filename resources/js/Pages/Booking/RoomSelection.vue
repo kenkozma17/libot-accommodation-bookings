@@ -90,7 +90,7 @@
           </button>
         </div>
       </div>
-      <div v-if="props.availableRooms.last_page === 1" class="flex justify-center bg-white rounded drop-shadow p-2">
+      <div v-if="props.availableRooms.last_page > 1" class="flex justify-center bg-white rounded drop-shadow p-2">
         <PaginationList :links="props.availableRooms.links" />
       </div>
     </div>

@@ -4,7 +4,7 @@
   import RoomDetailsModal from '@/Components/Modals/RoomDetailsModal.vue';
   import { useBookingStore } from '@/stores/booking';
   import { useForm } from '@inertiajs/vue3';
-  import { reactive } from 'vue';
+  import { onMounted } from 'vue';
   import { useModal } from 'vue-final-modal';
 
   const bookingStore = useBookingStore();
@@ -41,6 +41,10 @@
     });
     modal.open();
   };
+
+  // onMounted(() => {
+  //   if(this)
+  // });
 
 </script>
 <template>

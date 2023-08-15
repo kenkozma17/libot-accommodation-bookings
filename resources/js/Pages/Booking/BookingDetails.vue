@@ -1,7 +1,7 @@
 <script setup>
   import BookingLayout from '@/Layouts/BookingLayout.vue';
   import SummaryPanel from '@/Components/Booking/SummaryPanel.vue';
-  import { reactive, computed } from 'vue';
+  import { reactive, computed, onMounted } from 'vue';
   import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
   import { useToast } from 'vue-toast-notification';
