@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Validator;
 
 class BookingDetailsController extends Controller
 {
@@ -14,15 +15,20 @@ class BookingDetailsController extends Controller
     }
 
     public function store(Request $request) {
-      $validated = $request->validate([
+
+      $validator = Validator::make($request->all(), [
         'contactDetails.firstName' => 'required',
         'contactDetails.lastName' => 'required',
         'contactDetails.email' => 'required',
         'contactDetails.phone' => 'required|min:12',
         'contactDetails.terms' => 'accepted',
-        ],
-        $this->validationMessages()
-      );
+      ], $this->validationMessages());
+
+      if ($validator->fails()) {
+        return redirect('/booking-details')
+          ->withErrors($validator)
+          ->withInput();
+      }
   
       return redirect('/payment');
     }
