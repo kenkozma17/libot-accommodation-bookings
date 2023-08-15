@@ -35,8 +35,8 @@ class PaymentController extends Controller
       $responseBody = $response->json();
       $checkoutUrl = $response['data']['attributes']['checkout_url'];
 
-      $this->createGuest($data['reservation']['guests']['contactDetails']);
-      $this->createPayment();
+      // $this->createGuest($data['reservation']['guests']['contactDetails']);
+      // $this->createPayment();
 
       return Inertia::location($checkoutUrl);
     }
@@ -48,7 +48,7 @@ class PaymentController extends Controller
       'email' => $guest['email'],
       'first_name' => $guest['firstName'],
       'last_name' => $guest['lastName'],
-      'nationality' => $guest['natioanlity'],
+      'nationality' => $guest['nationality'],
       'phone' => $guest['phone'],
     ]);
   }
