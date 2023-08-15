@@ -51,45 +51,51 @@
 </script>
 <template>
   <BookingLayout>
-    <div class="drop-shadow-lg grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
-      <div class="md:col-span-4 col-span-12 relative img-container">
-        <img :src="room.cover_image_url" class="w-full cover-image" alt="">
-      </div>
-      <div class="md:col-span-5 col-span-12 p-4 flex flex-col justify-between">
-        <div>
-          <h2 class="md:text-[1.5rem] text-[1.25rem] font-bold tracking-wide">
-            {{ room.name }}
-          </h2>
-          <p class="text-[.75rem]">
-            {{ room.short_description }}
-          </p>
-          <ul class="text-[.75rem] mt-2">
-            <template 
-              v-for="amenity in room.amenities">
-              <li v-if="isMainAmenity(amenity.name)">
-                {{ amenity.name }}
-              </li>
-            </template>
-          </ul>
+    <div v-if="props.availableRooms.data.length">
+      <h1 class="text-[1.25rem] font-bold tracking-wider mb-2">{{ props.availableRooms.total }} Rooms Found</h1>
+      <div class="drop-shadow-lg grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
+        <div class="md:col-span-4 col-span-12 relative img-container">
+          <img :src="room.cover_image_url" class="w-full cover-image" alt="">
         </div>
-        <div class="flex mt-6">
-          <a href="#" @click="openModal(room)" class="text-black font-bold md:text-[1rem] text-[.85rem] bg-back-gray md:px-4 md:py-3.5 px-2 py-2">
-            Room Details
-          </a>
+        <div class="md:col-span-5 col-span-12 p-4 flex flex-col justify-between">
+          <div>
+            <h2 class="md:text-[1.5rem] text-[1.25rem] font-bold tracking-wide">
+              {{ room.name }}
+            </h2>
+            <p class="text-[.75rem]">
+              {{ room.short_description }}
+            </p>
+            <ul class="text-[.75rem] mt-2">
+              <template 
+                v-for="amenity in room.amenities">
+                <li v-if="isMainAmenity(amenity.name)">
+                  {{ amenity.name }}
+                </li>
+              </template>
+            </ul>
+          </div>
+          <div class="flex mt-6">
+            <a href="#" @click="openModal(room)" class="text-black font-bold md:text-[1rem] text-[.85rem] bg-back-gray md:px-4 md:py-3.5 px-2 py-2">
+              Room Details
+            </a>
+          </div>
+        </div>
+        <div class="md:col-span-3 col-span-12 md:border-l md:border-t-0 border-t border-black flex md:flex-col flex-row md:justify-end justify-between items-end p-4 md:space-y-3">
+          <p class="text-dark-green font-bold md:text-[1.25rem] text-[1rem]">PHP {{ room.rate_formatted }} / night</p>
+          <button
+            @click="selectRoom(room)" 
+            :class="{'bg-dark-green text-white' : isRoomSelected(room.id) }"
+            class="uppercase border-2 border-dark-green font-bold md:text-[1rem] text-[.85rem] md:p-2.5 p-2 md:w-full w-1/2">
+            {{ isRoomSelected(room.id) ? 'Selected' : 'Select' }}
+          </button>
         </div>
       </div>
-      <div class="md:col-span-3 col-span-12 md:border-l md:border-t-0 border-t border-black flex md:flex-col flex-row md:justify-end justify-between items-end p-4 md:space-y-3">
-        <p class="text-dark-green font-bold md:text-[1.25rem] text-[1rem]">PHP {{ room.rate_formatted }} / night</p>
-        <button
-          @click="selectRoom(room)" 
-          :class="{'bg-dark-green text-white' : isRoomSelected(room.id) }"
-          class="uppercase border-2 border-dark-green font-bold md:text-[1rem] text-[.85rem] md:p-2.5 p-2 md:w-full w-1/2">
-          {{ isRoomSelected(room.id) ? 'Selected' : 'Select' }}
-        </button>
+      <div class="flex justify-center bg-white rounded drop-shadow p-2">
+        <PaginationList :links="props.availableRooms.links" />
       </div>
     </div>
-    <div class="flex justify-center bg-white rounded drop-shadow p-2">
-      <PaginationList :links="props.availableRooms.links" />
+    <div class="bg-white p-6" v-else>
+      <h1 class="text-[1.25rem] font-bold tracking-wider">No Rooms Found</h1>
     </div>
   </BookingLayout>
 </template>
