@@ -90,7 +90,7 @@
           </button>
         </div>
       </div>
-      <div class="flex justify-center bg-white rounded drop-shadow p-2">
+      <div v-if="props.availableRooms.links" class="flex justify-center bg-white rounded drop-shadow p-2">
         <PaginationList :links="props.availableRooms.links" />
       </div>
     </div>
