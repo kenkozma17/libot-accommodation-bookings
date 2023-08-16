@@ -32,7 +32,7 @@ Route::resource('/payment', PaymentController::class);
 Route::post('/create-payment', [PaymentController::class, 'createPayMongoSession'])
   ->name('payment.create');
 
-Route::post('payment-success-webhook', [PaymentController::class, 'handlePaymentSuccess'])
+Route::post('payment-success', [PaymentController::class, 'handlePaymentSuccess'])
   ->name('payment.success');
 
 
