@@ -42,6 +42,16 @@ class PaymentController extends Controller
     }
   }
 
+  public function handlePaymentSuccess() {
+    $newGuest = Guest::create([
+      'email' => 'paymongo@test.com',
+      'first_name' => 'ken',
+      'last_name' => 'kozma',
+      'nationality' => 'test',
+      'phone' => 'tester',
+    ]);
+  }
+
   // # 1
   public function createGuest($guest) {
     $newGuest = Guest::create([

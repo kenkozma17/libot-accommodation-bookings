@@ -8,6 +8,7 @@ use App\Http\Controllers\RoomSelectionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\GuestController;
 use App\Http\Controllers\Admin\RoomsController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 
@@ -31,15 +32,16 @@ Route::resource('/payment', PaymentController::class);
 Route::post('/create-payment', [PaymentController::class, 'createPayMongoSession'])
   ->name('payment.create');
 
+Route::post('payment-success-webhook', [PaymentController::class, 'handlePaymentSuccess'])
+  ->name('payment.success');
+
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::resource('/guests', GuestController::class, ['names' => 'guests']);
 

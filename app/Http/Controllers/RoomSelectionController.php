@@ -21,6 +21,7 @@ class RoomSelectionController extends Controller
       $guestCount = (int) $guests['adults'] + (int) $guests['children'];
 
       $rooms = Room::where('max_occupancy', '>=', $guestCount)
+        ->where('is_available', true)
         ->orderBy('rate', 'desc')
         ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
           // Handles range overlap and allows customers to check in on the same day others check out
