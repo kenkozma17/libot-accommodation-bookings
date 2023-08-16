@@ -239,8 +239,8 @@ const updateRoom = () => {
                   <Checkbox
                     :disabled="isReadOnly"
                     :class="{'bg-gray-100': isReadOnly}"
-                     v-model="form.is_available"
-                      name="is_available" />
+                    v-model="form.is_available"
+                    name="is_available" />
                   <span class="ml-2 text-sm text-gray-600">Is Room Public?</span>
               </label>
               <InputError :message="form.errors.is_available" class="mt-2" />
