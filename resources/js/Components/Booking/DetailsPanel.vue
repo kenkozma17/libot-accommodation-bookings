@@ -99,7 +99,7 @@
     document.addEventListener('click', function handleClickOutsideBox(event) {
       const detailsPanel = document.getElementById('details-panel');
 
-      if (!detailsPanel.contains(event.target)) {
+      if (detailsPanel && !detailsPanel.contains(event.target)) {
         showDatePicker.value = false;
         showGuestsAdjust.value = false;
       }

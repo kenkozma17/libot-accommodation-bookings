@@ -50,17 +50,6 @@ class PaymentController extends Controller
     ]);
   }
 
-  // # 1
-  public function createGuest($guest) {
-    $newGuest = Guest::create([
-      'email' => $guest['email'],
-      'first_name' => $guest['firstName'],
-      'last_name' => $guest['lastName'],
-      'nationality' => $guest['nationality'],
-      'phone' => $guest['phone'],
-    ]);
-  }
-
   // # 2
   public function createPayment($payment) {
     $newPayment = Payment::create([
