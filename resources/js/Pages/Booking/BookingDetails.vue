@@ -6,6 +6,7 @@
   import { useBookingStore } from '@/stores/booking';
   import { useToast } from 'vue-toast-notification';
   import countries from '@/countries';
+  import { Head } from '@inertiajs/vue3';
 
   const listOfCountries = reactive(countries);
 
@@ -46,6 +47,7 @@
 </script>
 <template>
   <BookingLayout>
+    <Head title="Booking Details" />
     <div class="grid grid-cols-12 my-5 gap-7">
       <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white p-5">

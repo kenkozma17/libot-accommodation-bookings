@@ -6,6 +6,7 @@
   import { onBeforeMount, reactive, computed } from 'vue';
   import { useToast } from 'vue-toast-notification';
   import { useScreens } from 'vue-screen-utils';
+  import { Head } from '@inertiajs/vue3';
 
   const { mapCurrent } = useScreens({ xs: '0px', sm: '640px', md: '768px', lg: '1024px' });
   const columns = mapCurrent({ lg: 2 }, 1);
@@ -80,6 +81,7 @@
 </script>
 <template>
   <BookingLayout>
+    <Head title="Select Room Dates" />
     <div class="grid grid-cols-12 my-5 gap-7">
       <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white">

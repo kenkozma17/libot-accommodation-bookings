@@ -3,10 +3,16 @@
   import DetailsPanel from '@/Components/Booking/DetailsPanel.vue';
   import { ModalsContainer } from 'vue-final-modal';
   import { Link } from '@inertiajs/vue3';
+  import ApplicationMark from '@/Components/ApplicationMark.vue';
 </script>
 <template>
   <div class="max-w-7xl mx-auto">
     <div class="m-4">
+      <div class="flex justify-center md:my-6 my-3">
+        <Link href="/">
+          <ApplicationMark class="md:w-60 w-40" />
+        </Link>
+      </div>
       <ModalsContainer />
       <Navigator></Navigator>
       <DetailsPanel class="my-4"></DetailsPanel>

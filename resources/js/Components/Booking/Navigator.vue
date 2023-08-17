@@ -58,7 +58,6 @@
           </span>
       </Link>
       <Link 
-        preserve-state
         href="/booking-details"
         :data="bookingStore.room" 
         class="text-black flex flex-col items-center border border-black border-l-0 md:py-5 p-2 hover:bg-gray-200 cursor-pointer">

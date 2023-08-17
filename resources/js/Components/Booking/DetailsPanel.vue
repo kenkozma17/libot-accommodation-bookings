@@ -1,6 +1,6 @@
 <script setup>
-  import { ref, reactive, onBeforeMount, computed } from 'vue';
-  import { router, useForm } from '@inertiajs/vue3';
+  import { ref, reactive, onBeforeMount, computed, onMounted, onUnmounted } from 'vue';
+  import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
   import dayjs from 'dayjs';
   import { useToast } from 'vue-toast-notification';
@@ -94,9 +94,21 @@
       bookingDetails.dates.end = bookingDates.end;
     }
   })
+
+  onMounted(() => {
+    document.addEventListener('click', function handleClickOutsideBox(event) {
+      const detailsPanel = document.getElementById('details-panel');
+
+      if (!detailsPanel.contains(event.target)) {
+        showDatePicker.value = false;
+        showGuestsAdjust.value = false;
+      }
+    });
+  });
+
 </script>
 <template>
-  <div v-if="showPanel">
+  <div v-if="showPanel" id="details-panel">
     <div class="relative border-black border bg-black w-full grid grid-cols-4 gap-[1px]">
       <div class="md:col-span-1 col-span-4 flex flex-col md:py-4 py-3 md:px-6 px-3 cursor-pointer bg-white">
         <span class="font-bold text-[.75rem]">Hotel</span>

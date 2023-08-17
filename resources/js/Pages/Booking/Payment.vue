@@ -4,8 +4,8 @@
   import RoomDetailsModal from '@/Components/Modals/RoomDetailsModal.vue';
   import { useBookingStore } from '@/stores/booking';
   import { useForm } from '@inertiajs/vue3';
-  import { onMounted } from 'vue';
   import { useModal } from 'vue-final-modal';
+  import { Head } from '@inertiajs/vue3';
 
   const bookingStore = useBookingStore();
 
@@ -44,14 +44,12 @@
     modal.open();
   };
 
-  // onMounted(() => {
-  //   if(this)
-  // });
-
 </script>
 <template>
   <BookingLayout>
     <div class="grid grid-cols-12 my-5 gap-7">
+      <Head title="Payment" />
+      
       <div class="md:col-span-8 col-span-12">
         <div class="border border-black bg-white">
           <div class="border-b border-black text-center py-5 px-2">

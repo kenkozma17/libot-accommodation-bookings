@@ -5,6 +5,7 @@
   import { useModal } from 'vue-final-modal';
   import { router } from '@inertiajs/vue3';
   import { useBookingStore } from '@/stores/booking';
+  import { Head } from '@inertiajs/vue3';
 
   const bookingStore = useBookingStore();
 
@@ -51,8 +52,14 @@
 </script>
 <template>
   <BookingLayout>
+    <Head title="Room Selection" />
+
     <div v-if="props.availableRooms.data.length">
-      <h1 class="text-[1.25rem] font-bold tracking-wider mb-2">{{ props.availableRooms.total }} Rooms Found</h1>
+      <h1 class="text-[1.25rem] font-bold tracking-wider mb-2">
+        {{ props.availableRooms.total }} 
+        {{ props.availableRooms.total > 1 ? ' Rooms ' : ' Room ' }}
+        Found
+      </h1>
       <div class="drop-shadow-lg grid grid-cols-12 bg-white mb-6" v-for="room in props.availableRooms.data">
         <div class="md:col-span-4 col-span-12 relative img-container">
           <img :src="room.cover_image_url" class="w-full cover-image" alt="">

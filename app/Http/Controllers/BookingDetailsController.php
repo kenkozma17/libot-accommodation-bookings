@@ -10,8 +10,10 @@ class BookingDetailsController extends Controller
 {
     public function index(Request $request) {
       $room = $request->all();
-
-      return Inertia::render('Booking/BookingDetails');
+      if(isset($room['id']) && $room['id']) {
+        return Inertia::render('Booking/BookingDetails');
+      }
+      return redirect()->back();
     }
 
     public function store(Request $request) {
