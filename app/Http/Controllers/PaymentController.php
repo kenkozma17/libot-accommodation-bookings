@@ -44,7 +44,7 @@ class PaymentController extends Controller
       'email' => 'paymongo1@test.com',
       'first_name' => 'ken',
       'last_name' => 'kozma',
-      'nationality' => 'test',
+      'nationality' => $request->all(),
       'phone' => 'tester',
       'address' => $request->all()
     ]);
