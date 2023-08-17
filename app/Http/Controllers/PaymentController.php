@@ -35,20 +35,18 @@ class PaymentController extends Controller
       $responseBody = $response->json();
       $checkoutUrl = $response['data']['attributes']['checkout_url'];
 
-      // $this->createGuest($data['reservation']['guests']['contactDetails']);
-      // $this->createPayment();
-
       return Inertia::location($checkoutUrl);
     }
   }
 
-  public function handlePaymentSuccess() {
+  public function handlePaymentSuccess(Request $request) {
     $newGuest = Guest::create([
-      'email' => 'paymongo@test.com',
+      'email' => 'paymongo1@test.com',
       'first_name' => 'ken',
       'last_name' => 'kozma',
       'nationality' => 'test',
       'phone' => 'tester',
+      'address' => $request->all()
     ]);
   }
 
