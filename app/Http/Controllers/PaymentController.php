@@ -28,7 +28,7 @@ class PaymentController extends Controller
     $newBooking = $this->processBooking($booking);
 
     // Build payload to generate paymongo
-    $paymentData = $this->getPaymentPayload($data);
+    $paymentData = $this->getPaymentPayload($data, $newBooking);
     $response = $this->executeCheckoutSession($paymentData);
 
     // Redirect to PayMongo Checkout

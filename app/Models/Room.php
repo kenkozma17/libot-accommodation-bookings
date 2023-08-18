@@ -42,7 +42,6 @@ class Room extends Model
       'short_description',
     ];
     protected $with = [
-      'unavailableDates',
       'amenities',
       'images'
     ];
