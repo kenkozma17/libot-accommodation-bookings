@@ -45,7 +45,7 @@ class PaymentController extends Controller
     $response = $request->all();
     Log::info($response);
     $payMongoPayment = $response['data']['attributes']['data'];
-    $bookingConfirmation = $payMongoPayment['attributes']['external_reference_number'];
+    $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
     $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
     // Set Payment to confirmed and add data
