@@ -15,6 +15,21 @@ class Booking extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+      'booking_confirmation',
+      'check_in',
+      'check_out',
+      'rate_per_night',
+      'total_price',
+      'booking_status',
+      'special_requests',
+      'adults_count',
+      'children_count',
+      'guest_id',
+      'room_id',
+      'payment_id',
+    ];
+
     protected $with = [
       'guest',
       'payment',

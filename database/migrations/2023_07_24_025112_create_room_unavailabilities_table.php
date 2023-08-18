@@ -18,6 +18,7 @@ return new class extends Migration
           $table->datetime('start_date');
           $table->datetime('end_date')->nullable();
           $table->boolean('is_range')->default(0);
+          $table->boolean('is_confirmed')->default(0);
           $table->text('notes')->nullable();
           $table->timestamps();
         });

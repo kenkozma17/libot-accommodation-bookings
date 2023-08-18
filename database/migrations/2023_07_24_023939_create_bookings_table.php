@@ -20,8 +20,8 @@ return new class extends Migration
             $table->decimal('total_price', 8, 2);
             $table->string('booking_status');
             $table->text('special_requests')->nullable();
-            $table->unsignedInteger('adults_count');
-            $table->unsignedInteger('children_count');
+            $table->unsignedInteger('adults_count')->default(0);
+            $table->unsignedInteger('children_count')->default(0);
 
             $table->foreignId('guest_id')->constrained();
             $table->foreignId('room_id')->constrained();

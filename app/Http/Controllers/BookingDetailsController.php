@@ -37,23 +37,18 @@ class BookingDetailsController extends Controller
 
     public function createGuest($guest) {
       $existingGuest = Guest::where('email', $guest['email'])->first();
+      $guestArray = [
+        'email' => $guest['email'],
+        'first_name' => $guest['firstName'],
+        'last_name' => $guest['lastName'],
+        'nationality' => $guest['nationality'],
+        'phone' => $guest['phone'],
+      ];
 
       if($existingGuest) {
-        $existingGuest->update([
-          'email' => $guest['email'],
-          'first_name' => $guest['firstName'],
-          'last_name' => $guest['lastName'],
-          'nationality' => $guest['nationality'],
-          'phone' => $guest['phone'],
-        ]);
+        $existingGuest->update($guestArray);
       } else {
-        $newGuest = Guest::create([
-          'email' => $guest['email'],
-          'first_name' => $guest['firstName'],
-          'last_name' => $guest['lastName'],
-          'nationality' => $guest['nationality'],
-          'phone' => $guest['phone'],
-        ]);
+        $newGuest = Guest::create($guestArray);
       }
     }
   

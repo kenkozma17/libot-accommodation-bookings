@@ -11,17 +11,21 @@ use App\Models\Payment;
 use App\Models\Booking;
 use App\Models\RoomUnavailability;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class PaymentController extends Controller
 {
   public function index(Request $request) {
     $data = $request->all();
-
     return Inertia::render('Booking/Payment');
   }
 
   public function createPayMongoSession(Request $request) {
     $data = $request->all();
+
+    $booking = $data['reservation'];
+    $this->createBooking($booking);
+
     $paymentData = $this->getPaymentPayload($data);
 
     $response = Http::accept('application/json')
@@ -40,14 +44,36 @@ class PaymentController extends Controller
   }
 
   public function handlePaymentSuccess(Request $request) {
-    $newGuest = Guest::create([
-      'email' => 'paymongo1@test.com',
-      'first_name' => 'ken',
-      'last_name' => 'kozma',
-      'nationality' => json_encode($request->all()),
-      'phone' => 'tester',
-      'address' => json_encode($request->all())
+    $payload = $request->all();
+    // $this->createPayment();
+  }
+
+  public function createBooking($booking) {
+    $newBooking = Booking::create([
+      'booking_confirmation' => Str::random(15),
+      'check_in' => $booking['dates']['start'],
+      'check_out' => $booking['dates']['end'],
+      'rate_per_night' => $booking['room']['rate'],
+      'total_price' => $booking['room']['rate'] * $booking['stayCount'],
+      'booking_status' => 'PENDING',
+      'special_requests' => $booking['guests']['contactDetails']['requests'],
+      'adults_count' => $booking['guests']['adults'],
+      'children_count' => $booking['guests']['children'],
+      'guest_id' => Guest::where('email', $booking['guests']['contactDetails']['email'])->first()->id,
+      'room_id' => $booking['room']['id'],
+      'payment_id' => null
     ]);
+    
+    // $newUnavailability = RoomUnavailability::create([
+    //   'room_id' => $newBooking->room_id,
+    //   'booking_id' => $newBooking->id,
+    //   'start_date' => $newBooking->check_in,
+    //   'end_date' => $newBooking->check_out,
+    //   'notes' => null,
+    //   'is_range' => true,
+    //   'is_confirmed' => false
+    // ]);
+
   }
 
   // # 2
@@ -67,36 +93,6 @@ class PaymentController extends Controller
       // 'payment_source' => $payment,
       'booking_id' => $payment,
       'guest_id' => $payment,
-    ]);
-  }
-
-  // # 3
-  public function createBooking($booking) {
-    $newBooking = Booking::create([
-      'booking_confirmation' => $booking,
-      'check_in' => $booking,
-      'check_out' => $booking,
-      'rate_per_night' => $booking,
-      'total_price' => $booking,
-      'booking_status' => $booking,
-      'special_requests' => $booking,
-      'adults_count' => $booking,
-      'children_count' => $booking,
-      'guest_id' => $booking,
-      'room_id' => $booking,
-      'payment_id' => $booking
-    ]);
-  }
-
-  // # 4
-  public function createUnavailableDates($booking) {
-    $newUnavailability = DateUnavailability::create([
-      'room_id' => $booking,
-      'booking_id' => $booking,
-      'start_date' => $booking,
-      'end_date' => $booking,
-      'notes' => $booking,
-      'is_range' => $booking,
     ]);
   }
 
