@@ -164,6 +164,10 @@ class PaymentController extends Controller
           ],
           'send_email_receipt' => true,
           'show_line_items' => true,
+          'external_reference_number' => $newBooking->booking_confirmation,
+          'metadata' => [
+            'booking_confirmation' => $newBooking->booking_confirmation
+          ],
           'line_items' => [[
             'currency' => 'PHP',
             'amount' => $totalPriceInCents,
@@ -172,7 +176,6 @@ class PaymentController extends Controller
           ]],
           'payment_method_types' => ['card', 'paymaya', 'gcash'],
           'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name,
-          'reference_number' => $newBooking->booking_confirmation
         ]
       ]
     ]);
