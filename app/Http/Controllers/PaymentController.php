@@ -12,6 +12,7 @@ use App\Models\Booking;
 use App\Models\RoomUnavailability;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -42,6 +43,7 @@ class PaymentController extends Controller
 
   public function handlePayMongoPaymentSuccess(Request $request) {
     $response = $request->all();
+    Log::info($response);
     $payMongoPayment = $response['data']['attributes']['data'];
     $bookingConfirmation = $payMongoPayment['attributes']['external_reference_number'];
     $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
