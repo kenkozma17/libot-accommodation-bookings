@@ -8,10 +8,10 @@ const props = defineProps({
 </script>
 
 <template>
-    <AppLayout :title="`Payment: ${payment.transaction_id}`">
+    <AppLayout :title="`Payment: ${payment.paymongo_payment_id}`">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Payment: {{ payment.transaction_id }}
+                Payment: {{ payment.paymongo_payment_id }}
             </h2>
         </template>
 

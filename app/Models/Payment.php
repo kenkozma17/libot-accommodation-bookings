@@ -16,6 +16,23 @@ class Payment extends Model
       'payment_date_formatted',
     ];
 
+    protected $fillable = [
+      'payment_amount',
+      'payment_status',
+      'payment_date',
+      'payment_method',
+      'paymongo_payment_id',
+      'payer_name',
+      'payer_email',
+      'payment_gateway',
+      'receipt_number',
+      'payment_reference',
+      'currency_code',
+      'payment_source',
+      'booking_id',
+      'guest_id',
+    ];
+
     public function booking() {
       return $this->belongsTo(Booking::class);
     }

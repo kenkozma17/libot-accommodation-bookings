@@ -20,21 +20,18 @@ class PaymentController extends Controller
     return Inertia::render('Booking/Payment');
   }
 
-  public function createPayMongoSession(Request $request) {
+  public function createPayMongoCheckoutSession(Request $request) {
     $data = $request->all();
 
+    // Create pending booking, room unavailability and payment
     $booking = $data['reservation'];
-    $this->createBooking($booking);
+    $newBooking = $this->processBooking($booking);
 
+    // Build payload to generate paymongo
     $paymentData = $this->getPaymentPayload($data);
+    $response = $this->executeCheckoutSession($paymentData);
 
-    $response = Http::accept('application/json')
-      ->withBasicAuth(env('PAYMONGO_SECRET_KEY'), env('PAYMONGO_SECRET_KEY'))
-      ->withBody($paymentData)
-      ->withHeaders([
-        'Content-Type' => 'application/json'
-      ])->post('https://api.paymongo.com/v1/checkout_sessions');
-
+    // Redirect to PayMongo Checkout
     if($response->successful()) {
       $responseBody = $response->json();
       $checkoutUrl = $response['data']['attributes']['checkout_url'];
@@ -43,12 +40,55 @@ class PaymentController extends Controller
     }
   }
 
-  public function handlePaymentSuccess(Request $request) {
-    $payload = $request->all();
-    // $this->createPayment();
+  public function handlePayMongoPaymentSuccess(Request $request) {
+    $response = $request->all();
+    $payment = $response['data']['attributes']['data'];
+    $bookingConfirmation = $payment['attributes']['external_reference_number'];
+
+    // Set Payment to confirmed and add data
+    $payment = Payment::where('booking_id', $booking->id)->first();
+    $payment->update([
+      'payment_method' => $payment['attributes']['source']['type'],
+      'paymongo_payment_id' => $payment['attributes']['id'],
+      'receipt_number' => $payment['attributes']['id'],
+      'payment_source' => $payment['attributes']['source']['type'],
+      'currency_code' => $payment['attributes']['currency'],
+      'payment_status' => 'PAID'
+    ]);
+    
+    // Set booking status to confirmed
+    $booking = Booking::where('confirmation_number', $bookingConfirmation)->first();
+    $booking->booking_status = 'CONFIRMED';
+    $booking->payment_id = $payment->id;
+    $booking->save();
+
+    // Set unavailability to confirmed
+    $unavailability = RoomUnavailability::where('booking_id', $booking->id)->first();
+    $unavailability->is_confirmed = true;
+    $unavailability->save();
+  }
+
+  public function executeCheckoutSession($paymentData) {
+    $response = Http::accept('application/json')
+      ->withBasicAuth(env('PAYMONGO_SECRET_KEY'), env('PAYMONGO_SECRET_KEY'))
+      ->withBody($paymentData)
+      ->withHeaders([
+        'Content-Type' => 'application/json'
+      ])->post('https://api.paymongo.com/v1/checkout_sessions');
+
+    return $response;
+  }
+
+  public function processBooking($booking) {
+    $newBooking = $this->createBooking($booking);
+    $unavailability = $this->createRoomUnavailablility($newBooking);
+    $payment = $this->createPayment($booking, $newBooking->id, $newBooking->guest_id);
+
+    return $newBooking;
   }
 
   public function createBooking($booking) {
+    $guest = Guest::where('email', $booking['guests']['contactDetails']['email'])->first();
     $newBooking = Booking::create([
       'booking_confirmation' => Str::random(15),
       'check_in' => $booking['dates']['start'],
@@ -59,44 +99,52 @@ class PaymentController extends Controller
       'special_requests' => $booking['guests']['contactDetails']['requests'],
       'adults_count' => $booking['guests']['adults'],
       'children_count' => $booking['guests']['children'],
-      'guest_id' => Guest::where('email', $booking['guests']['contactDetails']['email'])->first()->id,
+      'guest_id' => $guest->id,
       'room_id' => $booking['room']['id'],
       'payment_id' => null
     ]);
-    
-    // $newUnavailability = RoomUnavailability::create([
-    //   'room_id' => $newBooking->room_id,
-    //   'booking_id' => $newBooking->id,
-    //   'start_date' => $newBooking->check_in,
-    //   'end_date' => $newBooking->check_out,
-    //   'notes' => null,
-    //   'is_range' => true,
-    //   'is_confirmed' => false
-    // ]);
 
+    return $newBooking;
   }
 
-  // # 2
-  public function createPayment($payment) {
-    $newPayment = Payment::create([
-      'payment_amount' => 3000,
-      'payment_status' => 'PAID',
-      'payment_date' => Carbon::now(),
-      'payment_method' => 'gcash',
-      'transaction_id' => '123',
-      'payer_name' => 'ken kozma',
-      'payer_email' => 'ken@gmail.com',
-      'payment_gateway' => 'paymongo',
-      'receipt_number' => '123',
-      // 'payment_reference' => $payment,
-      // 'currency_code' => $payment,
-      // 'payment_source' => $payment,
-      'booking_id' => $payment,
-      'guest_id' => $payment,
+  public function createRoomUnavailablility($newBooking) {
+    $newUnavailability = RoomUnavailability::create([
+      'room_id' => $newBooking->room_id,
+      'booking_id' => $newBooking->id,
+      'start_date' => $newBooking->check_in,
+      'end_date' => $newBooking->check_out,
+      'notes' => null,
+      'is_range' => true,
+      'is_confirmed' => false
     ]);
+
+    return $newUnavailability;
   }
 
-  public function getPaymentPayload($data) {
+  public function createPayment($booking, $bookingId, $guestId) {
+    $room = Room::find($booking['room']['id']);
+    $guest = $booking['guests'];
+    $newPayment = Payment::create([
+      'payment_amount' => $room->rate * $booking['stayCount'],
+      'payment_status' => 'PENDING',
+      'payment_date' => Carbon::now(),
+      'payment_method' => null,
+      'paymongo_payment_id' => null,
+      'payer_name' => $guest['contactDetails']['firstName'] . ' ' . $guest['contactDetails']['lastName'],
+      'payer_email' => $guest['contactDetails']['email'],
+      'payment_gateway' => 'PAYMONGO',
+      'receipt_number' => null,
+      'payment_reference' => null,
+      'currency_code' => null,
+      'payment_source' => null,
+      'booking_id' => $bookingId,
+      'guest_id' => $guestId,
+    ]);
+
+    return $newPayment;
+  }
+
+  public function getPaymentPayload($data, $newBooking) {
     $guest = $data['reservation']['guests'];
 
     $room = Room::find($data['reservation']['room']['id']);
@@ -121,6 +169,7 @@ class PaymentController extends Controller
           ]],
           'payment_method_types' => ['card', 'paymaya', 'gcash'],
           'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name,
+          'reference_number' => $newBooking->confirmation_number
         ]
       ]
     ]);

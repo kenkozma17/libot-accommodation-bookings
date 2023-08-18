@@ -22,9 +22,10 @@
     form.post(route('payment.create'), {
       errorBag: 'createPayment',
       preserveScroll: true,
-    }).then(() => {
-      bookingStore.$reset();
-    });
+      onSuccess: () => {
+        // bookingStore.$reset();
+      },
+    })
   };
 
   const openModal = (room) => {

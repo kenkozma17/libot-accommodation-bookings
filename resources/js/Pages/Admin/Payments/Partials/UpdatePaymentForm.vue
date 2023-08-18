@@ -17,7 +17,7 @@ const isReadOnly = ref(true);
 const form = useForm({
     id: props.payment.id,
     payment_amount: props.payment.payment_amount,
-    transaction_id: props.payment.transaction_id,
+    paymongo_payment_id: props.payment.paymongo_payment_id,
     payer_name: props.payment.payer_name,
     payer_email: props.payment.payer_email,
     payment_method: props.payment.payment_method,
@@ -47,17 +47,17 @@ const form = useForm({
 
       <template #form>
         <div class="col-span-6 sm:col-span-4">
-              <InputLabel for="transaction_id" value="Transaction ID" />
+              <InputLabel for="paymongo_payment_id" value="Transaction ID" />
               <TextInput
                   :disabled="isReadOnly"
-                  id="transaction_id"
-                  v-model="form.transaction_id"
+                  id="paymongo_payment_id"
+                  v-model="form.paymongo_payment_id"
                   type="text"
                   class="block w-full mt-1"
                   :class="{'bg-gray-100': isReadOnly}"
                   autofocus
               />
-              <InputError :message="form.errors.transaction_id" class="mt-2" />
+              <InputError :message="form.errors.paymongo_payment_id" class="mt-2" />
           </div>
           <div class="col-span-6 sm:col-span-4">
               <InputLabel for="payment_amount" value="Payment Amount (PHP)" />

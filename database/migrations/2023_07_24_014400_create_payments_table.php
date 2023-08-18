@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('payment_status');
             $table->datetime('payment_date');
             $table->string('payment_method');
-            $table->string('transaction_id')->nullable();
+            $table->string('paymongo_payment_id')->nullable();
             $table->string('payer_name');
             $table->string('payer_email');
             $table->string('card_last_four_digits')->nullable();

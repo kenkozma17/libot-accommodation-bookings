@@ -59,7 +59,7 @@
                     <tr v-for="payment in payments.data">
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
                         <Link :href="route('payments.show', payment.id)"> 
-                          {{ payment.transaction_id }}
+                          {{ payment.paymongo_payment_id }}
                         </Link>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm">

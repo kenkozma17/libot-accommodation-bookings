@@ -29,10 +29,10 @@ Route::get('/', function () {
 Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);
 Route::resource('/payment', PaymentController::class);
-Route::post('/create-payment', [PaymentController::class, 'createPayMongoSession'])
+Route::post('/create-payment', [PaymentController::class, 'createPayMongoCheckoutSession'])
   ->name('payment.create');
 
-Route::post('payment-success-test', [PaymentController::class, 'handlePaymentSuccess'])
+Route::post('payment-success-test', [PaymentController::class, 'handlePayMongoPaymentSuccess'])
   ->name('payment.success');
 
 

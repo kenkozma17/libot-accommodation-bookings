@@ -38,7 +38,7 @@ const props = defineProps({
                   </div>
 
                   <div class="mt-2 text-xs text-gray-600 text-left">
-                      #{{ payment.transaction_id }}
+                      #{{ payment.paymongo_payment_id }}
                   </div>
               </div>
             </Link>
