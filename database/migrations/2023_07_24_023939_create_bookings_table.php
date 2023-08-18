@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->foreignId('guest_id')->constrained();
             $table->foreignId('room_id')->constrained();
-            // $table->foreignId('payment_id')->constrained();
+            $table->foreignId('payment_id')->nullable()->constrained();
 
             $table->timestamps();
         });

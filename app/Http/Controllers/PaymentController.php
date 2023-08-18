@@ -42,22 +42,23 @@ class PaymentController extends Controller
 
   public function handlePayMongoPaymentSuccess(Request $request) {
     $response = $request->all();
-    $payment = $response['data']['attributes']['data'];
-    $bookingConfirmation = $payment['attributes']['external_reference_number'];
+    $payMongoPayment = $response['data']['attributes']['data'];
+    $bookingConfirmation = $payMongoPayment['attributes']['external_reference_number'];
+    $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
     // Set Payment to confirmed and add data
     $payment = Payment::where('booking_id', $booking->id)->first();
     $payment->update([
-      'payment_method' => $payment['attributes']['source']['type'],
-      'paymongo_payment_id' => $payment['attributes']['id'],
-      'receipt_number' => $payment['attributes']['id'],
-      'payment_source' => $payment['attributes']['source']['type'],
-      'currency_code' => $payment['attributes']['currency'],
+      'payment_method' => $payMongoPayment['attributes']['source']['type'],
+      'paymongo_payment_id' => $payMongoPayment['id'],
+      'receipt_number' => $payMongoPayment['id'],
+      'payment_source' => $payMongoPayment['attributes']['source']['type'],
+      'currency_code' => $payMongoPayment['attributes']['currency'],
       'payment_status' => 'PAID'
     ]);
     
     // Set booking status to confirmed
-    $booking = Booking::where('confirmation_number', $bookingConfirmation)->first();
+    $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
     $booking->booking_status = 'CONFIRMED';
     $booking->payment_id = $payment->id;
     $booking->save();
@@ -169,7 +170,7 @@ class PaymentController extends Controller
           ]],
           'payment_method_types' => ['card', 'paymaya', 'gcash'],
           'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name,
-          'reference_number' => $newBooking->confirmation_number
+          'reference_number' => $newBooking->booking_confirmation
         ]
       ]
     ]);
