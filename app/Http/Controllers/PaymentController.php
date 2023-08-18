@@ -93,7 +93,7 @@ class PaymentController extends Controller
   public function createBooking($booking) {
     $guest = Guest::where('email', $booking['guests']['contactDetails']['email'])->first();
     $newBooking = Booking::create([
-      'booking_confirmation' => Str::random(15),
+      'booking_confirmation' => Str::random(7),
       'check_in' => $booking['dates']['start'],
       'check_out' => $booking['dates']['end'],
       'rate_per_night' => $booking['room']['rate'],

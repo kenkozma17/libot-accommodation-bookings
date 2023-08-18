@@ -30,6 +30,7 @@ class BookingController extends Controller
             ->orWhere('email', 'LIKE', '%' . $s . '%');
         }
       })
+      ->where('booking_status', 'CONFIRMED')
       ->orderBy('check_in', 'asc')
       ->paginate(config('pagination.default'))
       ->withQueryString();

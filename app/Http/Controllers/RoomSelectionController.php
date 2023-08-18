@@ -24,6 +24,8 @@ class RoomSelectionController extends Controller
         ->where('is_available', true)
         ->orderBy('rate', 'desc')
         ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
+          $query->where('is_confirmed', true);
+
           // Handles range overlap and allows customers to check in on the same day others check out
           $query->where('start_date', '<', $end)
             ->where('end_date', '>', $start);

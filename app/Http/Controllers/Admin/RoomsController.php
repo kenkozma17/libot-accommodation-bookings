@@ -87,7 +87,7 @@ class RoomsController extends Controller
      */
     public function show(string $id)
     {
-      $room = Room::where('id', $id)->with(['bookings'])->first();
+      $room = Room::where('id', $id)->with(['bookings', 'unavailableDates'])->first();
       $amenities = Amenity::all();
       return Inertia::render('Admin/Rooms/Show', [
         'room' => $room,
@@ -139,6 +139,7 @@ class RoomsController extends Controller
           $newUnavailability->start_date = $date;
           $newUnavailability->notes = $request->notes;
           $newUnavailability->is_range = 0;
+          $newUnavailability->is_confirmed = 1;
           $newUnavailability->room_id = $id;
           $newUnavailability->save();
         }

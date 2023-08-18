@@ -59,7 +59,7 @@ class Room extends Model
     }
 
     public function unavailableDates(): HasMany {
-      return $this->hasMany(RoomUnavailability::class);
+      return $this->hasMany(RoomUnavailability::class)->where('is_confirmed', true);
     }
 
     public function getBedsFormattedAttribute() {

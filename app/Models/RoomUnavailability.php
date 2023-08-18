@@ -15,6 +15,10 @@ class RoomUnavailability extends Model
       'booking'
     ];
 
+    protected $casts = [
+      'is_confirmed' => 'boolean'
+    ];
+
     protected $fillable = [
       'room_id',
       'booking_id',

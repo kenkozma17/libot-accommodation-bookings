@@ -21,7 +21,9 @@
       highlight: date.is_range ? 'green' : 'red',
       dot: 'yellow',
       dates: date.is_range ? {start: new Date(date.start_date), end: new Date(date.end_date)} : [new Date(date.start_date)],
-      popover: true,
+      popover: {
+        visibility: 'hover'
+      },
       customData: date,
       hideIndicator: false,
     })),

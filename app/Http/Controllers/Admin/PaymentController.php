@@ -23,7 +23,9 @@ class PaymentController extends Controller
               ->get();
           }
         }]
-      ])->orderBy('created_at', 'asc')
+      ])
+        ->where('payment_status', 'CONFIRMED')
+        ->orderBy('created_at', 'asc')
         ->paginate(config('pagination.default'))
         ->withQueryString();;
 
@@ -54,7 +56,8 @@ class PaymentController extends Controller
      */
     public function show(string $id)
     {
-      $payment = Payment::where('id', $id)->with(['booking'])->first();
+      $payment = Payment::where('id', $id)
+        ->with(['booking'])->first();
       return Inertia::render('Admin/Payments/Show', [
         'payment' => $payment,
       ]);
