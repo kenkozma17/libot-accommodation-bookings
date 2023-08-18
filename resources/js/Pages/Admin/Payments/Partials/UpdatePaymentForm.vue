@@ -47,7 +47,7 @@ const form = useForm({
 
       <template #form>
         <div class="col-span-6 sm:col-span-4">
-              <InputLabel for="paymongo_payment_id" value="Transaction ID" />
+              <InputLabel for="paymongo_payment_id" value="Payment ID" />
               <TextInput
                   :disabled="isReadOnly"
                   id="paymongo_payment_id"
