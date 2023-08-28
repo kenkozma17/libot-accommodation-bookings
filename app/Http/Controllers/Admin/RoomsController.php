@@ -144,6 +144,9 @@ class RoomsController extends Controller
           $newUnavailability->save();
         }
 
+        session()->flash('flash.banner', 'Date Blocked Successfully!');
+        session()->flash('flash.bannerStyle', 'success');
+
         return to_route('rooms.show', $id);
 
       } catch(Throwable $e) {
@@ -154,6 +157,9 @@ class RoomsController extends Controller
     public function unblockDate(Request $request, string $id) {
       try {
         $unavailability = RoomUnavailability::destroy($id);
+
+        session()->flash('flash.banner', 'Date Unblocked Successfully!');
+        session()->flash('flash.bannerStyle', 'success');
       } catch(Throwable $e) {
 
       }

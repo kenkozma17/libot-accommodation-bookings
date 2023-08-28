@@ -48,13 +48,17 @@ class PaymentController extends Controller
     $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
     $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
+    $paymentMethod = isset($payMongoPayment['attributes']['source']) ? 
+      $payMongoPayment['attributes']['source']['type'] :
+      $payMongoPayment['attributes']['payment_method_used'];
+
     // Set Payment to confirmed and add data
     $payment = Payment::where('booking_id', $booking->id)->first();
     $payment->update([
-      'payment_method' => $payMongoPayment['attributes']['source']['type'],
+      'payment_method' => $paymentMethod,
       'paymongo_payment_id' => $payMongoPayment['id'],
       'receipt_number' => $payMongoPayment['id'],
-      'payment_source' => $payMongoPayment['attributes']['source']['type'],
+      'payment_source' => $paymentMethod,
       'currency_code' => $payMongoPayment['attributes']['currency'],
       'payment_status' => 'PAID'
     ]);
