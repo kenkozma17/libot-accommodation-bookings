@@ -23,7 +23,7 @@
       errorBag: 'createPayment',
       preserveScroll: true,
       onSuccess: () => {
-        bookingStore.$reset();
+        bookingStore.resetBooking();
       },
     })
   };

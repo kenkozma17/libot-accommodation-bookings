@@ -79,6 +79,17 @@ export const useBookingStore = defineStore('booking', {
     },
     setContactDetails(contact) {
       this.guests.contactDetails = contact;
+    },
+    resetBooking() {
+      this.dates.start = this.dates.end = null;
+      this.room = {
+        id: null,
+        name: null,
+        description: null,
+        images: [],
+        rate: null,
+        currency: 'PHP'
+      };
     }
    },
    persist: true,
