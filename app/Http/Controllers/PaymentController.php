@@ -73,6 +73,8 @@ class PaymentController extends Controller
     $unavailability = RoomUnavailability::where('booking_id', $booking->id)->first();
     $unavailability->is_confirmed = true;
     $unavailability->save();
+
+    return Inertia::render('Booking/BookingReset');
   }
 
   public function executeCheckoutSession($paymentData) {
