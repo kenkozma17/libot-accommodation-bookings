@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-          $table->foreignId('booking_id')->constrained();
-          $table->foreignId('guest_id')->constrained();
+          $table->foreignId('booking_id')->nullable()->constrained()->cascadeOnDelete();
+          $table->foreignId('guest_id')->constrained()->cascadeOnDelete();
         });
     }
 

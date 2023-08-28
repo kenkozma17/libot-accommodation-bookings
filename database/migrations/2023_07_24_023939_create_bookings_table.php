@@ -23,9 +23,9 @@ return new class extends Migration
             $table->unsignedInteger('adults_count')->default(0);
             $table->unsignedInteger('children_count')->default(0);
 
-            $table->foreignId('guest_id')->constrained();
+            $table->foreignId('guest_id')->constrained()->cascadeOnDelete();
             $table->foreignId('room_id')->constrained();
-            $table->foreignId('payment_id')->nullable()->constrained();
+            $table->foreignId('payment_id')->nullable()->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

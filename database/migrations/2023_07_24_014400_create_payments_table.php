@@ -31,8 +31,6 @@ return new class extends Migration
             $table->string('currency_code')->nullable(); 
             $table->string('payment_source')->nullable();
 
-            // $table->foreignId('booking_id')->constrained();
-
             $table->timestamps();
         });
     }

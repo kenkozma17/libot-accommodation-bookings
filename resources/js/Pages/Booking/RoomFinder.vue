@@ -77,6 +77,8 @@
     if(bookingGuests.adults && bookingGuests.children) {
       bookingDetails.guests = bookingGuests;
     }
+
+    bookingStore.resetBooking();
   })
 </script>
 <template>
