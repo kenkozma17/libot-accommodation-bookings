@@ -23,9 +23,7 @@
       errorBag: 'createPayment',
       preserveScroll: true,
     });
-    setTimeout(() => {
-      bookingStore.resetBooking();
-    }, 1000);
+    bookingStore.resetBooking();
   };
 
   const openModal = (room) => {
