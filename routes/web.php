@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\BookingDetailsController;
+use App\Http\Controllers\RoomFinderController;
 use App\Http\Controllers\RoomSelectionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\GuestController;
@@ -23,9 +24,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Booking/RoomFinder');
-});
+Route::get('/', [RoomFinderController::class, 'index']);
 Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);
 Route::resource('/payment', PaymentController::class);

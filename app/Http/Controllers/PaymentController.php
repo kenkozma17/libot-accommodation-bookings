@@ -13,6 +13,7 @@ use App\Models\RoomUnavailability;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -44,37 +45,40 @@ class PaymentController extends Controller
   public function handlePayMongoPaymentSuccess(Request $request) {
     $response = $request->all();
     Log::info($response);
-    $payMongoPayment = $response['data']['attributes']['data'];
-    $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
-    $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
+    if($response['data']['attributes']['type'] === 'checkout_session.payment.paid') {
+      $payMongoPayment = $response['data']['attributes']['data'];
+      $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
+      $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
-    $paymentMethod = isset($payMongoPayment['attributes']['source']) ? 
-      $payMongoPayment['attributes']['source']['type'] :
-      $payMongoPayment['attributes']['payment_method_used'];
+      $paymentMethod = isset($payMongoPayment['attributes']['source']) ? 
+        $payMongoPayment['attributes']['source']['type'] :
+        $payMongoPayment['attributes']['payment_method_used'];
 
-    // Set Payment to confirmed and add data
-    $payment = Payment::where('booking_id', $booking->id)->first();
-    $payment->update([
-      'payment_method' => $paymentMethod,
-      'paymongo_payment_id' => $payMongoPayment['id'],
-      'receipt_number' => $payMongoPayment['id'],
-      'payment_source' => $paymentMethod,
-      'currency_code' => 'PHP',
-      'payment_status' => 'PAID'
-    ]);
-    
-    // Set booking status to confirmed
-    $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
-    $booking->booking_status = 'CONFIRMED';
-    $booking->payment_id = $payment->id;
-    $booking->save();
+      // Set Payment to confirmed and add data
+      $payment = Payment::where('booking_id', $booking->id)->first();
+      $payment->update([
+        'payment_method' => $paymentMethod,
+        'paymongo_payment_id' => $payMongoPayment['id'],
+        'receipt_number' => $payMongoPayment['id'],
+        'payment_source' => $paymentMethod,
+        'currency_code' => 'PHP',
+        'payment_status' => 'PAID'
+      ]);
+      
+      // Set booking status to confirmed
+      $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
+      $booking->booking_status = 'CONFIRMED';
+      $booking->payment_id = $payment->id;
+      $booking->save();
 
-    // Set unavailability to confirmed
-    $unavailability = RoomUnavailability::where('booking_id', $booking->id)->first();
-    $unavailability->is_confirmed = true;
-    $unavailability->save();
+      // Set unavailability to confirmed
+      $unavailability = RoomUnavailability::where('booking_id', $booking->id)->first();
+      $unavailability->is_confirmed = true;
+      $unavailability->save();
 
-    return Inertia::render('Booking/BookingReset');
+      // Send confirmation email
+      $this->sendConfirmationEmail($booking->guest->email);
+    }
   }
 
   public function executeCheckoutSession($paymentData) {
@@ -151,6 +155,18 @@ class PaymentController extends Controller
     ]);
 
     return $newPayment;
+  }
+
+  public function sendConfirmationEmail(String $guestEmail) {
+    \Mail::to($guestEmail)
+      ->send(new \App\Mail\BookingConfirmationMail());
+  }
+
+  public function generateConfirmationPdf() {
+    $pdf = Pdf::loadView('confirmation');
+
+    $file = $pdf->render()->output();
+    Storage::put('public/confirmations/confirmation1.pdf', $file);
   }
 
   public function getPaymentPayload($data, $newBooking) {

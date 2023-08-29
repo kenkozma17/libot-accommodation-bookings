@@ -18,37 +18,45 @@ class BookingDetailsController extends Controller
     }
 
     public function store(Request $request) {
-      $data = $request->all();
-      $guest = $data['contactDetails'];
-      $validated = $request->validate([
-        'contactDetails.firstName' => 'required',
-        'contactDetails.lastName' => 'required',
-        'contactDetails.email' => 'required',
-        'contactDetails.phone' => 'required|min:12',
-        'contactDetails.terms' => 'accepted',
-        ],
-        $this->validationMessages()
-      );
+      try {
+        $data = $request->all();
+        $guest = $data['contactDetails'];
+        $validated = $request->validate([
+          'contactDetails.firstName' => 'required',
+          'contactDetails.lastName' => 'required',
+          'contactDetails.email' => 'required',
+          'contactDetails.phone' => 'required|min:12',
+          'contactDetails.terms' => 'accepted',
+          ],
+          $this->validationMessages()
+        );
 
-      $this->createGuest($guest);
-  
-      return redirect('/payment');
+        $this->createGuest($guest);
+    
+        return redirect('/payment');
+      } catch(Throwable $e) {
+        report(e);
+      }
     }
 
     public function createGuest($guest) {
-      $existingGuest = Guest::where('email', $guest['email'])->first();
-      $guestArray = [
-        'email' => $guest['email'],
-        'first_name' => $guest['firstName'],
-        'last_name' => $guest['lastName'],
-        'nationality' => $guest['nationality'],
-        'phone' => $guest['phone'],
-      ];
+      try {
+        $existingGuest = Guest::where('email', $guest['email'])->first();
+        $guestArray = [
+          'email' => $guest['email'],
+          'first_name' => $guest['firstName'],
+          'last_name' => $guest['lastName'],
+          'nationality' => $guest['nationality'],
+          'phone' => $guest['phone'],
+        ];
 
-      if($existingGuest) {
-        $existingGuest->update($guestArray);
-      } else {
-        $newGuest = Guest::create($guestArray);
+        if($existingGuest) {
+          $existingGuest->update($guestArray);
+        } else {
+          $newGuest = Guest::create($guestArray);
+        }
+      } catch(Throwable $e) {
+        report($e);
       }
     }
   
