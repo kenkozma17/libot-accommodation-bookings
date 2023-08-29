@@ -84,7 +84,7 @@ class PaymentController extends Controller
       $this->generateConfirmationPdf($booking);
 
       // Send confirmation email
-      $this->sendConfirmationEmail($booking->guest->email);
+      $this->sendConfirmationEmail($booking);
     }
   }
 
