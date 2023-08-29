@@ -13,10 +13,12 @@
     <title>Invoice Example</title>
   </head>
   <body>
-    <h1 class="text-center text-2xl uppercase font-bold">Booking Confirmation: 00001</h1>
+    <h1 class="text-center text-2xl font-bold">
+      <span class="uppercase">Booking Confirmation:</span> {{ $booking->booking_confirmation }}
+    </h1>
     <div class="mt-4">
-      <p class="mb-6">January 2, 2023</p>
-      <p class="mb-2">Dear Valued Guest,</p>
+      <p class="mb-6">{{ $booking->created_at_formatted }}</p>
+      <p class="mb-2">Dear {{ $booking->guest->full_name }},</p>
       <p>
         Thank you for your reservation at Catanduanes Midtown Inn. Please find your reservation details as follows:
       </p>
@@ -29,29 +31,29 @@
         <th>Check Out</th>
       </tr>
       <tr>
-        <td>Ken Kozma</td>
-        <td>Exclusive Deluxe</td>
-        <td>January 1, 2023</td>
-        <td>January 3, 2023</td>
+        <td>{{ $booking->guest->full_name }}</td>
+        <td>{{ $booking->room->name }}</td>
+        <td>{{ $booking->check_in_formatted }}</td>
+        <td>{{ $booking->check_out_formatted }}</td>
       </tr>
     </table>
 
     <div class="mt-4">
       <h2 class="font-bold">Payment Details</h2>
       <ul>
-        <li>Payment Confirmation: #123</li>
-        <li>Payment Amount: P2500</li>
-        <li>Payment Method: Cash</li>
-        <li>Payment Date: January 2, 2023</li>
+        <li>Payment Confirmation: {{ $booking->payment->paymongo_payment_id }}</li>
+        <li>Payment Amount: {{ $booking->payment->payment_amount_formatted }}</li>
+        <li>Payment Method: {{ $booking->payment->payment_method }}</li>
+        <li>Payment Date: {{ $booking->payment->payment_date }}</li>
       </ul>
     </div>
 
     <div class="mt-4">
       <h2 class="font-bold">Guest Details</h2>
       <ul>
-        <li>No. of Guests: 5</li>
-        <li>Email: kenkozma17@gmail.com</li>
-        <li>Phone Number: +63 969 042 6656</li>
+        <li>No. of Guests: {{ $booking->adult_count + $booking->children_count }}</li>
+        <li>Email: {{ $booking->guest->email }}</li>
+        <li>Phone Number: {{ $booking->guest->phone }}</li>
       </ul>
     </div>
 

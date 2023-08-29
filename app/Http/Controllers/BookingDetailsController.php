@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Guest;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Booking;
+use Illuminate\Support\Facades\Storage;
+
 
 class BookingDetailsController extends Controller
 {

@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Attachment;
+use App\Models\Booking;
 
 
 class BookingConfirmationMail extends Mailable
@@ -18,9 +19,9 @@ class BookingConfirmationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(Booking $booking)
     {
-        //
+        $this->booking = $booking;
     }
 
     /**
@@ -51,7 +52,7 @@ class BookingConfirmationMail extends Mailable
     public function attachments(): array
     {
         return [
-          Attachment::fromPath('images/logo/logo.png'),
+          Attachment::fromPath('storage/confirmations/' . $this->booking->booking_confirmation . '.pdf'),
         ];
     }
 }

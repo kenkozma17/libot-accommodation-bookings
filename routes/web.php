@@ -23,7 +23,6 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 Route::get('/', [RoomFinderController::class, 'index']);
 Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);

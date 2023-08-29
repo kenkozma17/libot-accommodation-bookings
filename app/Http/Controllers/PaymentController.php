@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
+use App\Mail\BookingConfirmationMail;
 
 class PaymentController extends Controller
 {
@@ -66,7 +68,9 @@ class PaymentController extends Controller
       ]);
       
       // Set booking status to confirmed
-      $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
+      $booking = Booking::where('booking_confirmation', $bookingConfirmation)
+        ->with(['guest', 'payment'])
+        ->first();
       $booking->booking_status = 'CONFIRMED';
       $booking->payment_id = $payment->id;
       $booking->save();
@@ -75,6 +79,9 @@ class PaymentController extends Controller
       $unavailability = RoomUnavailability::where('booking_id', $booking->id)->first();
       $unavailability->is_confirmed = true;
       $unavailability->save();
+
+      // Generate Booking Confirmation
+      $this->generateConfirmationPdf($booking);
 
       // Send confirmation email
       $this->sendConfirmationEmail($booking->guest->email);
@@ -157,16 +164,14 @@ class PaymentController extends Controller
     return $newPayment;
   }
 
-  public function sendConfirmationEmail(String $guestEmail) {
-    \Mail::to($guestEmail)
-      ->send(new \App\Mail\BookingConfirmationMail());
+  public function sendConfirmationEmail(Booking $booking) {
+    \Mail::to($booking->guest->email)
+      ->send(new BookingConfirmationMail($booking));
   }
 
-  public function generateConfirmationPdf() {
-    $pdf = Pdf::loadView('confirmation');
-
-    $file = $pdf->render()->output();
-    Storage::put('public/confirmations/confirmation1.pdf', $file);
+  public function generateConfirmationPdf(Booking $booking) {
+    $file = Pdf::loadView('confirmation', ['booking' => $booking]);
+    Storage::put('public/confirmations/' . $booking->booking_confirmation . '.pdf', $file->output());
   }
 
   public function getPaymentPayload($data, $newBooking) {
