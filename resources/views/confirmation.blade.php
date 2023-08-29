@@ -51,7 +51,7 @@
     <div class="mt-4">
       <h2 class="font-bold">Guest Details</h2>
       <ul>
-        <li>No. of Guests: {{ $booking->adult_count + $booking->children_count }}</li>
+        <li>No. of Guests: {{ $booking->adults_count + $booking->children_count }}</li>
         <li>Email: {{ $booking->guest->email }}</li>
         <li>Phone Number: {{ $booking->guest->phone }}</li>
       </ul>
