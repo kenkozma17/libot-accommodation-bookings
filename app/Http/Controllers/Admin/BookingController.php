@@ -81,7 +81,14 @@ class BookingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+      $booking = Booking::find($id);
+      $booking->arrival_status = $request->arrival_status;
+      $booking->save();
+
+      session()->flash('flash.banner', 'Booking Updated Successfully!');
+      session()->flash('flash.bannerStyle', 'success');
+
+      return redirect()->route('bookings.show', $id);
     }
 
     /**

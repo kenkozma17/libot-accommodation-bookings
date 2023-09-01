@@ -3,6 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import UpdateBookingForm from '@/Pages/Admin/Bookings/Partials/UpdateBookingForm.vue';
 import UpdateGuestForm from '@/Pages/Admin/Guests/Partials/UpdateGuestForm.vue';
 import UpdatePaymentForm from '@/Pages/Admin/Payments/Partials/UpdatePaymentForm.vue';
+import BookingActionsForm from '@/Pages/Admin/Bookings/Partials/BookingActionsForm.vue';
 import SectionBorder from '@/Components/SectionBorder.vue';
 
 const props = defineProps({
@@ -20,6 +21,10 @@ const props = defineProps({
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+              <BookingActionsForm :booking="booking" />
+
+              <SectionBorder />
+
               <UpdateBookingForm :booking="booking" />
 
               <SectionBorder />
