@@ -81,7 +81,7 @@ class PaymentController extends Controller
       $unavailability->save();
 
       // Generate Booking Confirmation
-      $this->generateConfirmationPdf($booking);
+      $this->generateConfirmationPdf($booking->id);
 
       // Send confirmation email
       $this->sendConfirmationEmail($booking);
@@ -169,7 +169,9 @@ class PaymentController extends Controller
       ->send(new BookingConfirmationMail($booking));
   }
 
-  public function generateConfirmationPdf(Booking $booking) {
+  public function generateConfirmationPdf($bookingId) {
+    $booking = Booking::where("id", $bookingId)->with(['guest', 'payment'])
+      ->first();
     $file = Pdf::loadView('confirmation', ['booking' => $booking]);
     Storage::put('public/confirmations/' . $booking->booking_confirmation . '.pdf', $file->output());
   }
