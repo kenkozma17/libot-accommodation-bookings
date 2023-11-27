@@ -30,7 +30,7 @@ Route::resource('/payment', PaymentController::class);
 Route::post('/create-payment', [PaymentController::class, 'createPayMongoCheckoutSession'])
   ->name('payment.create');
 
-Route::post(env('PAYMONGO_PAYMENT_SUCCESS_URL'), [PaymentController::class, 'handlePayMongoPaymentSuccess'])
+Route::post('booking-payment-success-test', [PaymentController::class, 'handlePayMongoPaymentSuccess'])
   ->name('payment.success');
 
 
