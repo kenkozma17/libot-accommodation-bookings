@@ -11,6 +11,8 @@ use App\Models\RoomImage;
 use App\Models\RoomUnavailability;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class RoomsController extends Controller
 {
@@ -184,7 +186,9 @@ class RoomsController extends Controller
     }
 
     public function deleteImage(string $imageId) {
-      $roomImage = RoomImage::destroy($imageId);
+      $roomImage = RoomImage::find($imageId);
+      File::delete(public_path('/images/rooms/' . $roomImage->image_url));
+      $roomImage->destroy($imageId);
     }
 
     public function setPrimaryImage(string $imageId) {
