@@ -2,7 +2,7 @@
 import BookingLayout from "@/Layouts/BookingLayout.vue";
 import SummaryPanel from "@/Components/Booking/SummaryPanel.vue";
 import RoomDetailsModal from "@/Components/Modals/RoomDetailsModal.vue";
-import { useBookingStore } from "@/stores/booking";
+import { useBookingStore } from "@/Stores/booking";
 import { useForm } from "@inertiajs/vue3";
 import { useModal } from "vue-final-modal";
 import { Head } from "@inertiajs/vue3";

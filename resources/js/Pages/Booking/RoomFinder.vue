@@ -2,7 +2,7 @@
 import BookingLayout from "@/Layouts/BookingLayout.vue";
 import dayjs from "dayjs";
 import { router } from "@inertiajs/vue3";
-import { useBookingStore } from "@/stores/booking";
+import { useBookingStore } from "@/Stores/booking";
 import { onBeforeMount, reactive, computed, onMounted } from "vue";
 import { useToast } from "vue-toast-notification";
 import { useScreens } from "vue-screen-utils";

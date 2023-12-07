@@ -1,10 +1,10 @@
 <script setup>
-  import { onMounted } from 'vue';
-  import { useBookingStore } from '@/stores/booking';
+import { onMounted } from "vue";
+import { useBookingStore } from "@/Stores/booking";
 
-  const bookingStore = useBookingStore();
+const bookingStore = useBookingStore();
 
-  onMounted(() => {
+onMounted(() => {
     bookingStore.resetBooking();
-  });
+});
 </script>
