@@ -124,7 +124,7 @@ const openModal = (room) => {
                         <div class="col-span-4 relative">
                             <img
                                 :src="bookingStore.room.cover_image_url"
-                                class="w-full cover-image"
+                                class="w-full"
                                 alt=""
                             />
                         </div>
