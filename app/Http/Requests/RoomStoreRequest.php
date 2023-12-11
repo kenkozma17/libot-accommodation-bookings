@@ -22,7 +22,7 @@ class RoomStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-          'name' => "required|string|max:50|unique:rooms,name, {$this->id}",
+          'name' => "required|string|max:50, {$this->id}",
           'rate' => 'required|numeric',
           'room_number' => 'required|string',
           'description' => 'nullable|string',
