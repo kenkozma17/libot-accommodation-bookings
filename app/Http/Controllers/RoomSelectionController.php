@@ -22,7 +22,7 @@ class RoomSelectionController extends Controller
 
       $rooms = Room::where('max_occupancy', '>=', $guestCount)
         ->where('is_available', true)
-        ->orderBy('rate', 'desc')
+        ->orderBy('rate', 'asc')
         ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
           $query->where('is_confirmed', true);
 
