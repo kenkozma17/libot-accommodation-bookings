@@ -104,10 +104,7 @@ const props = defineProps({
                 <template v-if="room.images.length">
                     <Carousel :items-to-show="1">
                         <Slide v-for="(image, key) in room.images" :key="key">
-                            <img
-                                :src="image.image_url_path"
-                                class="w-full h-full"
-                            />
+                            <img :src="image.image_url_path" class="w-full" />
                         </Slide>
 
                         <template #addons>
