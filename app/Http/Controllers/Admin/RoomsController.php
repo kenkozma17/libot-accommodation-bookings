@@ -29,7 +29,7 @@ class RoomsController extends Controller
               ->get();
           }
         }]
-      ])->where('is_available', true)
+      ])
       ->orderBy('name', 'asc')
       ->paginate(config('pagination.default'))
       ->withQueryString();;
@@ -56,14 +56,14 @@ class RoomsController extends Controller
     public function store(RoomStoreRequest $request)
     {
       try {
-        $room = new Room; 
+        $room = new Room;
 
         if(isset($request->cover_image) && $request->cover_image) {
           $imageName = time().'.'.$request->cover_image->extension();
           $request->cover_image->move(public_path('images'), $imageName);
           $room->cover_image = $imageName;
         }
-        
+
         $room->fill($request->validated());
         $room->save();
 
@@ -154,7 +154,7 @@ class RoomsController extends Controller
       } catch(Throwable $e) {
 
       }
-    } 
+    }
 
     public function unblockDate(Request $request, string $id) {
       try {

@@ -83,7 +83,7 @@ const openModal = (room) => {
                         <h2
                             class="md:text-[1.5rem] text-[1.25rem] font-bold tracking-wide"
                         >
-                            {{ room.name }}
+                            {{ room.full_room_name }}
                         </h2>
                         <p class="text-[.75rem]">
                             {{ room.short_description }}

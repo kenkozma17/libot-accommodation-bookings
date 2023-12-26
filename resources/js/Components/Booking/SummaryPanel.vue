@@ -19,7 +19,7 @@ const bookingStore = useBookingStore();
                             Stay at Catanduanes Midtown Inn
                         </p>
                         <span class="text-[.7rem]">
-                            {{ bookingStore.room.name }}
+                            {{ bookingStore.room.full_room_name }}
                         </span>
                     </div>
                     <div class="flex justify-end items-start">

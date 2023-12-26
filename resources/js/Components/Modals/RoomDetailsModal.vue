@@ -27,7 +27,7 @@ const props = defineProps({
                 <h2
                     class="md:text-[2.5rem] text-[1.5rem] font-bold tracking-wide leading-snug"
                 >
-                    {{ props.room.name }}
+                    {{ props.room.full_room_name }}
                 </h2>
                 <ul
                     v-if="props.room.size && props.room.beds"

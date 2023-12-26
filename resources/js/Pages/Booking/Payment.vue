@@ -133,7 +133,7 @@ const openModal = (room) => {
                                 <h3
                                     class="text-[1.25rem] font-bold tracking-wider"
                                 >
-                                    {{ bookingStore.room.name }}
+                                    {{ bookingStore.room.full_room_name }}
                                 </h3>
                                 <p class="text-[.875rem] mt-2">
                                     {{ bookingStore.room.short_description }}
@@ -165,15 +165,15 @@ const openModal = (room) => {
             <div class="grid grid-cols-2 gap-4 mt-2">
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">First Name*</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="First Name"
                   class="border-black border bg-white text-[.875rem] p-3.5">
               </div>
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Last Name*</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Last Name"
                   class="border-black border bg-white text-[.875rem] p-3.5">
               </div>
@@ -181,8 +181,8 @@ const openModal = (room) => {
 
             <div class="input-field flex flex-col mt-4">
               <span class="text-[.75rem] font-bold mb-1">Card Number*</span>
-              <input 
-                  type="text" 
+              <input
+                  type="text"
                   placeholder="**** **** **** ****"
                   class="border-black border bg-white text-[.875rem] p-3.5">
             </div>
@@ -190,15 +190,15 @@ const openModal = (room) => {
             <div class="grid grid-cols-2 gap-4 mt-4">
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">Expiration Date*</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="**/**"
                   class="border-black border bg-white text-[.875rem] p-3.5">
               </div>
               <div class="input-field flex flex-col">
                 <span class="text-[.75rem] font-bold mb-1">CVC*</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="***"
                   class="border-black border bg-white text-[.875rem] p-3.5">
               </div>
@@ -206,7 +206,7 @@ const openModal = (room) => {
 
             <form @submit.prevent="submit">
               <div class="mt-4">
-                <button 
+                <button
                   class="w-full hover:bg-opacity-90 transition-colors ease-in-out p-4 text-white bg-dark-green uppercase tracking-widest font-bold">
                   Continue to Payment
                 </button>
