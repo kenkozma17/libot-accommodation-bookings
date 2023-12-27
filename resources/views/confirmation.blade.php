@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td>{{ $booking->guest->full_name }}</td>
-        <td>{{ $booking->room->name }}</td>
+        <td>{{ $booking->room->full_room_name }}</td>
         <td>{{ $booking->check_in_formatted }}</td>
         <td>{{ $booking->check_out_formatted }}</td>
       </tr>
@@ -64,7 +64,7 @@
     </div>
 
 
-    
+
   </body>
   <style>
   table {

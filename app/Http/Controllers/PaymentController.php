@@ -52,7 +52,7 @@ class PaymentController extends Controller
       $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
       $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
-      $paymentMethod = isset($payMongoPayment['attributes']['source']) ? 
+      $paymentMethod = isset($payMongoPayment['attributes']['source']) ?
         $payMongoPayment['attributes']['source']['type'] :
         $payMongoPayment['attributes']['payment_method_used'];
 
@@ -66,7 +66,7 @@ class PaymentController extends Controller
         'currency_code' => 'PHP',
         'payment_status' => 'PAID'
       ]);
-      
+
       // Set booking status to confirmed
       $booking = Booking::where('booking_confirmation', $bookingConfirmation)
         ->with(['guest', 'payment'])
@@ -166,6 +166,7 @@ class PaymentController extends Controller
 
   public function sendConfirmationEmail(Booking $booking) {
     \Mail::to($booking->guest->email)
+      ->cc("catmidinn.libot@gmail.com")
       ->send(new BookingConfirmationMail($booking));
   }
 
