@@ -61,9 +61,9 @@ class PaymentController extends Controller
       $payment->update([
         'payment_method' => $paymentMethod,
         'paymongo_payment_id' => $payMongoPayment['id'],
-        'receipt_number' => $payMongoPayment['id'],
+        'receipt_number' => $payMongoPayment['attributes']['payments'][0]['id'],
         'payment_source' => $paymentMethod,
-        'currency_code' => 'PHP',
+        'currency_code' => $payMongoPayment['attributes']['payments'][0]['currency'],
         'payment_status' => 'PAID'
       ]);
 
