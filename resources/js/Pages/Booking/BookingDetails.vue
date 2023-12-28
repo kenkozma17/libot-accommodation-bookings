@@ -188,6 +188,7 @@ const validationErrors = computed(() => {
                                 <span class="text-[.75rem] ml-2">
                                     I agree to have read the Terms &
                                     <a
+                                        target="_blank"
                                         href="/cancellation-policy"
                                         class="font-bold"
                                         >Cancellation Policy</a
