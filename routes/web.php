@@ -23,6 +23,9 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/cancellation-policy', function() {
+    return Inertia::render('Terms/Cancellation');
+});
 Route::get('/', [RoomFinderController::class, 'index']);
 Route::resource('/available-rooms', RoomSelectionController::class);
 Route::resource('/booking-details', BookingDetailsController::class);
@@ -40,7 +43,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::resource('/guests', GuestController::class, ['names' => 'guests']);
 
     Route::resource('/rooms', RoomsController::class, ['names' => 'rooms']);
