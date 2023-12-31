@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\RoomsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Services\BotLogger;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/cancellation-policy', function() {
     return Inertia::render('Terms/Cancellation');
 });

@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\BookingConfirmationMail;
+use Carbon\Exceptions\Exception;
+use App\Services\BotLogger;
 
 class PaymentController extends Controller
 {
@@ -46,7 +48,6 @@ class PaymentController extends Controller
 
   public function handlePayMongoPaymentSuccess(Request $request) {
     $response = $request->all();
-    Log::info($response);
     if($response['data']['attributes']['type'] === 'checkout_session.payment.paid') {
       $payMongoPayment = $response['data']['attributes']['data'];
       $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
@@ -85,6 +86,9 @@ class PaymentController extends Controller
 
       // Send confirmation email
       $this->sendConfirmationEmail($booking);
+
+      (new BotLogger())->logMessage("⏳ A guest has completed payment for their booking (". $booking->bookingConfirmation .")");
+
     }
   }
 
@@ -110,19 +114,21 @@ class PaymentController extends Controller
   public function createBooking($booking) {
     $guest = Guest::where('email', $booking['guests']['contactDetails']['email'])->first();
     $newBooking = Booking::create([
-      'booking_confirmation' => Str::random(7),
-      'check_in' => $booking['dates']['start'],
-      'check_out' => $booking['dates']['end'],
-      'rate_per_night' => $booking['room']['rate'],
-      'total_price' => $booking['room']['rate'] * $booking['stayCount'],
-      'booking_status' => 'PENDING',
-      'special_requests' => $booking['guests']['contactDetails']['requests'],
-      'adults_count' => $booking['guests']['adults'],
-      'children_count' => $booking['guests']['children'],
-      'guest_id' => $guest->id,
-      'room_id' => $booking['room']['id'],
-      'payment_id' => null
+        'booking_confirmation' => Str::random(7),
+        'check_in' => $booking['dates']['start'],
+        'check_out' => $booking['dates']['end'],
+        'rate_per_night' => $booking['room']['rate'],
+        'total_price' => $booking['room']['rate'] * $booking['stayCount'],
+        'booking_status' => 'PENDING',
+        'special_requests' => $booking['guests']['contactDetails']['requests'],
+        'adults_count' => $booking['guests']['adults'],
+        'children_count' => $booking['guests']['children'],
+        'guest_id' => $guest->id,
+        'room_id' => $booking['room']['id'],
+        'payment_id' => null
     ]);
+
+    (new BotLogger())->logMessage("⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
 
     return $newBooking;
   }
