@@ -172,7 +172,7 @@ class PaymentController extends Controller
 
   public function sendConfirmationEmail(Booking $booking) {
     \Mail::to($booking->guest->email)
-      ->cc("catmidinn@gmail.con")
+      ->cc("catmidinn@gmail.com")
       ->send(new BookingConfirmationMail($booking));
   }
 
