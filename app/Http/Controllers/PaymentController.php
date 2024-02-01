@@ -196,7 +196,6 @@ class PaymentController extends Controller
           'billing' => [
             'name' => $guest['contactDetails']['firstName'] . ' ' . $guest['contactDetails']['lastName'],
             'email' => $guest['contactDetails']['email'],
-            'phone' => $guest['contactDetails']['phone']
           ],
           'send_email_receipt' => true,
           'show_line_items' => true,
