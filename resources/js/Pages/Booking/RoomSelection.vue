@@ -34,6 +34,10 @@ const isMainAmenity = (amenityName) => {
         "Air-Conditioned Unit",
         "Satellite/Cable TV",
         "Intercom",
+        'Restaurant',
+        'Swimming Pool',
+        'Airport Hotel Shuttle',
+        'Parking',
     ];
     return amenities.includes(amenityName);
 };
