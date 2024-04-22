@@ -87,7 +87,7 @@ class PaymentController extends Controller
       // Send confirmation email
       $this->sendConfirmationEmail($booking);
 
-      (new BotLogger())->logMessage(env("APP_ENV") . " Environment: ✅ A guest has completed payment for their booking (". $booking->bookingConfirmation .")");
+      (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME")  . " ✅ A guest has completed payment for their booking (". $booking->booking_confirmation .")");
 
     }
   }
@@ -128,7 +128,7 @@ class PaymentController extends Controller
         'payment_id' => null
     ]);
 
-    (new BotLogger())->logMessage(env("APP_ENV") . " Environment: ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
+    (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME")  . " ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
 
     return $newBooking;
   }
