@@ -179,7 +179,7 @@ class PaymentController extends Controller
   public function generateConfirmationPdf($bookingId) {
     $booking = Booking::where("id", $bookingId)->with(['guest', 'payment'])
       ->first();
-    $file = Pdf::loadView('confirmation', ['booking' => $booking]);
+    $file = Pdf::loadView('confirmation', ['booking' => $booking, 'property' => env("APP_NAME")]);
     Storage::put('public/confirmations/' . $booking->booking_confirmation . '.pdf', $file->output());
   }
 
