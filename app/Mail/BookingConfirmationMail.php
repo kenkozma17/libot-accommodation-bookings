@@ -30,7 +30,7 @@ class BookingConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Midtown Inn Booking Confirmation',
+            subject: ENV('APP_NAME') . ' Booking Confirmation',
         );
     }
 
@@ -41,6 +41,7 @@ class BookingConfirmationMail extends Mailable
     {
         return new Content(
             view: 'emails.booking-confirmation',
+            with: ['business_name' => ENV('APP_NAME')]
         );
     }
 
