@@ -1,6 +1,10 @@
 <script setup></script>
 <template>
+<<<<<<< HEAD
     <div class="max-w-7xl mx-auto my-10 mx-14">
+=======
+    <div class="max-w-7xl mx-auto my-10 mx-12">
+>>>>>>> beach
         <div class="mb-10">
             <a href="/">Back Home</a>
         </div>

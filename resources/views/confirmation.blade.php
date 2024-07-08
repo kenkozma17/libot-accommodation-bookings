@@ -20,7 +20,7 @@
       <p class="mb-6">{{ $booking->created_at_formatted }}</p>
       <p class="mb-2">Dear {{ $booking->guest->full_name }},</p>
       <p>
-        Thank you for your reservation at Catanduanes Midtown Inn. Please find your reservation details as follows:
+        Thank you for your reservation at {{ $property }}. Please find your reservation details as follows:
       </p>
     </div>
     <table class="w-full mt-4">

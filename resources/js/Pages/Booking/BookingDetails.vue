@@ -201,7 +201,9 @@ const validationErrors = computed(() => {
                                         >Safety Standards</a
                                     >.*
                                 </span>
-                                <p class="text-[.75rem]">Accessibility Information: Please note that our hotel does not have an elevator on the premises. Guests should be aware that stairs are the only means of accessing upper floors. We apologize for any inconvenience this may cause and encourage guests with accessibility needs to contact us directly for assistance and alternative accommodation options.</p>
+                                <p class="text-[.75rem] mt-2">
+                                    Accessibility Information: Please note that our hotel does not have an elevator on the premises. Guests should be aware that stairs are the only means of accessing upper floors. We apologize for any inconvenience this may cause and encourage guests with accessibility needs to contact us directly for assistance and alternative accommodation options.
+                                </p>
                             </label>
                         </div>
                         <div class="mt-4">
