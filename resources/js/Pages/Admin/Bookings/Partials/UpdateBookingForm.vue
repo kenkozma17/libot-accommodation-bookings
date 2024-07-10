@@ -19,7 +19,7 @@ const form = useForm({
     booking_confirmation: props.booking.booking_confirmation,
     check_in: props.booking.check_in_formatted,
     check_out: props.booking.check_out_formatted,
-    total_price: props.booking.payment.payment_amount_formatted,
+    total_price: props.booking.payment ? props.booking.payment.payment_amount_formatted : "PHP " + props.booking.total_price,
     rate_per_night: "PHP " + props.booking.rate_per_night_formatted,
     booking_status: props.booking.booking_status,
     special_requests: props.booking.special_requests,

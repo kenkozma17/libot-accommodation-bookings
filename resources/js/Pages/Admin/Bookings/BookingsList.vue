@@ -103,7 +103,7 @@ const s = ref(props.search);
                                     scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                                 >
-                                    Arrival Status
+                                    Online Booking?
                                 </th>
                                 <th
                                     scope="col"
@@ -164,7 +164,7 @@ const s = ref(props.search);
                                     {{ booking.booking_status }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.arrival_status }}
+                                    {{ booking.is_manual ? 'No' : 'Yes' }}
                                 </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"

@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\BookingStoreRequest;
 use App\Models\Booking;
+use App\Models\Guest;
+use App\Models\Room;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -46,15 +50,42 @@ class BookingController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Bookings/Create', [
+            'rooms' => Room::where('is_available', true)->orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BookingStoreRequest $request)
     {
-        //
+        try {
+            // Check if guest exists already
+            $guest = Guest::where('email', $request->email)->first();
+            if(!$guest) {
+                $guest = new Guest;
+                $guest->fill($request->validated());
+                $guest->save();
+            }
+
+            // Check for bookings that could overlap with existing ones
+            $booking = new Booking;
+            $booking->fill($request->validated());
+            $booking->guest_id = $guest->id;
+            $booking->is_manual = true;
+            if(!$booking->booking_confirmation) {
+                $booking->booking_confirmation = Str::random(7);
+            }
+            $booking->save();
+
+            session()->flash('flash.banner', 'Booking Created Successfully!');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('bookings.index');
+          } catch(Throwable $e) {
+            report($e);
+          }
     }
 
     /**

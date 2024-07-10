@@ -155,7 +155,7 @@ const logout = () => {
                                     <DropdownLink :href="route('bookings.index')">
                                         Bookings List
                                     </DropdownLink>
-                                    <DropdownLink href="/">
+                                    <DropdownLink :href="route('bookings.create')">
                                         Create Booking
                                     </DropdownLink>
                                   </div>

@@ -5,6 +5,6 @@ import ApplicationMark from '@/Components/ApplicationMark.vue';
 
 <template>
     <Link :href="'/'">
-        <ApplicationMark />
+        <ApplicationMark class="md:w-60 w-40" />
     </Link>
 </template>
