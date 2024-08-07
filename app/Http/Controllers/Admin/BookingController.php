@@ -10,9 +10,21 @@ use App\Models\Guest;
 use App\Models\Room;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
+use App\Services\BookingService;
 
 class BookingController extends Controller
 {
+
+    protected $bookingService;
+    public function __construct(BookingService $bookingService) {
+        $this->bookingService = $bookingService;
+    }
+
+    public function createRoomUnavailablility($newBooking) {
+        $isConfirmed = true;
+        $this->bookingService->createRoomUnavailablility($newBooking, $isConfirmed);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -61,7 +73,7 @@ class BookingController extends Controller
     public function store(BookingStoreRequest $request)
     {
         try {
-            // Check if guest exists already
+            // Check if guest exists already. If not, create one.
             $guest = Guest::where('email', $request->email)->first();
             if(!$guest) {
                 $guest = new Guest;
@@ -78,6 +90,8 @@ class BookingController extends Controller
                 $booking->booking_confirmation = Str::random(7);
             }
             $booking->save();
+
+            $this->createRoomUnavailablility($booking);
 
             session()->flash('flash.banner', 'Booking Created Successfully!');
             session()->flash('flash.bannerStyle', 'success');

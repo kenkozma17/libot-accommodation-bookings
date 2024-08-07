@@ -18,9 +18,21 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\BookingConfirmationMail;
 use Carbon\Exceptions\Exception;
 use App\Services\BotLogger;
+use App\Services\BookingService;
 
 class PaymentController extends Controller
 {
+
+  protected $bookingService;
+
+  public function __construct(BookingService $bookingService) {
+    $this->bookingService = $bookingService;
+  }
+
+  public function createRoomUnavailablility($newBooking) {
+    $this->bookingService->createRoomUnavailablility($newBooking);
+  }
+
   public function index(Request $request) {
     $data = $request->all();
     return Inertia::render('Booking/Payment');
@@ -131,20 +143,6 @@ class PaymentController extends Controller
     (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME") . " ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
 
     return $newBooking;
-  }
-
-  public function createRoomUnavailablility($newBooking) {
-    $newUnavailability = RoomUnavailability::create([
-      'room_id' => $newBooking->room_id,
-      'booking_id' => $newBooking->id,
-      'start_date' => $newBooking->check_in,
-      'end_date' => $newBooking->check_out,
-      'notes' => null,
-      'is_range' => true,
-      'is_confirmed' => false
-    ]);
-
-    return $newUnavailability;
   }
 
   public function createPayment($booking, $bookingId, $guestId) {
