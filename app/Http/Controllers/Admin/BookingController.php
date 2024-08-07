@@ -11,6 +11,8 @@ use App\Models\Room;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Services\BookingService;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class BookingController extends Controller
 {
@@ -73,30 +75,56 @@ class BookingController extends Controller
     public function store(BookingStoreRequest $request)
     {
         try {
-            // Check if guest exists already. If not, create one.
-            $guest = Guest::where('email', $request->email)->first();
-            if(!$guest) {
-                $guest = new Guest;
-                $guest->fill($request->validated());
-                $guest->save();
-            }
-
             // Check for bookings that could overlap with existing ones
-            $booking = new Booking;
-            $booking->fill($request->validated());
-            $booking->guest_id = $guest->id;
-            $booking->is_manual = true;
-            if(!$booking->booking_confirmation) {
-                $booking->booking_confirmation = Str::random(7);
+            $start = Carbon::parse($request->check_in)->format('Y-m-d');
+            $end = Carbon::parse($request->check_out)->format('Y-m-d');
+            $isRoomAvailable = Room::where('id', $request->room_id)
+                ->where('is_available', true)
+                ->orderBy('rate', 'asc')
+                ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
+                $query->where('is_confirmed', true);
+
+                // Handles range overlap and allows customers to check in on the same day others check out
+                $query->where('start_date', '<', $end)
+                    ->where('end_date', '>', $start);
+
+                // Handles unavailable blocked dates. Room is unavailable for the whole date.
+                $query->orWhereBetween('start_date', [$start, $end])
+                    ->whereNull('end_date');
+            })->first();
+
+
+            if($isRoomAvailable) {
+                // Check if guest exists already. If not, create one.
+                $guest = Guest::where('email', $request->email)->first();
+                if(!$guest) {
+                    $guest = new Guest;
+                    $guest->fill($request->validated());
+                    $guest->save();
+                }
+
+                // Create the booking
+                $booking = new Booking;
+                $booking->fill($request->validated());
+                $booking->guest_id = $guest->id;
+                $booking->is_manual = true;
+                if(!$booking->booking_confirmation) {
+                    $booking->booking_confirmation = Str::random(7);
+                }
+                $booking->save();
+
+                $this->createRoomUnavailablility($booking);
+
+                session()->flash('flash.banner', 'Booking Created Successfully!');
+                session()->flash('flash.bannerStyle', 'success');
+
+                return redirect()->route('bookings.index');
+            } else {
+                session()->flash('flash.banner', 'This booking overlaps with another booking for this room!');
+                session()->flash('flash.bannerStyle', 'danger');
+
+                return redirect()->back();
             }
-            $booking->save();
-
-            $this->createRoomUnavailablility($booking);
-
-            session()->flash('flash.banner', 'Booking Created Successfully!');
-            session()->flash('flash.bannerStyle', 'success');
-
-            return redirect()->route('bookings.index');
           } catch(Throwable $e) {
             report($e);
           }
