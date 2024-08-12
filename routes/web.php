@@ -12,7 +12,8 @@ use App\Http\Controllers\Admin\RoomsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
-use App\Services\BotLogger;
+use App\Http\Controllers\Admin\FolioController as AdminFolioController;
+use App\Http\Controllers\Admin\FolioTransactionController as AdminFolioTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,4 +63,6 @@ Route::middleware([
 
     Route::resource('/payments', AdminPaymentController::class, ['names' => 'payments']);
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
+    Route::resource('/folios', AdminFolioController::class, ['names' => 'folios']);
+    Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
 });

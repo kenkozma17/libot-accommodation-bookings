@@ -7,17 +7,17 @@ import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const props = defineProps({
-    bookings: Object,
+    folios: Object,
     search: String,
 });
 
 const s = ref(props.search);
 </script>
 <template>
-    <AppLayout title="Bookings Management">
+    <AppLayout title="Folios Management">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Bookings Management
+                Folios Management
             </h2>
         </template>
 
@@ -39,11 +39,11 @@ const s = ref(props.search);
                                         name="search"
                                         id="search"
                                         class="p-3 pl-10 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
-                                        placeholder="Search by Name, Email or Phone Number..."
+                                        placeholder="Search by Guest Name, Reg. No., Booking Confirmation..."
                                     />
                                 </form>
                                 <SecondaryButton class="justify-center">
-                                    <Link :href="route('bookings.index')">
+                                    <Link :href="route('folios.index')">
                                         Clear Search
                                     </Link>
                                 </SecondaryButton>
@@ -55,55 +55,19 @@ const s = ref(props.search);
                                     scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                                 >
+                                    Registration Number
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
+                                    Guest Name
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
                                     Booking Confirmation
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Booking Date
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Guest
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Room Name (Room Number)
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Check In
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Check Out
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Stay Length
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Status
-                                </th>
-                                <th
-                                    scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                                >
-                                    Online Booking?
                                 </th>
                                 <th
                                     scope="col"
@@ -114,64 +78,48 @@ const s = ref(props.search);
                             </tr>
                         </template>
                         <template #content>
-                            <tr v-for="booking in bookings.data">
+                            <tr v-for="folio in folios.data">
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm font-medium"
                                 >
                                     <Link
                                         :href="
-                                            route('bookings.show', booking.id)
+                                            route('folios.show', folio.id)
                                         "
                                     >
-                                        {{ booking.booking_confirmation }}
+                                        {{ folio.registration_number }}
                                     </Link>
-                                </td>
-
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.created_at_formatted }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <Link
-                                        :href="
-                                            route(
-                                                'guests.show',
-                                                booking.guest.id
-                                            )
-                                        "
-                                    >
-                                        {{ booking.guest.full_name }}
-                                    </Link>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <Link
-                                        :href="
-                                            route('rooms.show', booking.room.id)
-                                        "
-                                    >
-                                        {{ booking.room.full_room_name }}
-                                    </Link>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.check_in_formatted }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.check_out_formatted }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.stay_length }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.booking_status }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    {{ booking.is_manual ? 'No' : 'Yes' }}
                                 </td>
                                 <td
-                                    class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                                >
+                                    <Link v-if="folio.guest_id"
+                                        :href="
+                                            route('guests.show', folio.guest_id)
+                                        "
+                                    >
+                                        {{ folio.guest.last_name }}
+                                    </Link>
+                                    <span v-else>N/A</span>
+                                </td>
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium"
                                 >
                                     <Link
+                                        v-if="folio.booking"
                                         :href="
-                                            route('bookings.show', booking.id)
+                                            route('bookings.show', folio.booking.id)
+                                        "
+                                        >{{folio.booking.booking_confirmation}}</Link
+                                    >
+                                    <span v-else>N/A</span>
+                                </td>
+                                <td
+                                        class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+                                    >
+                                    <Link
+                                        :href="
+                                            route('folios.show', folio.id)
                                         "
                                         >View</Link
                                     >
@@ -179,7 +127,7 @@ const s = ref(props.search);
                             </tr>
                         </template>
                         <template #pagination>
-                            <PaginationList :links="bookings.links" />
+                            <PaginationList :links="folios.links" />
                         </template>
                     </TableList>
                 </div>
