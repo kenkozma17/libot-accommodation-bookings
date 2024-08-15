@@ -98,7 +98,7 @@ const s = ref(props.search);
                                             route('guests.show', folio.guest_id)
                                         "
                                     >
-                                        {{ folio.guest.last_name }}
+                                        {{ folio.guest.last_name }}, {{ folio.guest.first_name }}
                                     </Link>
                                     <span v-else>N/A</span>
                                 </td>

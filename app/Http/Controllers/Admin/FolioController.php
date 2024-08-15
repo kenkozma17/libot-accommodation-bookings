@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FolioTransaction;
 use Illuminate\Http\Request;
 use App\Http\Requests\FolioStoreRequest;
 use Inertia\Inertia;
 use App\Models\Folio;
 use App\Models\Guest;
 use App\Models\Booking;
+use App\Models\Service;
+use App\Models\ServiceCategory;
 use Carbon\Carbon;
 use Exception;
 
@@ -102,8 +105,10 @@ class FolioController extends Controller
     public function show(string $id)
     {
         $folio = Folio::with(['booking', 'guest'])->where('id', $id)->first();
+        $serviceCategories = ServiceCategory::with('services')->orderBy('name', 'asc')->get();
         return Inertia::render('Admin/Folios/Show', [
             'folio' => $folio,
+            'serviceCategories' => $serviceCategories,
         ]);
     }
 

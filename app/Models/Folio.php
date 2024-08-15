@@ -5,15 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\hasOne;
 use App\Models\Guest;
 use App\Models\Booking;
+use App\Models\FolioTransaction;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Folio extends Model
 {
     use HasFactory;
 
     protected $fillable = ['guest_id', 'booking_id'];
+    protected $with = ['guest', 'booking'];
+
+    protected $appends = ['total'];
 
     public function guest(): BelongsTo {
         return $this->belongsTo(Guest::class);
@@ -22,4 +26,18 @@ class Folio extends Model
     public function booking(): BelongsTo {
         return $this->belongsTo(Booking::class);
     }
+
+    public function transactions(): HasMany {
+        return $this->hasMany(FolioTransaction::class)->orderBy('created_at', 'desc');
+    }
+
+    public function getTotalAttribute() {
+        $total = 0;
+        foreach($this->transactions as $transaction) {
+            $total += (int) $transaction->amount;
+        }
+        return 'P' . number_format($total, 2);
+    }
+
+
 }

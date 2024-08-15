@@ -18,9 +18,8 @@ return new class extends Migration
             $table->string('unit')->nullable();
             $table->decimal('price', 8, 2);
             $table->decimal('amount', 8, 2);
-
-            // Income or Expense
-            $table->string('type');
+            $table->string('type')->nullable();
+            $table->boolean('is_paid')->default(0);
             $table->text('description')->nullable();
             $table->string('payment_method');
             $table->timestamps();

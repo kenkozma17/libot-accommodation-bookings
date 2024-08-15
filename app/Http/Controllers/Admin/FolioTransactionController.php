@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FolioTransaction;
+use App\Models\Service;
+use App\Models\ServiceCategory;
+use Inertia\Inertia;
+use Exception;
 use Illuminate\Http\Request;
 
 class FolioTransactionController extends Controller
@@ -28,7 +33,30 @@ class FolioTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // try {
+            $folioTransaction = new FolioTransaction();
+            $folioTransaction->fill($request->all());
+            $folioTransaction->folio_id = $request->folio_id;
+            $folioTransaction->service_id = $request->service_id;
+
+            $service = Service::find($request->service_id);
+            if(!$service) {
+                session()->flash('flash.banner', 'Service not found!');
+                session()->flash('flash.bannerStyle', 'danger');
+                return redirect()->back();
+            }
+            $folioTransaction->price = $service->price;
+            $folioTransaction->amount = $folioTransaction->price * $request->quantity;
+            $folioTransaction->save();
+
+            session()->flash('flash.banner', 'Transaction Created Successfully!');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->route('folios.show', $request->folio_id);
+
+        // } catch(Exception $ex) {
+
+        // }
     }
 
     /**
@@ -36,7 +64,12 @@ class FolioTransactionController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $folioTransaction = FolioTransaction::with(['folio', 'service'])->where('id', $id)->first();
+        $serviceCategories = ServiceCategory::with('services')->orderBy('name', 'asc')->get();
+        return Inertia::render('Admin/FolioTransactions/Show', [
+            'transaction' => $folioTransaction,
+            'serviceCategories' => $serviceCategories
+        ]);
     }
 
     /**
@@ -52,7 +85,21 @@ class FolioTransactionController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $folioTransaction = FolioTransaction::find($id);
+            $folioTransaction->update($request->all());
+
+            $folioTransaction->amount = $folioTransaction->price * $request->quantity;
+
+            $folioTransaction->save();
+
+            session()->flash('flash.banner', 'Transaction Updated Successfully!');
+            session()->flash('flash.bannerStyle', 'success');
+
+            return redirect()->back();
+          } catch(Exception $e) {
+            report($e);
+          }
     }
 
     /**
