@@ -9,10 +9,10 @@ const props = defineProps({
 </script>
 
 <template>
-  <AppLayout :title="`Folio Transaction: ${transaction.service.name}`">
+  <AppLayout :title="`Folio Transaction: ${transaction.service_name}`">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Folio Transaction: {{ transaction.service.name }}
+        Folio Transaction: {{ transaction.service_name }}
       </h2>
     </template>
 

@@ -12,13 +12,13 @@ const props = defineProps({
 });
 
 const itemsPaidFor = computed(() => {
-    if(props.folio.transactions) {
+    if(props.folio.transactions.length) {
         let unpaidTransactions = 0;
         let paidTransactions = 0;
         props.folio.transactions.forEach((transaction) => transaction.is_paid ? paidTransactions += 1 : unpaidTransactions += 1);
         return paidTransactions + ' paid out of ' + unpaidTransactions + ' transactions.';
     }
-    return "0";
+    return "";
 });
 </script>
 <template>
@@ -81,11 +81,7 @@ const itemsPaidFor = computed(() => {
                 {{ transaction.quantity }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <Link
-                  v-if="transaction.service"
-                  href="route('services.show', transaction.service.id)"
-                  >{{ transaction.service.name }}</Link
-                >
+                {{ transaction.service_name }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 {{ transaction.formatted_price }}

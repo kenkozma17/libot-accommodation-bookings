@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\FolioController as AdminFolioController;
 use App\Http\Controllers\Admin\FolioTransactionController as AdminFolioTransactionController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\ExpensesController as AdminExpensesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,4 +67,6 @@ Route::middleware([
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
     Route::resource('/folios', AdminFolioController::class, ['names' => 'folios']);
     Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
+    Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
+    Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
 });
