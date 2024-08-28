@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->boolean('is_paid')->default(0);
             $table->text('description')->nullable();
+            $table->string('receipt_number')->nullable();
             $table->string('payment_method');
             $table->timestamps();
         });

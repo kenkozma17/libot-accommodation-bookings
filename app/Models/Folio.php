@@ -9,6 +9,7 @@ use App\Models\Guest;
 use App\Models\Booking;
 use App\Models\FolioTransaction;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class Folio extends Model
 {
@@ -17,7 +18,11 @@ class Folio extends Model
     protected $fillable = ['guest_id', 'booking_id'];
     protected $with = ['guest', 'booking'];
 
-    protected $appends = ['total'];
+    protected $appends = ['total', 'date'];
+
+    public function getDateAttribute() {
+        return Carbon::parse($this->created_at)->format('M d, Y');
+    }
 
     public function guest(): BelongsTo {
         return $this->belongsTo(Guest::class);

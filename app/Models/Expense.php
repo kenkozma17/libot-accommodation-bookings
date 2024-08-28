@@ -22,7 +22,11 @@ class Expense extends Model
         'type'
     ];
 
-    protected $appends = ['expense_date_formatted'];
+    protected $appends = ['expense_date_formatted', 'date'];
+
+    public function getDateAttribute() {
+        return Carbon::parse($this->expense_date)->format('M d, Y');
+    }
 
     public function getExpenseDateFormattedAttribute() {
         return Carbon::parse($this->expense_date)->format('M d, Y');

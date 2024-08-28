@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\FolioController as AdminFolioController;
 use App\Http\Controllers\Admin\FolioTransactionController as AdminFolioTransactionController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\ExpensesController as AdminExpensesController;
+use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,4 +70,7 @@ Route::middleware([
     Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
     Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
+    Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
+    Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
+        ->name('reports.generate');
 });

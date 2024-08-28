@@ -8,6 +8,9 @@ use App\Http\Requests\BookingStoreRequest;
 use App\Models\Booking;
 use App\Models\Guest;
 use App\Models\Room;
+use App\Models\Folio;
+use App\Models\FolioTransaction;
+use App\Models\Service;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Services\BookingService;
@@ -113,6 +116,27 @@ class BookingController extends Controller
                 }
                 $booking->save();
 
+                // Create Folio
+                $folio = new Folio;
+                $folio->registration_number = $this->generateRegNumber();
+                $folio->guest_id = $guest->id;
+                $folio->booking_id = $booking->id;
+                $folio->save();
+
+                // Create Folio Transaction
+                $service = Service::where('slug', 'room')->first();
+                $folioTransaction = new FolioTransaction();
+                $folioTransaction->folio_id = $folio->id;
+                $folioTransaction->service_id = $service->id;
+                $folioTransaction->price = $booking->rate_per_night;
+                $folioTransaction->amount = $booking->total_price;
+                $folioTransaction->quantity = $booking->stay_length_number;
+                $folioTransaction->payment_method = $request->payment_method;
+                $folioTransaction->service_name = Room::find($request->room_id)->name;
+                $folioTransaction->created_at = $request->booking_date;
+                $folioTransaction->save();
+
+                // Create unavailability
                 $this->createRoomUnavailablility($booking);
 
                 session()->flash('flash.banner', 'Booking Created Successfully!');
@@ -128,6 +152,14 @@ class BookingController extends Controller
           } catch(Throwable $e) {
             report($e);
           }
+    }
+
+    public function generateRegNumber() {
+        $latestFolio = Folio::latest('created_at')->first();
+        if($latestFolio) {
+            return (string) (((int) $latestFolio->registration_number) + 1);
+        }
+        return '5000';
     }
 
     /**

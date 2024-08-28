@@ -348,6 +348,9 @@ const logout = () => {
                         <DropdownLink :href="route('expenses.create')">
                           Create Expense
                         </DropdownLink>
+                        <DropdownLink :href="route('reports.index')">
+                          Reports
+                        </DropdownLink>
                       </div>
                     </template>
                   </Dropdown>

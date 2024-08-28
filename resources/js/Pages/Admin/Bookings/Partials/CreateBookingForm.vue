@@ -33,6 +33,7 @@ const form = useForm({
   email: "",
   phone: "",
   nationality: "Philippines (the)",
+  payment_method: ""
 });
 
 const stayCount = computed(() => {
@@ -136,6 +137,19 @@ const createBooking = () => {
           autofocus
         />
         <InputError :message="form.errors.rate_per_night" class="mt-2" />
+      </div>
+
+      <div class="col-span-6 sm:col-span-4">
+        <InputLabel for="payment_method" value="Payment Method" />
+        <TextInput
+          id="payment_method"
+          required
+          v-model="form.payment_method"
+          type="text"
+          class="block w-full mt-1"
+          autofocus
+        />
+        <InputError :message="form.errors.payment_method" class="mt-2" />
       </div>
 
       <div class="col-span-6 sm:col-span-4">

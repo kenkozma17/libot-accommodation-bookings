@@ -55,6 +55,12 @@ const s = ref(props.search);
                                     scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                                 >
+                                    Date
+                                </th>
+                                <th
+                                    scope="col"
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                                >
                                     Registration Number
                                 </th>
                                 <th
@@ -79,6 +85,11 @@ const s = ref(props.search);
                         </template>
                         <template #content>
                             <tr v-for="folio in folios.data">
+                                <td
+                                    class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                                >
+                                   {{folio.date}}
+                                </td>
                                 <td
                                     class="px-6 py-4 whitespace-nowrap text-sm font-medium"
                                 >

@@ -9,6 +9,9 @@ use App\Models\Room;
 use App\Models\Guest;
 use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\Folio;
+use App\Models\Service;
+use App\Models\FolioTransaction;
 use App\Models\RoomUnavailability;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -93,6 +96,25 @@ class PaymentController extends Controller
       $unavailability->is_confirmed = true;
       $unavailability->save();
 
+      // Create Folio
+      $folio = new Folio;
+      $folio->registration_number = $this->generateRegNumber();
+      $folio->guest_id = $booking->guest_id;
+      $folio->booking_id = $booking->id;
+      $folio->save();
+
+      // Create Folio Transaction
+      $service = Service::where('slug', 'room')->first();
+      $folioTransaction = new FolioTransaction;
+      $folioTransaction->folio_id = $folio->id;
+      $folioTransaction->service_id = $service->id;
+      $folioTransaction->price = $booking->rate_per_night;
+      $folioTransaction->amount = $booking->total_price;
+      $folioTransaction->quantity = $booking->stay_length_number;
+      $folioTransaction->payment_method = $paymentMethod;
+      $folioTransaction->service_name = Room::find($request->room_id)->name;
+      $folioTransaction->save();
+
       // Generate Booking Confirmation
       $this->generateConfirmationPdf($booking->id);
 
@@ -103,6 +125,14 @@ class PaymentController extends Controller
 
     }
   }
+
+  public function generateRegNumber() {
+    $latestFolio = Folio::latest('created_at')->first();
+    if($latestFolio) {
+        return (string) (((int) $latestFolio->registration_number) + 1);
+    }
+    return '5000';
+}
 
   public function executeCheckoutSession($paymentData) {
     $response = Http::accept('application/json')

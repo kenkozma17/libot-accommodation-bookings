@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\Folio;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Carbon\Carbon;
 
 class FolioTransaction extends Model
 {
@@ -18,11 +19,16 @@ class FolioTransaction extends Model
 
     protected $appends = [
         'formatted_price',
-        'formatted_amount'
+        'formatted_amount',
+        'date'
     ];
 
     public function service(): BelongsTo {
         return $this->belongsTo(Service::class);
+    }
+
+    public function getDateAttribute() {
+        return Carbon::parse($this->created_at)->format('M d, Y');
     }
 
     public function folio(): BelongsTo {
