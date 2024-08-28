@@ -97,7 +97,7 @@ class PaymentController extends Controller
       $unavailability->save();
 
       // Create Folio
-      $folio = new Folio;
+      $folio = new Folio();
       $folio->registration_number = $this->generateRegNumber();
       $folio->guest_id = $booking->guest_id;
       $folio->booking_id = $booking->id;
@@ -105,14 +105,14 @@ class PaymentController extends Controller
 
       // Create Folio Transaction
       $service = Service::where('slug', 'room')->first();
-      $folioTransaction = new FolioTransaction;
+      $folioTransaction = new FolioTransaction();
       $folioTransaction->folio_id = $folio->id;
       $folioTransaction->service_id = $service->id;
       $folioTransaction->price = $booking->rate_per_night;
       $folioTransaction->amount = $booking->total_price;
       $folioTransaction->quantity = $booking->stay_length_number;
       $folioTransaction->payment_method = $paymentMethod;
-      $folioTransaction->service_name = Room::find($request->room_id)->name;
+      $folioTransaction->service_name = Room::find($booking->room_id)->name;
       $folioTransaction->save();
 
       // Generate Booking Confirmation
