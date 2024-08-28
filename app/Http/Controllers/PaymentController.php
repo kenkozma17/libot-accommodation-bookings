@@ -121,9 +121,26 @@ class PaymentController extends Controller
       // Send confirmation email
       $this->sendConfirmationEmail($booking);
 
+      // Expire Checkout Session
+      $sessionId = $response['data']['id'];
+      $this->expireCheckoutSession($sessionId);
+
       (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME") . " ✅ A guest has completed payment for their booking (". $booking->booking_confirmation .")");
 
     }
+  }
+
+  public function expireCheckoutSession($sessionId) {
+    $response = Http::accept('application/json')
+        ->withBasicAuth(env('PAYMONGO_SECRET_KEY'), env('PAYMONGO_SECRET_KEY'))
+        ->withBody(json_encode([
+            'checkout_session_id' => $sessionId,
+        ]))
+        ->withHeaders([
+        'Content-Type' => 'application/json'
+        ])->post('https://api.paymongo.com/v1/checkout_sessions/checkout_session_id/expire');
+
+    return $response;
   }
 
   public function generateRegNumber() {
