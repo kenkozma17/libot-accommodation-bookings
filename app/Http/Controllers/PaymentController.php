@@ -113,6 +113,8 @@ class PaymentController extends Controller
       $folioTransaction->quantity = $booking->stay_length_number;
       $folioTransaction->payment_method = $paymentMethod;
       $folioTransaction->service_name = Room::find($booking->room_id)->name;
+      $folioTransaction->is_paid = 1;
+      $folioTransaction->date_placed = $booking->check_in;
       $folioTransaction->save();
 
       // Generate Booking Confirmation

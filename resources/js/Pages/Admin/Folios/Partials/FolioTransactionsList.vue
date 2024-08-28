@@ -8,17 +8,19 @@ import { Link } from "@inertiajs/vue3";
 import dayjs from "dayjs";
 import { computed } from "vue";
 const props = defineProps({
-  folio: Object
+  folio: Object,
 });
 
 const itemsPaidFor = computed(() => {
-    if(props.folio.transactions.length) {
-        let unpaidTransactions = 0;
-        let paidTransactions = 0;
-        props.folio.transactions.forEach((transaction) => transaction.is_paid ? paidTransactions += 1 : unpaidTransactions += 1);
-        return paidTransactions + ' paid out of ' + unpaidTransactions + ' transactions.';
-    }
-    return "";
+  if (props.folio.transactions.length) {
+    let unpaidTransactions = 0;
+    let paidTransactions = 0;
+    props.folio.transactions.forEach((transaction) =>
+      transaction.is_paid ? (paidTransactions += 1) : (unpaidTransactions += 1)
+    );
+    return paidTransactions + " paid out of " + unpaidTransactions + " transactions.";
+  }
+  return "";
 });
 </script>
 <template>
@@ -90,28 +92,28 @@ const itemsPaidFor = computed(() => {
                 {{ transaction.formatted_amount }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                {{ dayjs(transaction.created_at).format('MMM DD, YYYY') }}
+                {{ dayjs(transaction.date_placed).format("MMM DD, YYYY") }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                {{ transaction.is_paid ? 'Yes' : 'No'}}
+                {{ transaction.is_paid ? "Yes" : "No" }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <Link :href="route('folio-transactions.show', transaction.id)">View</Link>
               </td>
             </tr>
             <tr>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                    {{ itemsPaidFor }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                    <span class="font-bold">Total</span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
-                    <span class="font-bold">{{ folio.total }}</span>
-                </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right"></td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                {{ itemsPaidFor }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                <span class="font-bold">Total</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                <span class="font-bold">{{ folio.total }}</span>
+              </td>
             </tr>
           </template>
         </TableList>

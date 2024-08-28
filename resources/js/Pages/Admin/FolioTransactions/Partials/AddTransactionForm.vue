@@ -20,6 +20,7 @@ const form = useForm({
   description: "",
   payment_method: "",
   is_paid: false,
+  date_placed: "",
 });
 
 const createFolioTransaction = () => {
@@ -92,6 +93,17 @@ const createFolioTransaction = () => {
         <InputError :message="form.errors.payment_method" class="mt-2" />
       </div>
       <div class="col-span-6 sm:col-span-4">
+        <InputLabel for="date_placed" value="Date" />
+        <TextInput
+        required
+          id="date_placed"
+          v-model="form.date_placed"
+          type="date"
+          class="block w-full mt-1"
+          autofocus
+        />
+      </div>
+      <div class="col-span-6 sm:col-span-4">
         <InputLabel for="description" value="Description" />
         <textarea
           id="description"
@@ -106,10 +118,7 @@ const createFolioTransaction = () => {
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="amenities" value="Has this transaction been paid for?" />
         <label class="flex items-center">
-          <Checkbox
-            :checked="form.is_paid"
-            @change="form.is_paid = !form.is_paid"
-          />
+          <Checkbox :checked="form.is_paid" @change="form.is_paid = !form.is_paid" />
         </label>
       </div>
     </template>

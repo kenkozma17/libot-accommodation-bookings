@@ -24,19 +24,25 @@ class ReportsController extends Controller
         $year = $request->year;
 
         // Fetch all income for month, year
-        $folios = Folio::with(['guest', 'booking', 'transactions'])
-            ->orWhereHas('transactions', function($query) use ($month, $year) {
-                $query->whereMonth('created_at', $month)->whereYear('created_at', $year);
-            })
-            ->get();
+        $folios = Folio::with([
+            'guest',
+            'booking',
+            'transactions' => function($query) use ($month, $year) {
+                $query->whereMonth('date_placed', $month)
+                      ->whereYear('date_placed', $year);
+            }
+        ])->whereHas('transactions', function($query) use ($month, $year) {
+            $query->whereMonth('date_placed', $month)
+                  ->whereYear('date_placed', $year);
+        })->get();
 
         $totalIncome = 0;
         foreach($folios as $folio) {
             $totalIncome += (int) $folio->transactions->sum('amount');
         }
 
-        $expenses = Expense::whereMonth('created_at', $month)
-            ->whereYear('created_at', $year);
+        $expenses = Expense::whereMonth('expense_date', $month)
+            ->whereYear('expense_date', $year);
 
         $totalExpenses = $expenses->sum('amount');
 

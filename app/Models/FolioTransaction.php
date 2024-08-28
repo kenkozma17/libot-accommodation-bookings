@@ -14,7 +14,7 @@ class FolioTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['quantity', 'description', 'payment_method', 'is_paid'];
+    protected $fillable = ['quantity', 'description', 'payment_method', 'is_paid', 'date_placed'];
     protected $with = ['service'];
 
     protected $appends = [
@@ -28,7 +28,7 @@ class FolioTransaction extends Model
     }
 
     public function getDateAttribute() {
-        return Carbon::parse($this->created_at)->format('M d, Y');
+        return Carbon::parse($this->date_placed)->format('M d, Y');
     }
 
     public function folio(): BelongsTo {

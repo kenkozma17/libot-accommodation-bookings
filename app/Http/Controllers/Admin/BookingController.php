@@ -133,7 +133,7 @@ class BookingController extends Controller
                 $folioTransaction->quantity = $booking->stay_length_number;
                 $folioTransaction->payment_method = $request->payment_method;
                 $folioTransaction->service_name = Room::find($booking->room_id)->name;
-                $folioTransaction->created_at = $request->booking_date;
+                $folioTransaction->date_placed = $request->booking_date;
                 $folioTransaction->save();
 
                 // Create unavailability

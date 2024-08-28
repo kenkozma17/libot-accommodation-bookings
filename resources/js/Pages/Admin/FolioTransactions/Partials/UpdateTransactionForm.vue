@@ -52,7 +52,7 @@ const updateFolioTransaction = () => {
 
     <template #description>
       Folio transaction for <b>{{ guest.full_name }}</b> on
-      <i>{{ dayjs(transaction.created_at).format("MMM DD, YYYY") }}</i
+      <i>{{ dayjs(transaction.date_placed).format("MMM DD, YYYY") }}</i
       >. <br />
       Registration No: <b>{{ transaction.folio.registration_number }}</b>
     </template>

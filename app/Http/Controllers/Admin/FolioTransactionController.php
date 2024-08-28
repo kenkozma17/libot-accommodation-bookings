@@ -38,6 +38,7 @@ class FolioTransactionController extends Controller
             $folioTransaction->fill($request->all());
             $folioTransaction->folio_id = $request->folio_id;
             $folioTransaction->service_id = $request->service_id;
+            $folioTransaction->date_placed = $request->date_placed;
 
             $service = Service::find($request->service_id);
             if(!$service) {
@@ -47,6 +48,7 @@ class FolioTransactionController extends Controller
             }
             $folioTransaction->price = $service->price;
             $folioTransaction->amount = $folioTransaction->price * $request->quantity;
+            $folioTransaction->service_name = $service->name;
             $folioTransaction->save();
 
             session()->flash('flash.banner', 'Transaction Created Successfully!');
