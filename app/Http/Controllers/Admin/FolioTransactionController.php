@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Folio;
 use App\Models\FolioTransaction;
 use App\Models\Service;
 use App\Models\ServiceCategory;
@@ -59,6 +60,18 @@ class FolioTransactionController extends Controller
         // } catch(Exception $ex) {
 
         // }
+    }
+
+    public function printFolio($folioId) {
+        $folio = Folio::with(['guest'])->where('id', $folioId)->first();
+        $totalExpenses = 0;
+        foreach($folio->transactions as $transaction) {
+            $totalExpenses += (int) $transaction->amount;
+        }
+        return Inertia::render('Admin/FolioTransactions/Print', [
+            'folio' => $folio,
+            'totalExpenses' => 'P' . number_format($totalExpenses, 2)
+        ]);
     }
 
     /**

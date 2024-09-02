@@ -68,6 +68,8 @@ Route::middleware([
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
     Route::resource('/folios', AdminFolioController::class, ['names' => 'folios']);
     Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
+    Route::get('/folio-transactions-report/{folioId}', [AdminFolioTransactionController::class, 'printFolio'])
+        ->name('folio-transactions.print');
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
     Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
     Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
