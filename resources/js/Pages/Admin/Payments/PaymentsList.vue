@@ -30,12 +30,12 @@
                     <div class="flex md:flex-row flex-col space-y-2 justify-between w-full">
                       <form action="" class="md:w-96 w-full">
                         <label for="search" class="sr-only">Search</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           v-model="s"
-                          name="search" 
-                          id="search" 
-                          class="p-3 pl-10 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500" 
+                          name="search"
+                          id="search"
+                          class="p-3 pl-10 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
                           placeholder="Search by Name, Email or Phone Number...">
                       </form>
                       <SecondaryButton class="justify-center">
@@ -50,6 +50,7 @@
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Transaction #</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payer Name</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                      <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fee</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payer Email</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment Method</th>
                       <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -60,7 +61,7 @@
                   <template #content>
                     <tr v-for="payment in payments.data">
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        <Link :href="route('payments.show', payment.id)"> 
+                        <Link :href="route('payments.show', payment.id)">
                           {{ payment.paymongo_payment_id }}
                         </Link>
                       </td>
@@ -69,6 +70,9 @@
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         {{ payment.payment_amount_formatted }}
+                      </td>
+                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        {{ payment.fee_formatted }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm">
                         {{ payment.payer_email }}
@@ -94,5 +98,5 @@
             </div>
         </div>
     </div>
-  </AppLayout>  
+  </AppLayout>
 </template>

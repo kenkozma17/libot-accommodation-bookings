@@ -81,7 +81,7 @@ class PaymentController extends Controller
         'payment_source' => $paymentMethod,
         'currency_code' => $payMongoPayment['attributes']['payments'][0]['attributes']['currency'],
         'payment_status' => 'PAID',
-        'fee' => $payMongoPayment['attributes']['payments'][0]['fee'],
+        'fee' => $payMongoPayment['attributes']['payments'][0]['attributes']['fee'],
       ]);
 
       // Set booking status to confirmed
