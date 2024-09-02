@@ -25,7 +25,7 @@ class PaymentController extends Controller
         }]
       ])
         ->where('payment_status', 'PAID')
-        ->orderBy('created_at', 'asc')
+        ->orderBy('created_at', 'desc')
         ->paginate(config('pagination.default'))
         ->withQueryString();;
 
