@@ -80,7 +80,8 @@ class PaymentController extends Controller
         'receipt_number' => $payMongoPayment['attributes']['payments'][0]['id'],
         'payment_source' => $paymentMethod,
         'currency_code' => $payMongoPayment['attributes']['payments'][0]['attributes']['currency'],
-        'payment_status' => 'PAID'
+        'payment_status' => 'PAID',
+        'fee' => $payMongoPayment['attributes']['payments'][0]['fee'],
       ]);
 
       // Set booking status to confirmed
@@ -210,6 +211,7 @@ class PaymentController extends Controller
       'payment_reference' => null,
       'currency_code' => null,
       'payment_source' => null,
+      'fee' => null,
       'booking_id' => $bookingId,
       'guest_id' => $guestId,
     ]);
