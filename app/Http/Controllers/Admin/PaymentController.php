@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Response;
 
 class PaymentController extends Controller
 {
@@ -33,6 +34,36 @@ class PaymentController extends Controller
         'payments' => $payments,
         'search' => $search
       ]);
+    }
+
+    public function export() {
+        // Get all payments
+        $payments = Payment::orderBy('created_at', 'desc')->get();
+
+        $csvFileName = 'payments.csv';
+        $csvFile = fopen($csvFileName, 'w');
+        $headers = ['Transaction #', 'Payer Name', 'Amount', 'Fee', 'Payer Email', 'Payment Method', 'Status', 'Date'];
+
+        // Set CSV headers
+        fputcsv($csvFile, $headers);
+
+        foreach($payments as $payment) {
+            fputcsv($csvFile, [
+                $payment->paymongo_payment_id,
+                $payment->payer_name,
+                $payment->payment_amount,
+                $payment->fee,
+                $payment->payer_email,
+                $payment->payment_source,
+                $payment->status,
+                $payment->payment_date,
+            ]);
+        }
+
+        // Close CSV File
+        fclose($csvFile);
+
+        return Response::download(public_path($csvFileName))->deleteFileAfterSend(true);
     }
 
     /**

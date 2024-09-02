@@ -70,6 +70,7 @@ Route::middleware([
     Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
     Route::get('/folio-transactions-report/{folioId}', [AdminFolioTransactionController::class, 'printFolio'])
         ->name('folio-transactions.print');
+    Route::get('/payments-export', [AdminPaymentController::class, 'export'])->name('payments.export');
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
     Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
     Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
