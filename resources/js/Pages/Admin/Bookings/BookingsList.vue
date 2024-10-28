@@ -10,7 +10,6 @@ const props = defineProps({
     bookings: Object,
     search: String,
 });
-
 const s = ref(props.search);
 </script>
 <template>

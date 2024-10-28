@@ -42,7 +42,7 @@ class FolioController extends Controller
             }
           })
           ->with('guest', 'booking')
-          ->orderBy('created_at', 'asc')
+          ->orderBy('created_at', 'desc')
           ->paginate(config('pagination.default'))
           ->withQueryString();
 

@@ -18,7 +18,7 @@ const s = ref(props.search);
   <AppLayout title="Payment Management">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        PayMongo Payment Management
+        Manual Payment Management
       </h2>
     </template>
 
@@ -73,12 +73,6 @@ const s = ref(props.search);
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
-                  Fee
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
                   Payer Email
                 </th>
                 <th
@@ -86,12 +80,6 @@ const s = ref(props.search);
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
                   Payment Method
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Status
                 </th>
                 <th
                   scope="col"
@@ -110,30 +98,24 @@ const s = ref(props.search);
             <template #content>
               <tr v-for="payment in payments.data">
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  <Link :href="route('payments.show', payment.id)">
-                    {{ payment.paymongo_payment_id }}
+                  <Link :href="route('folio-transactions.show', payment.id)">
+                    {{ payment.id }}
                   </Link>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  {{ payment.payer_name }}
+                  {{ payment.folio.guest.full_name }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  {{ payment.payment_amount_formatted }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  {{ payment.fee_formatted }}
+                  {{ payment.formatted_amount }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  {{ payment.payer_email }}
+                  {{ payment.folio.guest.email }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                   {{ payment.payment_method }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  {{ payment.payment_status }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  {{ payment.payment_date_formatted }}
+                  {{ payment.date }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Link :href="route('payments.show', payment.id)">View</Link>

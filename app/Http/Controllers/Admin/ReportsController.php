@@ -36,9 +36,34 @@ class ReportsController extends Controller
                   ->whereYear('date_placed', $year);
         })->get();
 
-        $totalIncome = 0;
+        $totalIncome = 0; $totalCashPayments = 0; $totalCardPayments = 0; $totalGcashPayments = 0; $totalPaymayaPayments = 0; $totalCheckPayments = 0;
         foreach($folios as $folio) {
             $totalIncome += (int) $folio->transactions->sum('amount');
+
+            // Calculate total for payment methods
+            if($folio->transactions) {
+                foreach($folio->transactions as $transaction) {
+                    if($transaction->payment_method === 'Cash') {
+                        $totalCashPayments += (int) $transaction->amount;
+                    }
+
+                    if($transaction->payment_method === 'Credit/Debit Card') {
+                        $totalCardPayments += (int) $transaction->amount;
+                    }
+
+                    if($transaction->payment_method === 'Gcash') {
+                        $totalGcashPayments += (int) $transaction->amount;
+                    }
+
+                    if($transaction->payment_method === 'PayMaya') {
+                        $totalPaymayaPayments += (int) $transaction->amount;
+                    }
+
+                    if($transaction->payment_method === 'Check') {
+                        $totalCheckPayments += (int) $transaction->amount;
+                    }
+                }
+            }
         }
 
         $expenses = Expense::whereMonth('expense_date', $month)
@@ -57,7 +82,12 @@ class ReportsController extends Controller
             'totalIncome' => 'P' . number_format($totalIncome, 2),
             'totalExpenses' => 'P' . number_format($totalExpenses, 2),
             'grandTotal' => 'P' . number_format($grandTotal, 2),
-            'isPositive' => $isPositive
+            'isPositive' => $isPositive,
+            'totalCashPayments' => 'P' . number_format($totalCashPayments, 2),
+            'totalCardPayments' => 'P' . number_format($totalCardPayments, 2),
+            'totalGcashPayments' => 'P' . number_format($totalGcashPayments, 2),
+            'totalPaymayaPayments' => 'P' . number_format($totalPaymayaPayments, 2),
+            'totalCheckPayments' => 'P' . number_format($totalCheckPayments, 2),
         ]);
     }
 

@@ -177,6 +177,9 @@ const logout = () => {
                         Manage Payments
                       </div>
                       <DropdownLink :href="route('payments.index')">
+                        PayMongo Payments List
+                      </DropdownLink>
+                      <DropdownLink :href="route('payments.manual-payments')">
                         Payments List
                       </DropdownLink>
                     </div>

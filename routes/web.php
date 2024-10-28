@@ -65,6 +65,9 @@ Route::middleware([
       ->name('rooms.set-primary-image');
 
     Route::resource('/payments', AdminPaymentController::class, ['names' => 'payments']);
+    Route::get('/manual-payments', [AdminPaymentController::class, 'showManualPayments'])
+        ->name('payments.manual-payments');
+
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
     Route::resource('/folios', AdminFolioController::class, ['names' => 'folios']);
     Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);

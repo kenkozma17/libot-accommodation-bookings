@@ -52,7 +52,7 @@ class BookingController extends Controller
         }
       })
       ->where('booking_status', 'CONFIRMED')
-      ->orderBy('check_in', 'asc')
+      ->orderBy('check_in', 'desc')
       ->paginate(config('pagination.default'))
       ->withQueryString();
 

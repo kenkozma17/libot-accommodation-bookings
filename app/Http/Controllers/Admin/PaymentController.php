@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FolioTransaction;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Inertia\Inertia;
@@ -80,6 +81,20 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    public function showManualPayments(Request $request) {
+        $search = $request->get('search');
+        $payments = FolioTransaction::where('payment_method', 'Credit/Debit Card')
+        ->with('folio')
+        ->orderBy('created_at', 'desc')
+        ->paginate(config('pagination.default'))
+        ->withQueryString();;
+
+      return Inertia::render('Admin/Payments/ManualPaymentsList', [
+        'payments' => $payments,
+        'search' => $search
+      ]);
     }
 
     /**

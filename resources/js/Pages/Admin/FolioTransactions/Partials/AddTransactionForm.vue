@@ -82,20 +82,26 @@ const createFolioTransaction = () => {
       </div>
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="payment_method" value="Payment Method" />
-        <TextInput
+        <select
           required
-          id="payment_method"
+          class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
           v-model="form.payment_method"
-          type="text"
-          class="block w-full mt-1"
-          autofocus
-        />
+          name="payment_method"
+          id="payment_method"
+        >
+          <option value="" disabled selected>Select Payment Method</option>
+          <option class="ml-[1rem]">Cash</option>
+          <option class="ml-[1rem]">Credit/Debit Card</option>
+          <option class="ml-[1rem]">Gcash</option>
+          <option class="ml-[1rem]">PayMaya</option>
+          <option class="ml-[1rem]">Check</option>
+        </select>
         <InputError :message="form.errors.payment_method" class="mt-2" />
       </div>
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="date_placed" value="Date" />
         <TextInput
-        required
+          required
           id="date_placed"
           v-model="form.date_placed"
           type="date"

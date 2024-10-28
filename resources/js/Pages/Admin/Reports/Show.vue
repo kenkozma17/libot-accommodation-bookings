@@ -10,6 +10,11 @@ const props = defineProps({
   totalExpenses: String,
   grandTotal: String,
   isPositive: Boolean,
+  totalCashPayments: String,
+  totalCardPayments: String,
+  totalGcashPayments: String,
+  totalPaymayaPayments: String,
+  totalCheckPayments: String,
 });
 
 const toggleRow = (rowId) => {
@@ -32,7 +37,9 @@ const toggleRow = (rowId) => {
       <div class="mx-auto py-10 px-4">
         <div class="overflow-x-auto">
           <!-- Income Table -->
-          <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">Income</h2>
+          <div class="mb-4">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Income</h2>
+          </div>
           <table class="min-w-full bg-white border">
             <thead class="bg-gray-200">
               <tr>
@@ -55,6 +62,11 @@ const toggleRow = (rowId) => {
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
                   Receipt. No.
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Paid?
                 </th>
                 <th
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -101,6 +113,7 @@ const toggleRow = (rowId) => {
                   <td class="px-6 py-4"></td>
                   <td class="px-6 py-4"></td>
                   <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4"></td>
                   <td class="px-6 py-4 text-green-600 font-semibold">
                     {{ income.total }}
                   </td>
@@ -123,6 +136,9 @@ const toggleRow = (rowId) => {
                       {{ transaction.receipt_number }}
                     </td>
                     <td class="px-6 py-4 text-gray-600">
+                      {{ transaction.is_paid ? "Yes" : "No" }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">
                       {{ transaction.payment_method }}
                     </td>
                     <td class="px-6 py-4 text-gray-600">
@@ -143,6 +159,7 @@ const toggleRow = (rowId) => {
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
                 <td class="px-6 py-4">Total</td>
                 <td class="px-6 py-4 text-green-600 font-bold">
                   {{ props.totalIncome }}
@@ -151,8 +168,28 @@ const toggleRow = (rowId) => {
             </tbody>
           </table>
 
+          <div class="flex flex-col gap-1 my-4 items-end">
+            <p>
+              Total Cash Payments: <span>{{ props.totalCashPayments }}</span>
+            </p>
+            <p>
+              Total Credit/Debit Card Payments: <span>{{ props.totalCardPayments }}</span>
+            </p>
+            <p>
+              Total Gcash Payments: <span>{{ props.totalGcashPayments }}</span>
+            </p>
+            <p>
+              Total PayMaya Payments: <span>{{ props.totalPaymayaPayments }}</span>
+            </p>
+            <p>
+              Total Check Payments: <span>{{ props.totalCheckPayments }}</span>
+            </p>
+          </div>
+
           <!-- Expenses Table -->
-          <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-6 mb-4">Expenses</h2>
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-6 mb-4">
+            Expenses
+          </h2>
           <table class="min-w-full bg-white border">
             <thead class="bg-gray-200">
               <tr>
