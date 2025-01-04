@@ -22,6 +22,7 @@ class UserRoleSeeder extends Seeder
         if(!$doesReporterRoleExist) {
             $role = Role::create(['name' => 'reporter']);
             $permission = Permission::create(['name' => 'manage reports']);
+            $role->givePermissionTo($permission);
         }
 
         $user = User::where('email', 'carina@catmidinn.com')->first();
