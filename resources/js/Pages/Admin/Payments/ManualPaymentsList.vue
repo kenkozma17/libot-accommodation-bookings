@@ -18,7 +18,7 @@ const s = ref(props.search);
   <AppLayout title="Payment Management">
     <template #header>
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        Manual Payment Management
+        Credit Card Payment Management
       </h2>
     </template>
 

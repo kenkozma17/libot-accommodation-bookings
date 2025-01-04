@@ -75,8 +75,11 @@ Route::middleware([
         ->name('folio-transactions.print');
     Route::get('/payments-export', [AdminPaymentController::class, 'export'])->name('payments.export');
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
-    Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
-    Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
-    Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
-        ->name('reports.generate');
+
+    Route::group(['middleware' => ['can:view reports']], function() {
+        Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
+        Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
+        Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
+            ->name('reports.generate');
+    });
 });

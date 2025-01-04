@@ -180,7 +180,7 @@ const logout = () => {
                         PayMongo Payments List
                       </DropdownLink>
                       <DropdownLink :href="route('payments.manual-payments')">
-                        Payments List
+                        Credit Card Payments List
                       </DropdownLink>
                     </div>
                   </template>
@@ -374,7 +374,7 @@ const logout = () => {
                         type="button"
                         class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150"
                       >
-                        {{ $page.props.auth.user.current_team.name }}
+                        <!-- {{ $page.props.auth.user.current_team.name }} -->
 
                         <svg
                           class="ml-2 -mr-0.5 h-4 w-4"
@@ -403,11 +403,11 @@ const logout = () => {
                         </div>
 
                         <!-- Team Settings -->
-                        <DropdownLink
+                        <!-- <DropdownLink
                           :href="route('teams.show', $page.props.auth.user.current_team)"
                         >
                           Team Settings
-                        </DropdownLink>
+                        </DropdownLink> -->
 
                         <DropdownLink
                           v-if="$page.props.jetstream.canCreateTeams"
@@ -634,12 +634,12 @@ const logout = () => {
                 <div class="block px-4 py-2 text-xs text-gray-400">Manage Team</div>
 
                 <!-- Team Settings -->
-                <ResponsiveNavLink
+                <!-- <ResponsiveNavLink
                   :href="route('teams.show', $page.props.auth.user.current_team)"
                   :active="route().current('teams.show')"
                 >
                   Team Settings
-                </ResponsiveNavLink>
+                </ResponsiveNavLink> -->
 
                 <ResponsiveNavLink
                   v-if="$page.props.jetstream.canCreateTeams"
