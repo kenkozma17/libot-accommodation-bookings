@@ -116,25 +116,30 @@ class BookingController extends Controller
                 }
                 $booking->save();
 
-                // Create Folio
-                $folio = new Folio;
-                $folio->registration_number = $this->generateRegNumber();
-                $folio->guest_id = $guest->id;
-                $folio->booking_id = $booking->id;
-                $folio->save();
+                // Create Folio if one doesn't exist
+                $folioExists = Folio::where('booking_id', $booking->id)->first();
+                if(!$folioExists) {
+                    $folio = new Folio;
+                    $folio->registration_number = $this->generateRegNumber();
+                    $folio->guest_id = $guest->id;
+                    $folio->booking_id = $booking->id;
+                    $folio->save();
 
-                // Create Folio Transaction
-                $service = Service::where('slug', 'room')->first();
-                $folioTransaction = new FolioTransaction();
-                $folioTransaction->folio_id = $folio->id;
-                $folioTransaction->service_id = $service->id;
-                $folioTransaction->price = $booking->rate_per_night;
-                $folioTransaction->amount = $booking->total_price;
-                $folioTransaction->quantity = $booking->stay_length_number;
-                $folioTransaction->payment_method = $request->payment_method;
-                $folioTransaction->service_name = Room::find($booking->room_id)->name;
-                $folioTransaction->date_placed = $request->booking_date;
-                $folioTransaction->save();
+
+                    // Create Folio Transaction
+                    $service = Service::where('slug', 'room')->first();
+                    $folioTransaction = new FolioTransaction();
+                    $folioTransaction->folio_id = $folio->id;
+                    $folioTransaction->service_id = $service->id;
+                    $folioTransaction->price = $booking->rate_per_night;
+                    $folioTransaction->amount = $booking->total_price;
+                    $folioTransaction->quantity = $booking->stay_length_number;
+                    $folioTransaction->payment_method = $request->payment_method;
+                    $folioTransaction->service_name = Room::find($booking->room_id)->name;
+                    $folioTransaction->date_placed = $request->booking_date;
+                    $folioTransaction->save();
+
+                }
 
                 // Create unavailability
                 $this->createRoomUnavailablility($booking);

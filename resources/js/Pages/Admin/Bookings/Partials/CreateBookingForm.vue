@@ -70,6 +70,7 @@ const createBooking = () => {
           v-model="form.booking_confirmation"
           type="text"
           class="block w-full mt-1"
+          disabled="true"
           autofocus
         />
         <InputError :message="form.errors.booking_confirmation" class="mt-2" />
