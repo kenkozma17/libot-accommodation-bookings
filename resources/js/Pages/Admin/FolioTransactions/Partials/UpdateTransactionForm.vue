@@ -54,7 +54,7 @@ const updateFolioTransaction = () => {
       Folio transaction for <b>{{ guest.full_name }}</b> on
       <i>{{ dayjs(transaction.date_placed).format("MMM DD, YYYY") }}</i
       >. <br />
-      Registration No: <b>{{ transaction.folio.registration_number }}</b>
+      Registration No: <a :href="route('folios.show', transaction.folio.id)"><b>{{ transaction.folio.registration_number }}</b></a>
     </template>
 
     <template #form>

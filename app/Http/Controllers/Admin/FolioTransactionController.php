@@ -38,16 +38,20 @@ class FolioTransactionController extends Controller
             $folioTransaction = new FolioTransaction();
             $folioTransaction->fill($request->all());
             $folioTransaction->folio_id = $request->folio_id;
-            $folioTransaction->service_id = $request->service_id;
+            $folioTransaction->service_id = $request->service['id'];
             $folioTransaction->date_placed = $request->date_placed;
 
-            $service = Service::find($request->service_id);
+            $service = Service::find($request->service['id']);
             if(!$service) {
                 session()->flash('flash.banner', 'Service not found!');
                 session()->flash('flash.bannerStyle', 'danger');
                 return redirect()->back();
             }
-            $folioTransaction->price = $service->price;
+            $folioTransaction->price = (
+                $service->slug === 'down-payment' || $service->slug === 'manual-payment'
+                ? $request->amount
+                : $service->price
+            );
             $folioTransaction->amount = $folioTransaction->price * $request->quantity;
             $folioTransaction->service_name = $service->name;
             $folioTransaction->save();

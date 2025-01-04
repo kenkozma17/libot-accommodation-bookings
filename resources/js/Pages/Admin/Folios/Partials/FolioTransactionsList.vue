@@ -13,12 +13,12 @@ const props = defineProps({
 
 const itemsPaidFor = computed(() => {
   if (props.folio.transactions.length) {
-    let unpaidTransactions = 0;
+    let totalTransactions = props.folio.transactions.length;
     let paidTransactions = 0;
     props.folio.transactions.forEach((transaction) =>
-      transaction.is_paid ? (paidTransactions += 1) : (unpaidTransactions += 1)
+      transaction.is_paid ? (paidTransactions += 1) : ""
     );
-    return paidTransactions + " paid out of " + unpaidTransactions + " transactions.";
+    return paidTransactions + " paid out of " + totalTransactions + " transactions.";
   }
   return "";
 });
@@ -33,6 +33,18 @@ const itemsPaidFor = computed(() => {
         <TableList :hasSearch="false">
           <template #header>
             <tr>
+              <th
+                scope="col"
+                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase"
+              >
+                Action
+              </th>
+              <th
+                scope="col"
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+              >
+                Paid?
+              </th>
               <th
                 scope="col"
                 class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
@@ -63,22 +75,16 @@ const itemsPaidFor = computed(() => {
               >
                 Date
               </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-              >
-                Paid?
-              </th>
-              <th
-                scope="col"
-                class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase"
-              >
-                Action
-              </th>
             </tr>
           </template>
           <template #content>
             <tr v-for="transaction in folio.transactions">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <Link :href="route('folio-transactions.show', transaction.id)">View</Link>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                {{ transaction.is_paid ? "Yes" : "No" }}
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 {{ transaction.quantity }}
               </td>
@@ -93,12 +99,6 @@ const itemsPaidFor = computed(() => {
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 {{ dayjs(transaction.date_placed).format("MMM DD, YYYY") }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                {{ transaction.is_paid ? "Yes" : "No" }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <Link :href="route('folio-transactions.show', transaction.id)">View</Link>
               </td>
             </tr>
             <tr>

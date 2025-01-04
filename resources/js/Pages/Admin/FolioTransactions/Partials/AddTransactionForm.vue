@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 import FormSection from "@/Components/FormSection.vue";
 import InputError from "@/Components/InputError.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -15,12 +15,17 @@ const props = defineProps({
 
 const form = useForm({
   folio_id: props.folio.id,
-  service_id: "",
+  service: "",
   quantity: "",
+  amount: "",
   description: "",
   payment_method: "",
   is_paid: false,
   date_placed: "",
+});
+
+const isManualPayment = computed(() => {
+    return form.service.slug === 'down-payment' || form.service.slug === 'manual-payment';
 });
 
 const createFolioTransaction = () => {
@@ -47,7 +52,7 @@ const createFolioTransaction = () => {
         <select
           required
           class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-          v-model="form.service_id"
+          v-model="form.service"
           name="services"
           id="services"
         >
@@ -59,13 +64,26 @@ const createFolioTransaction = () => {
               v-if="serviceCategory.services"
               v-for="service in serviceCategory.services"
               :key="service.id"
-              :value="service.id"
+              :value="service"
             >
               &nbsp;&nbsp;{{ service.name }} - {{ service.formatted_price }}
             </option>
           </template>
         </select>
         <InputError :message="form.errors.services" class="mt-2" />
+      </div>
+      <div class="col-span-6 sm:col-span-4" v-if="isManualPayment">
+        <InputLabel for="amount" value="Amount" />
+        <TextInput
+          required
+          id="amount"
+          v-model="form.amount"
+          type="number"
+          min="1"
+          class="block w-full mt-1"
+          autofocus
+        />
+        <InputError :message="form.errors.amount" class="mt-2" />
       </div>
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="quantity" value="Quantity" />
