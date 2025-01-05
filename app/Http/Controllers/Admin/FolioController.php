@@ -105,7 +105,10 @@ class FolioController extends Controller
     public function show(string $id)
     {
         $folio = Folio::with(['booking', 'guest'])->where('id', $id)->first();
-        $serviceCategories = ServiceCategory::with('services')->orderBy('name', 'asc')->get();
+        $serviceCategories = ServiceCategory::with(['services' => function($query) {
+            return $query->orderBy('name', 'asc');
+        }])->orderBy('name', 'asc')->get();
+
         return Inertia::render('Admin/Folios/Show', [
             'folio' => $folio,
             'serviceCategories' => $serviceCategories,
