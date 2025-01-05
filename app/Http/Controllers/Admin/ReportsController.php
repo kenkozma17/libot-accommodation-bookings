@@ -47,15 +47,15 @@ class ReportsController extends Controller
                         $totalCashPayments += (int) $transaction->amount;
                     }
 
-                    if($transaction->payment_method === 'Credit/Debit Card') {
+                    if($transaction->payment_method === 'Credit/Debit Card' || $transaction->payment_method === 'card') {
                         $totalCardPayments += (int) $transaction->amount;
                     }
 
-                    if($transaction->payment_method === 'Gcash') {
+                    if($transaction->payment_method === 'Gcash' || $transaction->payment_method === 'gcash') {
                         $totalGcashPayments += (int) $transaction->amount;
                     }
 
-                    if($transaction->payment_method === 'PayMaya') {
+                    if($transaction->payment_method === 'PayMaya' || $transaction->payment_method === 'paymaya') {
                         $totalPaymayaPayments += (int) $transaction->amount;
                     }
 
