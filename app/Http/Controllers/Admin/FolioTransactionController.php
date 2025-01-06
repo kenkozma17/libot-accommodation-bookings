@@ -48,7 +48,7 @@ class FolioTransactionController extends Controller
                 return redirect()->back();
             }
             $folioTransaction->price = (
-                $service->slug === 'down-payment' || $service->slug === 'manual-payment'
+                $service->slug === 'down-payment' || $service->slug === 'manual-payment' || $service->slug === 'adjustment'
                 ? $request->amount
                 : $service->price
             );

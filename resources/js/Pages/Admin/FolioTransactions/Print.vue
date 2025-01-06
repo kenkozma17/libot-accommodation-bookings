@@ -37,6 +37,11 @@ const props = defineProps({
             <th
               class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
             >
+              Paid?
+            </th>
+            <th
+              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+            >
               Name
             </th>
             <th
@@ -84,6 +89,9 @@ const props = defineProps({
                 {{ transaction.date }}
               </td>
               <td class="px-6 py-4 pl-10 text-gray-600 text-sm text-nowrap">
+                {{ transaction.is_paid ? 'Yes' : 'No' }}
+              </td>
+              <td class="px-6 py-4 pl-10 text-gray-600 text-sm text-nowrap">
                 {{ transaction.service_name }}
               </td>
               <td class="px-6 py-4 text-gray-600 text-sm"></td>
@@ -104,6 +112,7 @@ const props = defineProps({
           </template>
           <!-- Total Row -->
           <tr class="main-row cursor-pointer bg-gray-100 hover:bg-gray-300">
+            <td class="px-6 py-4"></td>
             <td class="px-6 py-4"></td>
             <td class="px-6 py-4"></td>
             <td class="px-6 py-4"></td>

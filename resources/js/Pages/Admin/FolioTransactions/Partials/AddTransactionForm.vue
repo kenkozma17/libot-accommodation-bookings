@@ -79,7 +79,6 @@ const createFolioTransaction = () => {
           id="amount"
           v-model="form.amount"
           type="number"
-          min="1"
           class="block w-full mt-1"
           autofocus
         />

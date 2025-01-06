@@ -62,8 +62,8 @@ const updateFolioTransaction = () => {
         <InputLabel for="services" value="Hotel Services" />
         <select
           required
-          :disabled="isReadOnly"
-          :class="{ 'bg-gray-100': isReadOnly }"
+          :disabled="true"
+          :class="{ 'bg-gray-100': true }"
           class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
           v-model="form.service_id"
           name="services"
@@ -88,8 +88,8 @@ const updateFolioTransaction = () => {
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="quantity" value="Quantity" />
         <TextInput
-          :disabled="isReadOnly"
-          :class="{ 'bg-gray-100': isReadOnly }"
+          :disabled="true"
+          :class="{ 'bg-gray-100': true }"
           required
           id="quantity"
           v-model="form.quantity"
