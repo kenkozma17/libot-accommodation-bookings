@@ -4,10 +4,12 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 const props = defineProps({
   folios: Array,
   expenses: Array,
+  accountReceivables: Array,
   month: String,
   year: String,
   totalIncome: String,
   totalExpenses: String,
+  totalReceivables: String,
   grandTotal: String,
   isPositive: Boolean,
   totalCashPayments: String,
@@ -158,8 +160,13 @@ const toggleRow = (rowId) => {
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4">Total Net Income</td>
+                <td
+                  class="px-6 py-4 font-bold"
+                  :class="props.isPositive ? 'text-green-600' : 'text-red-600'"
+                >
+                  {{ props.grandTotal }}
+                </td>
                 <td class="px-6 py-4">Total</td>
                 <td class="px-6 py-4 text-green-600 font-bold">
                   {{ props.totalIncome }}
@@ -272,6 +279,138 @@ const toggleRow = (rowId) => {
                   :class="props.isPositive ? 'text-green-600' : 'text-red-600'"
                 >
                   {{ props.grandTotal }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Account Receivables Table -->
+          <h2 class="font-semibold text-xl text-gray-800 leading-tight mt-6 mb-4">
+            Account Receivables
+          </h2>
+          <table class="min-w-full bg-white border">
+            <thead class="bg-gray-200">
+              <tr>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Date
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Name
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Reg. No.
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Receipt. No.
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Paid?
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Payment Method
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Price
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Quantity
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Sub-total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Main Row -->
+              <template v-for="(account, index) in props.accountReceivables" :key="index">
+                <tr
+                  :class="[
+                    'main-row cursor-pointer hover:bg-gray-300',
+                    index % 2 === 0 ? 'bg-gray-100' : 'bg-gray-50',
+                  ]"
+                  @click="toggleRow(`row-${index}`)"
+                >
+                  <td class="px-6 py-4 font-medium text-gray-900">{{ account.date }}</td>
+                  <td class="px-6 py-4">
+                    {{
+                      account.booking
+                        ? account.booking.guest.full_name
+                        : account.guest.full_name
+                    }}
+                  </td>
+                  <td class="px-6 py-4">{{ account.registration_number }}</td>
+                  <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4"></td>
+                  <td class="px-6 py-4 text-green-600 font-semibold">
+                    {{ account.total }}
+                  </td>
+                </tr>
+                <!-- Sub-Rows -->
+                <template v-if="account.transactions.length">
+                  <tr
+                    v-for="(transaction, tIndex) in account.transactions"
+                    :key="transaction.id"
+                    :id="'row-' + index"
+                    class="sub-row hidden hover:bg-gray-300"
+                    :class="tIndex % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'"
+                  >
+                    <td class="px-6 py-4 pl-10 text-gray-600">{{ transaction.date }}</td>
+                    <td class="px-6 py-4 pl-10 text-gray-600">
+                      {{ transaction.service_name }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600"></td>
+                    <td class="px-6 py-4 text-gray-600">
+                      {{ transaction.receipt_number }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">
+                      {{ transaction.is_paid ? "Yes" : "No" }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">
+                      {{ transaction.payment_method }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">
+                      {{ transaction.formatted_price }}
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">{{ transaction.quantity }}</td>
+                    <td class="px-6 py-4 text-green-600 font-semibold">
+                      {{ transaction.formatted_amount }}
+                    </td>
+                  </tr>
+                </template>
+              </template>
+              <!-- Total Row -->
+              <tr class="main-row cursor-pointer bg-gray-100 hover:bg-gray-300">
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4">Total Receivables</td>
+                <td class="px-6 py-4 text-green-600 font-bold">
+                  {{ props.totalReceivables}}
                 </td>
               </tr>
             </tbody>

@@ -29,5 +29,10 @@ class UserRoleSeeder extends Seeder
         if($user && $user->hasRole('reporter') === false) {
             $user->assignRole('reporter');
         }
+
+        $user = User::where('email', 'gerlyn@catmidinn.com')->first();
+        if($user && $user->hasRole('reporter') === false) {
+            $user->assignRole('reporter');
+        }
     }
 }

@@ -29,7 +29,8 @@ class ReportsController extends Controller
             'booking',
             'transactions' => function($query) use ($month, $year) {
                 $query->whereMonth('date_placed', $month)
-                      ->whereYear('date_placed', $year);
+                      ->whereYear('date_placed', $year)
+                      ->where('is_paid', true);
             }
         ])->whereHas('transactions', function($query) use ($month, $year) {
             $query->whereMonth('date_placed', $month)
@@ -66,6 +67,27 @@ class ReportsController extends Controller
             }
         }
 
+        // Accounts Receivable
+        $accountReceivables = Folio::with([
+            'guest',
+            'booking',
+            'transactions' => function($query) use ($month, $year) {
+                $query->whereMonth('date_placed', $month)
+                      ->whereYear('date_placed', $year)
+                      ->where('is_paid', false);
+            }
+        ])->whereHas('transactions', function($query) use ($month, $year) {
+            $query->whereMonth('date_placed', $month)
+                  ->whereYear('date_placed', $year)
+                  ->where('is_paid', false);
+        })->get();
+
+        $totalReceivables = 0;
+        foreach($accountReceivables as $folio) {
+            $totalReceivables += (int) $folio->transactions->sum('amount');
+        }
+
+        // Operational Expenses
         $expenses = Expense::whereMonth('expense_date', $month)
             ->whereYear('expense_date', $year);
 
@@ -77,10 +99,12 @@ class ReportsController extends Controller
         return Inertia::render('Admin/Reports/Show', [
             'folios' => $folios,
             'expenses' => $expenses->get(),
+            'accountReceivables' => $accountReceivables,
             'month' => $request->month,
             'year' => $year,
             'totalIncome' => 'P' . number_format($totalIncome, 2),
             'totalExpenses' => 'P' . number_format($totalExpenses, 2),
+            'totalReceivables' => 'P' . number_format($totalReceivables, 2),
             'grandTotal' => 'P' . number_format($grandTotal, 2),
             'isPositive' => $isPositive,
             'totalCashPayments' => 'P' . number_format($totalCashPayments, 2),
