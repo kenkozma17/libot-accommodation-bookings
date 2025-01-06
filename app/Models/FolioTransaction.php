@@ -14,7 +14,7 @@ class FolioTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['quantity', 'description', 'payment_method', 'is_paid', 'date_placed'];
+    protected $fillable = ['quantity', 'description', 'payment_method', 'is_paid', 'date_placed', 'user_id'];
     protected $with = ['service'];
 
     protected $appends = [
@@ -33,6 +33,10 @@ class FolioTransaction extends Model
 
     public function folio(): BelongsTo {
         return $this->belongsTo(Folio::class);
+    }
+
+    public function user() {
+        return $this->belongsTo(User::class);
     }
 
     public function getFormattedPriceAttribute() {

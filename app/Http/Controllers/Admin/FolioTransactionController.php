@@ -10,6 +10,7 @@ use App\Models\ServiceCategory;
 use Inertia\Inertia;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FolioTransactionController extends Controller
 {
@@ -38,6 +39,7 @@ class FolioTransactionController extends Controller
             $folioTransaction = new FolioTransaction();
             $folioTransaction->fill($request->all());
             $folioTransaction->folio_id = $request->folio_id;
+            $folioTransaction->user_id = Auth::user()->id;
             $folioTransaction->service_id = $request->service['id'];
             $folioTransaction->date_placed = $request->date_placed;
 
@@ -83,7 +85,7 @@ class FolioTransactionController extends Controller
      */
     public function show(string $id)
     {
-        $folioTransaction = FolioTransaction::with(['folio', 'service'])->where('id', $id)->first();
+        $folioTransaction = FolioTransaction::with(['folio', 'service', 'user'])->where('id', $id)->first();
         $serviceCategories = ServiceCategory::with('services')->orderBy('name', 'asc')->get();
         return Inertia::render('Admin/FolioTransactions/Show', [
             'transaction' => $folioTransaction,

@@ -16,6 +16,7 @@ use Illuminate\Support\Str;
 use App\Services\BookingService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -130,6 +131,7 @@ class BookingController extends Controller
                     $service = Service::where('slug', 'room')->first();
                     $folioTransaction = new FolioTransaction();
                     $folioTransaction->folio_id = $folio->id;
+                    $folioTransaction->user_id = Auth::user()->id;
                     $folioTransaction->service_id = $service->id;
                     $folioTransaction->price = $booking->rate_per_night;
                     $folioTransaction->amount = $booking->total_price;

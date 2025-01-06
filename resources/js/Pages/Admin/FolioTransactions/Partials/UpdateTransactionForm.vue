@@ -145,6 +145,10 @@ const updateFolioTransaction = () => {
           />
         </label>
       </div>
+
+      <div class="col-span-6 sm:col-span-4" v-if="props.transaction.user">
+        <p class="text-sm">Created by: <span class="font-semibold">{{ props.transaction.user.name}}</span> </p>
+      </div>
     </template>
 
     <template #actions>

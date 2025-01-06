@@ -267,15 +267,6 @@ const toggleRow = (rowId) => {
                   {{ props.totalExpenses }}
                 </td>
               </tr>
-              <tr class="main-row cursor-pointer bg-gray-100 hover:bg-gray-300">
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-                <td class="px-6 py-4"></td>
-              </tr>
             </tbody>
           </table>
 
