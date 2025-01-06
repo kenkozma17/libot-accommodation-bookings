@@ -273,13 +273,8 @@ const toggleRow = (rowId) => {
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
-                <td class="px-6 py-4">Net Total</td>
-                <td
-                  class="px-6 py-4 font-bold"
-                  :class="props.isPositive ? 'text-green-600' : 'text-red-600'"
-                >
-                  {{ props.grandTotal }}
-                </td>
+                <td class="px-6 py-4"></td>
+                <td class="px-6 py-4"></td>
               </tr>
             </tbody>
           </table>
