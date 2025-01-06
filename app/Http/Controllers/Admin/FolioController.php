@@ -71,21 +71,30 @@ class FolioController extends Controller
     public function store(FolioStoreRequest $request)
     {
         // try {
+
             // Create the Folio
             $folio = new Folio;
             $folio->registration_number = $this->generateRegNumber();
-            if( $request->guest_id !== 0) {
-                $folio->guest_id = $request->guest_id;
-            }
-            if($request->booking_id !== 0) {
-                $folio->booking_id = $request->booking_id;
-            }
-            $folio->save();
 
-            session()->flash('flash.banner', 'Folio Created Successfully!');
-            session()->flash('flash.bannerStyle', 'success');
+            $doesFolioExist = Folio::where('booking_id', $request->booking_id)->first();
+            if(!$doesFolioExist) {
+                if( $request->guest_id !== 0) {
+                    $folio->guest_id = $request->guest_id;
+                }
 
-            return redirect()->route('folios.index');
+                if($request->booking_id !== 0) {
+                    $folio->booking_id = $request->booking_id;
+                }
+                $folio->save();
+                session()->flash('flash.banner', 'Folio Created Successfully!');
+                session()->flash('flash.bannerStyle', 'success');
+                return redirect()->route('folios.index');
+            } else {
+                session()->flash('flash.banner', 'Selected booking already has folio!');
+                session()->flash('flash.bannerStyle', 'danger');
+                return redirect()->route('folios.create');
+            }
+
         // } catch(Exception $ex) {
 
         // }
