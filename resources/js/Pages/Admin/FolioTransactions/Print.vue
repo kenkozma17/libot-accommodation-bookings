@@ -85,42 +85,44 @@ const props = defineProps({
               class="hover:bg-gray-300"
               :class="tIndex % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'"
             >
-              <td class="px-6 py-4 pl-10 text-gray-600 text-sm text-nowrap">
+              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
                 {{ transaction.date }}
               </td>
-              <td class="px-6 py-4 pl-10 text-gray-600 text-sm text-nowrap">
+              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
                 {{ transaction.is_paid ? 'Yes' : 'No' }}
               </td>
-              <td class="px-6 py-4 pl-10 text-gray-600 text-sm text-nowrap">
+              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
                 {{ transaction.service_name }}
               </td>
-              <td class="px-6 py-4 text-gray-600 text-sm"></td>
-              <td class="px-6 py-4 text-gray-600 text-sm">
+              <td class="px-6 py-2 text-gray-600 text-sm">
+                {{ folio.registration_number }}
+              </td>
+              <td class="px-6 py-2 text-gray-600 text-sm">
                 {{ transaction.receipt_number }}
               </td>
-              <td class="px-6 py-4 text-gray-600 text-sm">
+              <td class="px-6 py-2 text-gray-600 text-sm">
                 {{ transaction.payment_method }}
               </td>
-              <td class="px-6 py-4 text-gray-600 text-sm">
+              <td class="px-6 py-2 text-gray-600 text-sm">
                 {{ transaction.formatted_price }}
               </td>
-              <td class="px-6 py-4 text-gray-600 text-sm">{{ transaction.quantity }}</td>
-              <td class="px-6 py-4 font-semibold">
+              <td class="px-6 py-2 text-gray-600 text-sm">{{ transaction.quantity }}</td>
+              <td class="px-6 py-2 font-semibold">
                 {{ transaction.formatted_amount }}
               </td>
             </tr>
           </template>
           <!-- Total Row -->
           <tr class="main-row cursor-pointer bg-gray-100 hover:bg-gray-300">
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4"></td>
-            <td class="px-6 py-4">Total</td>
-            <td class="px-6 py-4 font-bold">
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2"></td>
+            <td class="px-6 py-2">Total</td>
+            <td class="px-6 py-2 font-bold">
               {{ props.totalExpenses }}
             </td>
           </tr>

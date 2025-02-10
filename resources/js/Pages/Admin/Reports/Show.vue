@@ -160,14 +160,14 @@ const toggleRow = (rowId) => {
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4"></td>
-                <td class="px-6 py-4">Total Net Income</td>
+                <td class="px-6 py-4">Total Gross Income</td>
                 <td
                   class="px-6 py-4 font-bold"
                   :class="props.isPositive ? 'text-green-600' : 'text-red-600'"
                 >
                   {{ props.grandTotal }}
                 </td>
-                <td class="px-6 py-4">Total</td>
+                <td class="px-6 py-4">Total Net Sales</td>
                 <td class="px-6 py-4 text-green-600 font-bold">
                   {{ props.totalIncome }}
                 </td>
@@ -396,7 +396,7 @@ const toggleRow = (rowId) => {
                 <td class="px-6 py-4"></td>
                 <td class="px-6 py-4">Total Receivables</td>
                 <td class="px-6 py-4 text-green-600 font-bold">
-                  {{ props.totalReceivables}}
+                  {{ props.totalReceivables }}
                 </td>
               </tr>
             </tbody>
