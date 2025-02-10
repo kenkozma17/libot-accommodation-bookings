@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Guest;
 use App\Models\Payment;
@@ -40,7 +39,8 @@ class Booking extends Model
       'check_out_formatted',
       'created_at_formatted',
       'rate_per_night_formatted',
-      'stay_length'
+      'stay_length',
+      'stay_length_number'
     ];
 
     public function room(): BelongsTo {
@@ -64,6 +64,12 @@ class Booking extends Model
       $checkOut = Carbon::parse($this->check_out);
       return $checkIn->diffInDays($checkOut) . ' Night/s';
     }
+
+    public function getStayLengthNumberAttribute() {
+        $checkIn = Carbon::parse($this->check_in);
+        $checkOut = Carbon::parse($this->check_out);
+        return $checkIn->diffInDays($checkOut);
+      }
 
     public function getCheckInFormattedAttribute() {
       return Carbon::parse($this->check_in)->format('M d, Y');

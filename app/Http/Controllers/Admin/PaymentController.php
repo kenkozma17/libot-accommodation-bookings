@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\FolioTransaction;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Response;
 
 class PaymentController extends Controller
 {
@@ -25,7 +27,7 @@ class PaymentController extends Controller
         }]
       ])
         ->where('payment_status', 'PAID')
-        ->orderBy('created_at', 'asc')
+        ->orderBy('created_at', 'desc')
         ->paginate(config('pagination.default'))
         ->withQueryString();;
 
@@ -33,6 +35,36 @@ class PaymentController extends Controller
         'payments' => $payments,
         'search' => $search
       ]);
+    }
+
+    public function export() {
+        // Get all payments
+        $payments = Payment::orderBy('created_at', 'desc')->get();
+
+        $csvFileName = 'payments.csv';
+        $csvFile = fopen($csvFileName, 'w');
+        $headers = ['Transaction #', 'Payer Name', 'Amount', 'Fee', 'Payer Email', 'Payment Method', 'Status', 'Date'];
+
+        // Set CSV headers
+        fputcsv($csvFile, $headers);
+
+        foreach($payments as $payment) {
+            fputcsv($csvFile, [
+                $payment->paymongo_payment_id,
+                $payment->payer_name,
+                $payment->payment_amount,
+                $payment->fee,
+                $payment->payer_email,
+                $payment->payment_source,
+                $payment->status,
+                $payment->payment_date,
+            ]);
+        }
+
+        // Close CSV File
+        fclose($csvFile);
+
+        return Response::download(public_path($csvFileName))->deleteFileAfterSend(true);
     }
 
     /**
@@ -49,6 +81,20 @@ class PaymentController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    public function showManualPayments(Request $request) {
+        $search = $request->get('search');
+        $payments = FolioTransaction::where('payment_method', 'Credit/Debit Card')
+        ->with('folio')
+        ->orderBy('created_at', 'desc')
+        ->paginate(config('pagination.default'))
+        ->withQueryString();;
+
+      return Inertia::render('Admin/Payments/ManualPaymentsList', [
+        'payments' => $payments,
+        'search' => $search
+      ]);
     }
 
     /**

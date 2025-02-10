@@ -12,7 +12,11 @@ use App\Http\Controllers\Admin\RoomsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\PaymentController as AdminPaymentController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
-use App\Services\BotLogger;
+use App\Http\Controllers\Admin\FolioController as AdminFolioController;
+use App\Http\Controllers\Admin\FolioTransactionController as AdminFolioTransactionController;
+use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
+use App\Http\Controllers\Admin\ExpensesController as AdminExpensesController;
+use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +65,21 @@ Route::middleware([
       ->name('rooms.set-primary-image');
 
     Route::resource('/payments', AdminPaymentController::class, ['names' => 'payments']);
+    Route::get('/manual-payments', [AdminPaymentController::class, 'showManualPayments'])
+        ->name('payments.manual-payments');
+
     Route::resource('/bookings', AdminBookingController::class, ['names' => 'bookings']);
+    Route::resource('/folios', AdminFolioController::class, ['names' => 'folios']);
+    Route::resource('/folio-transactions', AdminFolioTransactionController::class, ['names' => 'folio-transactions']);
+    Route::get('/folio-transactions-report/{folioId}', [AdminFolioTransactionController::class, 'printFolio'])
+        ->name('folio-transactions.print');
+    Route::get('/payments-export', [AdminPaymentController::class, 'export'])->name('payments.export');
+    Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
+    Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
+
+    Route::group(['middleware' => ['can:manage reports']], function() {
+        Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
+        Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
+            ->name('reports.generate');
+    });
 });

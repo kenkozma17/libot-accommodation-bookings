@@ -14,10 +14,12 @@ class Payment extends Model
     protected $appends = [
       'payment_amount_formatted',
       'payment_date_formatted',
+      'fee_formatted'
     ];
 
     protected $fillable = [
       'payment_amount',
+      'fee',
       'payment_status',
       'payment_date',
       'payment_method',
@@ -40,6 +42,12 @@ class Payment extends Model
     public function getPaymentAmountFormattedAttribute() {
       return $this->currency_code . ' ' . number_format($this->payment_amount, 2);
     }
+
+    public function getFeeFormattedAttribute() {
+        if($this->fee) {
+            return $this->currency_code . ' ' . number_format($this->fee, 2);
+        }
+      }
 
     public function getPaymentDateFormattedAttribute() {
       return Carbon::parse($this->payment_date)->format('M d, Y');

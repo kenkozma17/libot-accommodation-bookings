@@ -4,11 +4,33 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\BookingStoreRequest;
 use App\Models\Booking;
+use App\Models\Guest;
+use App\Models\Room;
+use App\Models\Folio;
+use App\Models\FolioTransaction;
+use App\Models\Service;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+use App\Services\BookingService;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
+
+    protected $bookingService;
+    public function __construct(BookingService $bookingService) {
+        $this->bookingService = $bookingService;
+    }
+
+    public function createRoomUnavailablility($newBooking) {
+        $isConfirmed = true;
+        $this->bookingService->createRoomUnavailablility($newBooking, $isConfirmed);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -31,7 +53,7 @@ class BookingController extends Controller
         }
       })
       ->where('booking_status', 'CONFIRMED')
-      ->orderBy('check_in', 'asc')
+      ->orderBy('check_in', 'desc')
       ->paginate(config('pagination.default'))
       ->withQueryString();
 
@@ -46,15 +68,105 @@ class BookingController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Bookings/Create', [
+            'rooms' => Room::where('is_available', true)->orderBy('name', 'asc')->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BookingStoreRequest $request)
     {
-        //
+        try {
+            // Check for bookings that could overlap with existing ones
+            $start = Carbon::parse($request->check_in)->format('Y-m-d');
+            $end = Carbon::parse($request->check_out)->format('Y-m-d');
+            $isRoomAvailable = Room::where('id', $request->room_id)
+                ->where('is_available', true)
+                ->orderBy('rate', 'asc')
+                ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
+                $query->where('is_confirmed', true);
+
+                // Handles range overlap and allows customers to check in on the same day others check out
+                $query->where('start_date', '<', $end)
+                    ->where('end_date', '>', $start);
+
+                // Handles unavailable blocked dates. Room is unavailable for the whole date.
+                $query->orWhereBetween('start_date', [$start, $end])
+                    ->whereNull('end_date');
+            })->first();
+
+
+            if($isRoomAvailable) {
+                // Check if guest exists already. If not, create one.
+                $guest = Guest::where('email', $request->email)->first();
+                if(!$guest) {
+                    $guest = new Guest;
+                    $guest->fill($request->validated());
+                    $guest->save();
+                }
+
+                // Create the booking
+                $booking = new Booking;
+                $booking->fill($request->validated());
+                $booking->guest_id = $guest->id;
+                $booking->is_manual = true;
+                if(!$booking->booking_confirmation) {
+                    $booking->booking_confirmation = Str::random(7);
+                }
+                $booking->save();
+
+                // Create Folio if one doesn't exist
+                $folioExists = Folio::where('booking_id', $booking->id)->first();
+                if(!$folioExists) {
+                    $folio = new Folio;
+                    $folio->registration_number = $this->generateRegNumber();
+                    $folio->guest_id = $guest->id;
+                    $folio->booking_id = $booking->id;
+                    $folio->save();
+
+
+                    // Create Folio Transaction
+                    $service = Service::where('slug', 'room')->first();
+                    $folioTransaction = new FolioTransaction();
+                    $folioTransaction->folio_id = $folio->id;
+                    $folioTransaction->user_id = Auth::user()->id;
+                    $folioTransaction->service_id = $service->id;
+                    $folioTransaction->price = $booking->rate_per_night;
+                    $folioTransaction->amount = $booking->total_price;
+                    $folioTransaction->quantity = $booking->stay_length_number;
+                    $folioTransaction->payment_method = $request->payment_method;
+                    $folioTransaction->service_name = Room::find($booking->room_id)->name;
+                    $folioTransaction->date_placed = $request->booking_date;
+                    $folioTransaction->save();
+
+                }
+
+                // Create unavailability
+                $this->createRoomUnavailablility($booking);
+
+                session()->flash('flash.banner', 'Booking Created Successfully!');
+                session()->flash('flash.bannerStyle', 'success');
+
+                return redirect()->route('bookings.index');
+            } else {
+                session()->flash('flash.banner', 'This booking overlaps with another booking for this room!');
+                session()->flash('flash.bannerStyle', 'danger');
+
+                return redirect()->back();
+            }
+          } catch(Throwable $e) {
+            report($e);
+          }
+    }
+
+    public function generateRegNumber() {
+        $latestFolio = Folio::latest('created_at')->first();
+        if($latestFolio) {
+            return (string) (((int) $latestFolio->registration_number) + 1);
+        }
+        return '5000';
     }
 
     /**

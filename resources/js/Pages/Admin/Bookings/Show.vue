@@ -28,8 +28,8 @@ const props = defineProps({
               <UpdateBookingForm :booking="booking" />
 
               <SectionBorder />
-              
-              <UpdateGuestForm 
+
+              <UpdateGuestForm
                 :guest="booking.guest"
                 :is-disabled="true"
                 />
@@ -37,6 +37,7 @@ const props = defineProps({
               <SectionBorder />
 
               <UpdatePaymentForm
+                v-if="booking.payment"
                 :payment="booking.payment"
                 />
             </div>

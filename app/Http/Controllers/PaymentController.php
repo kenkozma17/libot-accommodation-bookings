@@ -9,6 +9,9 @@ use App\Models\Room;
 use App\Models\Guest;
 use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\Folio;
+use App\Models\Service;
+use App\Models\FolioTransaction;
 use App\Models\RoomUnavailability;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -18,9 +21,21 @@ use Illuminate\Support\Facades\Storage;
 use App\Mail\BookingConfirmationMail;
 use Carbon\Exceptions\Exception;
 use App\Services\BotLogger;
+use App\Services\BookingService;
 
 class PaymentController extends Controller
 {
+
+  protected $bookingService;
+
+  public function __construct(BookingService $bookingService) {
+    $this->bookingService = $bookingService;
+  }
+
+  public function createRoomUnavailablility($newBooking) {
+    $this->bookingService->createRoomUnavailablility($newBooking);
+  }
+
   public function index(Request $request) {
     $data = $request->all();
     return Inertia::render('Booking/Payment');
@@ -65,7 +80,8 @@ class PaymentController extends Controller
         'receipt_number' => $payMongoPayment['attributes']['payments'][0]['id'],
         'payment_source' => $paymentMethod,
         'currency_code' => $payMongoPayment['attributes']['payments'][0]['attributes']['currency'],
-        'payment_status' => 'PAID'
+        'payment_status' => 'PAID',
+        'fee' => number_format(($payMongoPayment['attributes']['payments'][0]['attributes']['fee'] / 100), 2, '.', ' '),
       ]);
 
       // Set booking status to confirmed
@@ -81,16 +97,62 @@ class PaymentController extends Controller
       $unavailability->is_confirmed = true;
       $unavailability->save();
 
+      // Create Folio
+      $folio = new Folio();
+      $folio->registration_number = $this->generateRegNumber();
+      $folio->guest_id = $booking->guest_id;
+      $folio->booking_id = $booking->id;
+      $folio->save();
+
+      // Create Folio Transaction
+      $service = Service::where('slug', 'room')->first();
+      $folioTransaction = new FolioTransaction();
+      $folioTransaction->folio_id = $folio->id;
+      $folioTransaction->service_id = $service->id;
+      $folioTransaction->price = $booking->rate_per_night;
+      $folioTransaction->amount = $booking->total_price;
+      $folioTransaction->quantity = $booking->stay_length_number;
+      $folioTransaction->payment_method = $paymentMethod;
+      $folioTransaction->service_name = Room::find($booking->room_id)->name;
+      $folioTransaction->is_paid = 1;
+      $folioTransaction->date_placed = $booking->check_in;
+      $folioTransaction->save();
+
       // Generate Booking Confirmation
       $this->generateConfirmationPdf($booking->id);
 
       // Send confirmation email
       $this->sendConfirmationEmail($booking);
 
-      (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME")  . " ✅ A guest has completed payment for their booking (". $booking->booking_confirmation .")");
+      // Expire Checkout Session
+      $sessionId = $response['data']['id'];
+      $this->expireCheckoutSession($sessionId);
+
+      (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME") . " ✅ A guest has completed payment for their booking (". $booking->booking_confirmation .")");
 
     }
   }
+
+  public function expireCheckoutSession($sessionId) {
+    $response = Http::accept('application/json')
+        ->withBasicAuth(env('PAYMONGO_SECRET_KEY'), env('PAYMONGO_SECRET_KEY'))
+        ->withBody(json_encode([
+            'checkout_session_id' => $sessionId,
+        ]))
+        ->withHeaders([
+        'Content-Type' => 'application/json'
+        ])->post('https://api.paymongo.com/v1/checkout_sessions/checkout_session_id/expire');
+
+    return $response;
+  }
+
+  public function generateRegNumber() {
+    $latestFolio = Folio::latest('created_at')->first();
+    if($latestFolio) {
+        return (string) (((int) $latestFolio->registration_number) + 1);
+    }
+    return '5000';
+}
 
   public function executeCheckoutSession($paymentData) {
     $response = Http::accept('application/json')
@@ -128,23 +190,9 @@ class PaymentController extends Controller
         'payment_id' => null
     ]);
 
-    (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME")  . " ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
+    (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME") . " ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");
 
     return $newBooking;
-  }
-
-  public function createRoomUnavailablility($newBooking) {
-    $newUnavailability = RoomUnavailability::create([
-      'room_id' => $newBooking->room_id,
-      'booking_id' => $newBooking->id,
-      'start_date' => $newBooking->check_in,
-      'end_date' => $newBooking->check_out,
-      'notes' => null,
-      'is_range' => true,
-      'is_confirmed' => false
-    ]);
-
-    return $newUnavailability;
   }
 
   public function createPayment($booking, $bookingId, $guestId) {
@@ -163,6 +211,7 @@ class PaymentController extends Controller
       'payment_reference' => null,
       'currency_code' => null,
       'payment_source' => null,
+      'fee' => null,
       'booking_id' => $bookingId,
       'guest_id' => $guestId,
     ]);
@@ -172,7 +221,7 @@ class PaymentController extends Controller
 
   public function sendConfirmationEmail(Booking $booking) {
     \Mail::to($booking->guest->email)
-      ->cc("catmidinn@gmail.com")
+      ->cc(env("FRONT_DESK_EMAIL"))
       ->send(new BookingConfirmationMail($booking));
   }
 
@@ -210,7 +259,7 @@ class PaymentController extends Controller
             'quantity' => 1
           ]],
           'payment_method_types' => ['card', 'paymaya', 'gcash'],
-          'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name,
+          'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name . ' at ' . env('APP_NAME'),
         ]
       ]
     ]);
