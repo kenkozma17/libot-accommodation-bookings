@@ -25,7 +25,7 @@ const form = useForm({
 });
 
 const isManualPayment = computed(() => {
-    return form.service.slug === 'down-payment' || form.service.slug === 'manual-payment' || form.service.slug === 'adjustment';
+    return form.service.slug === 'down-payment' || form.service.slug === 'manual-payment' || form.service.slug === 'adjustment' || form.service.slug === 'discount';
 });
 
 const createFolioTransaction = () => {
