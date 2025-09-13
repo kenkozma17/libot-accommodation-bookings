@@ -6,6 +6,7 @@ use App\Mail\BookingConfirmationMail;
 use App\Models\Booking;
 use Carbon\Exceptions\Exception;
 use Illuminate\Console\Command;
+use Illuminate\Mail\Mailables\Attachment;
 
 class SendFailedBookingEmails extends Command
 {
@@ -31,7 +32,9 @@ class SendFailedBookingEmails extends Command
         try {
             $bookingIds = [169, 172, 173];
             foreach($bookingIds as $id) {
-                $booking = Booking::find($id);
+                $booking = Booking::where('id', $id)
+                ->with(['guest', 'payment'])
+                ->first();
 
                 if($booking) {
                     \Mail::to($booking->guest->email)
@@ -41,7 +44,7 @@ class SendFailedBookingEmails extends Command
             }
             $this->info('Emails Sent!');
         } catch (\Exception $e) {
-            $this->error('Something went wrong! ' . $e->getMessage());
+            $this->error('Something went wrong! ' . $e);
         }
     }
 }

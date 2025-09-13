@@ -53,7 +53,9 @@ class BookingConfirmationMail extends Mailable
     public function attachments(): array
     {
         return [
-          Attachment::fromPath('storage/confirmations/' . $this->booking->booking_confirmation . '.pdf'),
+          Attachment::fromPath(
+            storage_path('app/public/confirmations/' . $this->booking->booking_confirmation . '.pdf')
+          ),
         ];
     }
 }
