@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('inventory_movements', function (Blueprint $table) {
             $table->id();
             $table->string('type'); // increase, decrease, adjustment
-            $table->decimal('quantity');
+            $table->decimal('quantity', 8, 2);
             $table->string('unit');
+            $table->decimal('previous_stock', 8, 2);
+            $table->decimal('current_stock', 8, 2);
+            $table->string('note')->nullable();
 
             $table->unsignedBigInteger('inventory_item_id');
             $table->foreign('inventory_item_id')

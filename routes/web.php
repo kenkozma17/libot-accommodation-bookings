@@ -17,6 +17,8 @@ use App\Http\Controllers\Admin\FolioTransactionController as AdminFolioTransacti
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\ExpensesController as AdminExpensesController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
+use App\Http\Controllers\Admin\InventoryController as AdminInventoryController;
+use App\Http\Controllers\Admin\InventoryMovementController as AdminInventoryMovementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,6 +78,10 @@ Route::middleware([
     Route::get('/payments-export', [AdminPaymentController::class, 'export'])->name('payments.export');
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
     Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
+
+    /* Inventory */
+    Route::resource('inventory', AdminInventoryController::class);
+    Route::resource('inventory-movement', AdminInventoryMovementController::class);
 
     Route::group(['middleware' => ['can:manage reports']], function() {
         Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);

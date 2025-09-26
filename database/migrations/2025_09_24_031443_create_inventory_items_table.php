@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->string('unit');
-            $table->decimal('stock', 2);
-            $table->decimal('min_level', 2);
-            $table->decimal('est_cost', 2);
+            $table->decimal('stock', 8, 2);
+            $table->decimal('min_level', 8, 2);
+            $table->decimal('est_cost', 8, 2);
             $table->timestamps();
         });
     }
