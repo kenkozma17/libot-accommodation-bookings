@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Service;
 use App\Http\Requests\ServiceStoreRequest;
+use App\Models\InventoryItem;
 use Illuminate\Support\Str;
 
 class ServiceController extends Controller
@@ -67,12 +68,49 @@ class ServiceController extends Controller
      */
     public function show(string $id)
     {
-        $service = Service::with('category')->where('id', $id)->first();
+        $service = Service::with(['category', 'inventory_items' => function($query) {
+          return $query->orderBy('name', 'asc');
+        }])->where('id', $id)->first();
         $serviceCategories = ServiceCategory::orderBy('name', 'asc')->get();
+        $items = InventoryItem::with('category')->orderBy('name', 'desc')->get();
         return Inertia::render('Admin/Services/Show', [
             'service' => $service,
             'serviceCategories' => $serviceCategories,
+            'items' => $items,
         ]);
+    }
+
+    /**
+     * Attach an inventory item to a service
+     */
+    public function addInventoryItem(string $serviceId, Request $request) {
+      $service = Service::find($serviceId);
+      $inventoryItemId = $request->inventory_item_id;
+      if(isset($request->inventory_item_id)) {
+        $inventoryItem = InventoryItem::find($inventoryItemId);
+
+        if($inventoryItem) {
+          $service->inventory_items()->attach($inventoryItem, [
+            'quantity' => $request->quantity,
+            'unit' => $inventoryItem->unit,
+          ]);
+        }
+      }
+    }
+
+    /**
+     * Remove an inventory item from a service
+     */
+    public function removeInventoryItem(string $serviceId, Request $request) {
+      $service = Service::find($serviceId);
+      $inventoryItemId = $request->inventory_item_id;
+      if(isset($request->inventory_item_id)) {
+        $inventoryItem = InventoryItem::find($inventoryItemId);
+
+        if($inventoryItem) {
+          $service->inventory_items()->detach($inventoryItem);
+        }
+      }
     }
 
     /**

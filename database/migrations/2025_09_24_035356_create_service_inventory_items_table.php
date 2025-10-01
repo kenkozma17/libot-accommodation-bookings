@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreign('service_id')->references('id')->on('services')->constrained();
             $table->foreign('inventory_item_id')->references('id')->on('inventory_items')->constrained();
 
-            $table->decimal('quantity', 2);
+            $table->decimal('quantity', 8,2);
             $table->string('unit');
             $table->timestamps();
         });

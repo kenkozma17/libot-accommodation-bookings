@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\ExpensesController as AdminExpensesController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 use App\Http\Controllers\Admin\InventoryController as AdminInventoryController;
 use App\Http\Controllers\Admin\InventoryMovementController as AdminInventoryMovementController;
+use App\Http\Controllers\Admin\PurchaseOrderController as AdminPurchaseOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,12 +77,24 @@ Route::middleware([
     Route::get('/folio-transactions-report/{folioId}', [AdminFolioTransactionController::class, 'printFolio'])
         ->name('folio-transactions.print');
     Route::get('/payments-export', [AdminPaymentController::class, 'export'])->name('payments.export');
+
+    /* Services */
     Route::resource('/services', AdminServiceController::class, ['names' => 'services']);
+    Route::post('/services/add-inventory-item/{service_id}', [AdminServiceController::class, 'addInventoryItem'])
+      ->name('services.add-inventory-item');
+    Route::delete('/services/remove-inventory-item/{service_id}', [AdminServiceController::class, 'removeInventoryItem'])
+      ->name('services.remove-inventory-item');
+
     Route::resource('/expenses', AdminExpensesController::class, ['names' => 'expenses']);
 
     /* Inventory */
     Route::resource('inventory', AdminInventoryController::class);
     Route::resource('inventory-movement', AdminInventoryMovementController::class);
+
+    /* Purchase Order */
+    Route::resource('purchase-order', AdminPurchaseOrderController::class);
+    Route::post('purchase-order/generate', [AdminPurchaseOrderController::class, 'generatePurchaseOrderFile'])
+      ->name('purchase-order.generate');
 
     Route::group(['middleware' => ['can:manage reports']], function() {
         Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);

@@ -18,6 +18,7 @@ const form = useForm({
   stock: "",
   unit: "",
   min_level: "",
+  refill_quantity: "",
   inventory_category_id: "",
 });
 
@@ -86,6 +87,18 @@ const createInventory = () => {
           autofocus
         />
         <InputError :message="form.errors.min_level" class="mt-2" />
+      </div>
+      <div class="col-span-6 sm:col-span-4">
+        <InputLabel for="refill_quantity" value="Refill Quantity" />
+        <TextInput
+          required
+          id="refill_quantity"
+          v-model="form.refill_quantity"
+          type="text"
+          class="block w-full mt-1"
+          autofocus
+        />
+        <InputError :message="form.errors.refill_quantity" class="mt-2" />
       </div>
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="est_cost" value="Est. Cost (PHP)" />

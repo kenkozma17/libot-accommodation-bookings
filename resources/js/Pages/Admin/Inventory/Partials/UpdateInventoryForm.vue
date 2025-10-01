@@ -27,6 +27,7 @@ const form = useForm({
   stock: props.item.stock,
   unit: props.item.unit,
   min_level: props.item.min_level,
+  refill_quantity: props.item.refill_quantity,
   inventory_category_id: props.item.inventory_category_id,
 });
 
@@ -119,6 +120,20 @@ function resetForm() {
           autofocus
         />
         <InputError :message="form.errors.min_level" class="mt-2" />
+      </div>
+      <div class="col-span-6 sm:col-span-4">
+        <InputLabel for="refill_quantity" value="Refill Quantity" />
+        <TextInput
+          :class="{ 'bg-gray-100': isReadOnly }"
+          :disabled="isReadOnly"
+          required
+          id="refill_quantity"
+          v-model="form.refill_quantity"
+          type="text"
+          class="block w-full mt-1"
+          autofocus
+        />
+        <InputError :message="form.errors.refill_quantity" class="mt-2" />
       </div>
       <div class="col-span-6 sm:col-span-4">
         <InputLabel for="est_cost" value="Est. Cost (PHP)" />

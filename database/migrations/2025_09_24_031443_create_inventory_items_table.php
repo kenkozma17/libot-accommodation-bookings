@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('stock', 8, 2);
             $table->decimal('min_level', 8, 2);
             $table->decimal('est_cost', 8, 2);
+            $table->decimal('refill_quantity', 8, 2);
             $table->timestamps();
         });
     }

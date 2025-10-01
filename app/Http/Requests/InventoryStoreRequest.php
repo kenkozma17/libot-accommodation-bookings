@@ -24,6 +24,7 @@ class InventoryStoreRequest extends FormRequest
         return [
             'name' => 'required|string',
             'min_level' => 'required|numeric',
+            'refill_quantity' => 'required|numeric',
             'stock' => 'required|numeric',
             'est_cost' => 'required|numeric',
             'unit' => 'required|string',

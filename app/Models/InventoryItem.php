@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class InventoryItem extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'description', 'unit', 'stock', 'min_level', 'est_cost', 'inventory_category_id'];
-    protected $appends = ['est_cost_formatted'];
+    protected $fillable = ['name', 'description', 'unit', 'stock', 'min_level', 'refill_quantity', 'est_cost', 'inventory_category_id'];
+    protected $appends = ['est_cost_formatted', 'est_refill_cost_formatted', 'est_refill_cost'];
     protected $with = ['movements'];
     public $units = ['BOX', 'CASE', 'KG', 'LITER', 'METER', 'PCS'];
 
@@ -21,6 +21,14 @@ class InventoryItem extends Model
 
     public function movements(): HasMany {
       return $this->hasMany(InventoryMovement::class, 'inventory_item_id');
+    }
+
+    public function getEstRefillCostFormattedAttribute() {
+      return 'P' . number_format(($this->est_cost * $this->refill_quantity), 2);
+    }
+
+    public function getEstRefillCostAttribute() {
+      return $this->est_cost * $this->refill_quantity;
     }
 
     public function getEstCostFormattedAttribute() {

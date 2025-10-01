@@ -31,6 +31,7 @@ class InventoryItemFactory extends Factory
         'unit' => fake()->randomElement(['KG', 'PCS', 'BOX']),
         'stock' => fake()->numberBetween(0, 250),
         'min_level' => fake()->numberBetween(10,50),
+        'refill_quantity' => fake()->numberBetween(10,50),
         'est_cost' => fake()->randomFloat(2, 10, 1000),
         'inventory_category_id' => InventoryCategory::inRandomOrder()->first()->id,
       ];
