@@ -29,12 +29,12 @@ class PurchaseOrderController extends Controller
      * Generate purchase order printable
      */
     public function generatePurchaseOrderFile(Request $request) {
-      $filteredItems = $request->items;
+      $filteredItems = json_decode($request->items);
       if($filteredItems) {
         $file = Pdf::loadView('pdf.purchase-order', ['items' => $filteredItems]);
-        Storage::put('public/confirmations/purchase_order.pdf', $file->output());
+        return response($file->output(), 200)->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', 'inline; filename="purchase-order.pdf"');
       }
-
     }
 
     /**

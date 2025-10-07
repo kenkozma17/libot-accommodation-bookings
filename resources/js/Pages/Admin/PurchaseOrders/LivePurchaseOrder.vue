@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import TableList from "@/Components/TableList.vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm, router } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 const props = defineProps({
@@ -37,16 +37,9 @@ const estCostTotal = computed(() => {
   return 0;
 });
 
-const form = useForm({
-   items: [],
-});
-
 const generatePdf = () => {
-  form.items = filteredItems.value;
-  form.post(route("purchase-order.generate"), {
-    errorBag: "generatePurchaseOrder",
-    preserveScroll: true,
-  });
+  const url = route("purchase-order.generate", { items: JSON.stringify(filteredItems.value) });
+  window.open(url, "_blank");
 };
 
 </script>

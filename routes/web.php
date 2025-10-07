@@ -92,9 +92,9 @@ Route::middleware([
     Route::resource('inventory-movement', AdminInventoryMovementController::class);
 
     /* Purchase Order */
-    Route::resource('purchase-order', AdminPurchaseOrderController::class);
-    Route::post('purchase-order/generate', [AdminPurchaseOrderController::class, 'generatePurchaseOrderFile'])
+    Route::get('purchase-order/generate', [AdminPurchaseOrderController::class, 'generatePurchaseOrderFile'])
       ->name('purchase-order.generate');
+    Route::resource('purchase-order', AdminPurchaseOrderController::class);
 
     Route::group(['middleware' => ['can:manage reports']], function() {
         Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);

@@ -23,7 +23,7 @@
         <td style="width: 50%; text-align: right">P.O. No:______________________</td>
       </tr>
       <tr>
-        <td style="width: 50%">Requesting Dept:______________</td>
+        <td style="width: 50%">Requesting Department:________________</td>
         <td style="width: 50%; text-align: right">Date:______________________</td>
       </tr>
       <tr>
@@ -54,13 +54,13 @@
       </tr>
       @php $estCostTotal = 0; @endphp
       @foreach($items as $item)
-        @php $estCostTotal+= $item['est_refill_cost'] @endphp
+        @php $estCostTotal+= $item->est_refill_cost @endphp
         <tr>
-          <td>{{ $item['refill_quantity'] }}</td>
-          <td>{{ $item['unit'] }}</td>
-          <td style="max-width: 250px;">{{ $item['name'] }}</td>
-          <td>{{ $item['est_cost_formatted'] }}</td>
-          <td>{{ $item['est_refill_cost_formatted'] }}</td>
+          <td>{{ $item->refill_quantity }}</td>
+          <td>{{ $item->unit }}</td>
+          <td style="max-width: 250px;">{{ $item->name }}</td>
+          <td>{{ $item->est_cost_formatted }}</td>
+          <td>{{ $item->est_refill_cost_formatted }}</td>
           <td></td>
         </tr>
       @endforeach
