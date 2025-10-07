@@ -184,7 +184,6 @@ function resetForm() {
 
     <template #actions>
       <SecondaryButton
-        class="bg-red-400 text-white hover:bg-[red]"
         v-if="!isReadOnly"
         :disabled="props.isDisabled"
         @click="deleteInventory"

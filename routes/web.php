@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 use App\Http\Controllers\Admin\InventoryController as AdminInventoryController;
 use App\Http\Controllers\Admin\InventoryMovementController as AdminInventoryMovementController;
 use App\Http\Controllers\Admin\PurchaseOrderController as AdminPurchaseOrderController;
+use App\Http\Controllers\Admin\EventSetController as AdminEventSetController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,15 @@ Route::middleware([
     /* Inventory */
     Route::resource('inventory', AdminInventoryController::class);
     Route::resource('inventory-movement', AdminInventoryMovementController::class);
+
+    /* Event Sets */
+    Route::get('event-sets/generate', [AdminEventSetController::class, 'generatePurchaseOrderFile'])
+      ->name('event-sets.generate');
+    Route::resource('event-sets', AdminEventSetController::class);
+    Route::post('/event-sets/add-service/{event_set_id}', [AdminEventSetController::class, 'addService'])
+      ->name('event-sets.add-service');
+    Route::delete('/event-sets/remove-service/{event_set_id}', [AdminEventSetController::class, 'removeService'])
+      ->name('event-sets.remove-service');
 
     /* Purchase Order */
     Route::get('purchase-order/generate', [AdminPurchaseOrderController::class, 'generatePurchaseOrderFile'])
