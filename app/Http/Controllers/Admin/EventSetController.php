@@ -133,11 +133,25 @@ class EventSetController extends Controller
      */
     public function generatePurchaseOrderFile(Request $request) {
       $filteredServices = json_decode($request->services);
-      dd($filteredServices);
+      $eventPax = $request->pax;
+
+      $items = array_merge(...array_map(function ($service) {
+        return $service->inventory_items;
+      }, $filteredServices));
+
+      $groupedItems = collect($items)
+        ->groupBy('id')
+        ->map(function($item) use ($eventPax) {
+          $base = $item->first();
+          $base->refill_quantity = $item->sum('pivot.quantity') * $eventPax;
+          $base->est_refill_cost_formatted = 'P' . number_format($base->refill_quantity * $base->est_cost, 2);
+          $base->est_refill_cost = $base->refill_quantity * $base->est_cost;
+          return $base;
+        })
+        ->values();
+
       if($filteredServices) {
-
-
-        $file = Pdf::loadView('pdf.purchase-order', ['items' => $items]);
+        $file = Pdf::loadView('pdf.purchase-order', ['items' => $groupedItems, 'eventPax' => $eventPax]);
         return response($file->output(), 200)->header('Content-Type', 'application/pdf')
         ->header('Content-Disposition', 'inline; filename="purchase-order.pdf"');
       }

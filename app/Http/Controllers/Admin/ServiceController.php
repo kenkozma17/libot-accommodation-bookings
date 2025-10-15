@@ -90,10 +90,16 @@ class ServiceController extends Controller
         $inventoryItem = InventoryItem::find($inventoryItemId);
 
         if($inventoryItem) {
-          $service->inventory_items()->attach($inventoryItem, [
-            'quantity' => $request->quantity,
-            'unit' => $inventoryItem->unit,
-          ]);
+          if(!$service->inventory_items()->where('inventory_item_id', $inventoryItemId)->exists()) {
+            $service->inventory_items()->attach($inventoryItem, [
+              'quantity' => $request->quantity,
+              'unit' => $inventoryItem->unit,
+            ]);
+          } else {
+            return back()->withErrors([
+              'addInventoryItem' => 'This inventory item is already attached.',
+            ]);
+          }
         }
       }
     }

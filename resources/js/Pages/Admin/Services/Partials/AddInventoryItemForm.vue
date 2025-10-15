@@ -57,7 +57,7 @@ const estCostTotal = computed(() => {
 </script>
 <template>
   <FormSection @submitted="addInventoryItem">
-    <template #title> Service Inventory Items </template>
+    <template #title> Attached Inventory Items </template>
 
     <template #description> Attach Inventory Items that are consumed when this service is used. </template>
 

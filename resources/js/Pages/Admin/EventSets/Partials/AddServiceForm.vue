@@ -7,7 +7,7 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import TableList from "@/Components/TableList.vue";
 import { Link } from "@inertiajs/vue3";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
 const props = defineProps({
   set: Object,
@@ -46,8 +46,13 @@ const filteredServices = computed(() => {
   return services;
 })
 
+const eventPax = ref(0);
+
 const generatePdf = () => {
-  const url = route("event-sets.generate", { services: JSON.stringify(filteredServices.value) });
+  const url = route("event-sets.generate", {
+    services: JSON.stringify(filteredServices.value),
+    pax: eventPax.value
+  });
   window.open(url, "_blank");
 };
 
@@ -82,7 +87,26 @@ const estCostTotal = computed(() => {
         class="bg-white overflow-hidden shadow-xl sm:rounded-lg col-span-6 border-gray border"
         v-if="props.set?.services.length"
       >
-        <p class="px-6 py-4 font-semibold">Attached Services</p>
+        <div class="px-6 py-4">
+          <p class="font-semibold">Attached Services</p>
+          <div class="flex items-end pt-2 gap-4">
+            <div class="w-1/4">
+              <InputLabel for="quantity" value="No. of Pax" />
+              <TextInput
+                required
+                id="quantity"
+                placeholder="No. of Pax"
+                v-model="eventPax"
+                type="number"
+                min="0"
+                class="block w-full mt-1"
+                autofocus
+              />
+              <InputError :message="form.errors.quantity" class="mt-2" />
+            </div>
+            <PrimaryButton @click="generatePdf" :disabled="!filteredServices.length || eventPax == 0"> Print </PrimaryButton>
+          </div>
+        </div>
         <TableList :hasSearch="false">
           <template #header>
             <tr>
@@ -125,7 +149,7 @@ const estCostTotal = computed(() => {
             </tr>
             <tr>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-left">
-                <PrimaryButton @click="generatePdf" :disabled="!filteredServices.length"> Print </PrimaryButton>
+
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-left">
                 <span class="font-bold">Total</span>

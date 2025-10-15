@@ -16,7 +16,9 @@
     <h1 class="text-center text-2xl font-bold uppercase">
       Purchase Order
     </h1>
-
+    @if(isset($eventPax) && $eventPax)
+      <p class="text-center">Event: {{ $eventPax }} Pax</p>
+    @endif
     <table>
       <tr>
         <td style="width: 50%">Seller:______________________</td>
@@ -43,7 +45,7 @@
           Description
         </th>
         <th scope="col">
-          Unit Price
+          Est. Unit Price
         </th>
         <th scope="col">
           Amount
