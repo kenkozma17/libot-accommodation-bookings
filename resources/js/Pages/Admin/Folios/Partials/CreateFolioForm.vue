@@ -17,6 +17,7 @@ const props = defineProps({
 const hasBooking = ref(false);
 
 const form = useForm({
+  folio_type: '',
   guest_id: 0,
   booking_id: 0,
 });
@@ -36,45 +37,65 @@ const createFolio = () => {
 
     <template #form>
       <div class="col-span-6 sm:col-span-4">
-        <InputLabel for="amenities" value="Does the guest have a booking?" />
-        <label class="flex items-center">
-          <Checkbox @change="hasBooking = !hasBooking" />
-          <span class="ml-2 text-sm text-gray-600"> No </span>
-        </label>
-      </div>
-      <div class="col-span-6 sm:col-span-4" v-if="hasBooking == false">
-        <InputLabel for="booking_id" value="Booking" />
+        <InputLabel for="folio_type" value="What type of folio is being created?" />
         <select
           class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-          v-model="form.booking_id"
+          v-model="form.folio_type"
           required
-          name="booking_id"
-          id="booking_id"
+          name="folio_type"
+          id="folio_type"
         >
-          <option value="0" disabled selected>Select Booking</option>
-          <option v-for="(booking, index) in props.bookings" :value="booking.id">
-            {{ booking.booking_confirmation.toUpperCase() }} -
-            {{ booking.guest.last_name }}, {{ booking.guest.first_name }}
-          </option>
+          <option value="" disabled selected>Select Folio Type</option>
+          <option value="accommodation">Accommodation</option>
+          <option value="event">Event</option>
         </select>
-        <InputError :message="form.errors.booking_id" class="mt-2" />
+        <InputError :message="form.errors.folio_type" class="mt-2" />
       </div>
-      <div class="col-span-6 sm:col-span-4" v-if="hasBooking">
-        <InputLabel for="guest_id" value="Guest*" />
-        <select
-          class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-          v-model="form.guest_id"
-          required
-          name="guest_id"
-          id="guest_id"
-        >
-          <option value="0" disabled selected>Select Guest</option>
-          <option v-for="(guest, index) in props.guests" :value="guest.id">
-            {{ guest.last_name + ", " + guest.first_name + " - (" + guest.email + ")" }}
-          </option>
-        </select>
-        <InputError :message="form.errors.guest_id" class="mt-2" />
-      </div>
+      <template v-if="form.folio_type === 'accommodation'">
+        <div class="col-span-6 sm:col-span-4">
+          <InputLabel for="amenities" value="Does the guest have a booking?" />
+          <label class="flex items-center">
+            <Checkbox @change="hasBooking = !hasBooking" />
+            <span class="ml-2 text-sm text-gray-600"> No </span>
+          </label>
+        </div>
+        <div class="col-span-6 sm:col-span-4" v-if="hasBooking == false">
+          <InputLabel for="booking_id" value="Booking" />
+          <select
+            class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+            v-model="form.booking_id"
+            required
+            name="booking_id"
+            id="booking_id"
+          >
+            <option value="0" disabled selected>Select Booking</option>
+            <option v-for="(booking, index) in props.bookings" :value="booking.id">
+              {{ booking.booking_confirmation.toUpperCase() }} -
+              {{ booking.guest.last_name }}, {{ booking.guest.first_name }}
+            </option>
+          </select>
+          <InputError :message="form.errors.booking_id" class="mt-2" />
+        </div>
+        <div class="col-span-6 sm:col-span-4" v-if="hasBooking">
+          <InputLabel for="guest_id" value="Guest*" />
+          <select
+            class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+            v-model="form.guest_id"
+            required
+            name="guest_id"
+            id="guest_id"
+          >
+            <option value="0" disabled selected>Select Guest</option>
+            <option v-for="(guest, index) in props.guests" :value="guest.id">
+              {{ guest.last_name + ", " + guest.first_name + " - (" + guest.email + ")" }}
+            </option>
+          </select>
+          <InputError :message="form.errors.guest_id" class="mt-2" />
+        </div>
+      </template>
+      <template v-else>
+
+      </template>
     </template>
 
     <template #actions>
