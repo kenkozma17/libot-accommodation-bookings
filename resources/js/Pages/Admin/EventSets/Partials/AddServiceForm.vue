@@ -104,7 +104,7 @@ const estCostTotal = computed(() => {
               />
               <InputError :message="form.errors.quantity" class="mt-2" />
             </div>
-            <PrimaryButton @click="generatePdf" :disabled="!filteredServices.length || eventPax == 0"> Print </PrimaryButton>
+            <PrimaryButton @click="generatePdf" :disabled="!filteredServices.length || eventPax == 0"> Generate P.O. </PrimaryButton>
           </div>
         </div>
         <TableList :hasSearch="false">

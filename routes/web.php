@@ -104,6 +104,10 @@ Route::middleware([
 
     /* Events */
     Route::resource('events', AdminEventsController::class);
+    Route::post('events/add-event-set/{event_id}', [AdminEventsController::class, 'addEventSet'])
+      ->name('events.add-event-set');
+    Route::delete('/events/remove-event-set/{event_id}', [AdminEventsController::class, 'removeEventSet'])
+      ->name('events.remove-event-set');
 
     /* Purchase Order */
     Route::get('purchase-order/generate', [AdminPurchaseOrderController::class, 'generatePurchaseOrderFile'])

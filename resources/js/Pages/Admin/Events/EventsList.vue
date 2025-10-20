@@ -7,16 +7,18 @@ import { Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const props = defineProps({
-  folios: Object,
+  events: Object,
   search: String,
 });
 
 const s = ref(props.search);
 </script>
 <template>
-  <AppLayout title="Folios Management">
+  <AppLayout title="Events Management">
     <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Folios Management</h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        Events Management
+      </h2>
     </template>
 
     <div class="py-12">
@@ -33,11 +35,11 @@ const s = ref(props.search);
                     name="search"
                     id="search"
                     class="p-3 pl-10 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Search by Guest Name, Reg. No., Booking Confirmation..."
+                    placeholder="Search by Event Name"
                   />
                 </form>
                 <SecondaryButton class="justify-center">
-                  <Link :href="route('folios.index')"> Clear Search </Link>
+                  <Link :href="route('events.index')"> Clear Search </Link>
                 </SecondaryButton>
               </div>
             </template>
@@ -47,31 +49,28 @@ const s = ref(props.search);
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
-                  Date
+                  Name
                 </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Registration Number
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Guest Name
-                </th>
-                <th
-                  scope="col"
-                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
-                >
-                  Booking Confirmation
-                </th>
+
                 <th
                   scope="col"
                   class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
                 >
                   Type
+                </th>
+
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Start Date
+                </th>
+
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"
+                >
+                  Notes
                 </th>
                 <th
                   scope="col"
@@ -82,49 +81,28 @@ const s = ref(props.search);
               </tr>
             </template>
             <template #content>
-              <tr v-for="folio in folios.data">
+              <tr v-for="event in props.events.data">
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  {{ folio.date }}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <Link :href="route('folios.show', folio.id)">
-                    {{ folio.registration_number }}
+                  <Link :href="route('events.show', event.id)">
+                    {{ event.name }}
                   </Link>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <Link
-                    v-if="folio.guest_id"
-                    :href="route('guests.show', folio.guest_id)"
-                  >
-                    {{ folio.guest.last_name }}, {{ folio.guest.first_name }}
-                  </Link>
-                  <Link
-                    v-else-if="folio.booking.guest"
-                    :href="route('guests.show', folio.booking.guest.id)"
-                  >
-                    {{ folio.booking.guest.last_name }},
-                    {{ folio.booking.guest.first_name }}
-                  </Link>
-                  <span v-else>N/A</span>
+                  {{ event.type }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <Link
-                    v-if="folio.booking"
-                    :href="route('bookings.show', folio.booking.id)"
-                    >{{ folio.booking.booking_confirmation }}</Link
-                  >
-                  <span v-else>N/A</span>
+                  {{ event.start_date }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  {{ folio.event_id ? 'Event' : 'Accommodation'}}
+                <td class="text-wrap px-6 py-4 text-sm font-medium">
+                  {{ event.notes }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <Link :href="route('folios.show', folio.id)">View</Link>
+                  <Link :href="route('events.show', event.id)">View</Link>
                 </td>
               </tr>
             </template>
             <template #pagination>
-              <PaginationList :links="folios.links" />
+              <PaginationList :links="props.events.links" />
             </template>
           </TableList>
         </div>

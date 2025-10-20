@@ -80,7 +80,7 @@ const generatePdf = () => {
                       {{ category.name }}
                     </option>
                   </select>
-                  <PrimaryButton @click="generatePdf" :disabled="!filteredItems.length"> Print </PrimaryButton>
+                  <PrimaryButton @click="generatePdf" :disabled="!filteredItems.length"> Generate P.O. </PrimaryButton>
                 </div>
               </div>
             </template>

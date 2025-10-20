@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use App\Models\Folio;
 use App\Models\Guest;
 use App\Models\Booking;
+use App\Models\Event;
 use App\Models\Service;
 use App\Models\ServiceCategory;
 use Carbon\Carbon;
@@ -62,6 +63,9 @@ class FolioController extends Controller
             'bookings' => Booking::where('booking_status', 'CONFIRMED')
                 ->where('check_out', '>=', Carbon::today())
                 ->orderBy('check_in', 'asc')->get(),
+            'events' => Event::where('status', 'CONFIRMED')
+              ->with('guest')
+              ->orderBy('start_date', 'desc')->get(),
         ]);
     }
 
@@ -70,34 +74,47 @@ class FolioController extends Controller
      */
     public function store(FolioStoreRequest $request)
     {
-        // try {
+      // Create the Folio
+      $folio = new Folio;
+      $folio->registration_number = $this->generateRegNumber();
 
-            // Create the Folio
-            $folio = new Folio;
-            $folio->registration_number = $this->generateRegNumber();
+      if($request->booking_id) {
+        $doesFolioExist = Folio::where('booking_id', $request->booking_id)->first();
+        if(!$doesFolioExist) {
+          if( $request->guest_id !== 0) {
+            $folio->guest_id = $request->guest_id;
+          }
 
-            $doesFolioExist = Folio::where('booking_id', $request->booking_id)->first();
-            if(!$doesFolioExist) {
-                if( $request->guest_id !== 0) {
-                    $folio->guest_id = $request->guest_id;
-                }
-
-                if($request->booking_id !== 0) {
-                    $folio->booking_id = $request->booking_id;
-                }
-                $folio->save();
-                session()->flash('flash.banner', 'Folio Created Successfully!');
-                session()->flash('flash.bannerStyle', 'success');
-                return redirect()->route('folios.index');
-            } else {
-                session()->flash('flash.banner', 'Selected booking already has folio!');
-                session()->flash('flash.bannerStyle', 'danger');
-                return redirect()->route('folios.create');
-            }
-
-        // } catch(Exception $ex) {
-
-        // }
+          if($request->booking_id !== 0) {
+            $folio->booking_id = $request->booking_id;
+          }
+          $folio->save();
+          session()->flash('flash.banner', 'Folio Created Successfully!');
+          session()->flash('flash.bannerStyle', 'success');
+          return redirect()->route('folios.index');
+        } else {
+          session()->flash('flash.banner', 'Selected booking already has folio!');
+          session()->flash('flash.bannerStyle', 'danger');
+          return redirect()->route('folios.create');
+        }
+      } else {
+        $doesFolioExist = Folio::where('event_id', $request->event_id)->first();
+        if(!$doesFolioExist) {
+          $event = Event::find($request->event_id);
+          if($event) {
+            $folio->guest_id = $event->guest_id;
+            $folio->event_id = $request->event_id;
+            $folio->save();
+            session()->flash('flash.banner', 'Folio Created Successfully!');
+            session()->flash('flash.bannerStyle', 'success');
+            return redirect()->route('folios.index');
+          }
+        } else {
+          session()->flash('flash.banner', 'Selected booking already has folio!');
+          session()->flash('flash.bannerStyle', 'danger');
+          return redirect()->route('folios.create');
+        }
+      }
     }
 
     public function generateRegNumber() {
@@ -113,7 +130,9 @@ class FolioController extends Controller
      */
     public function show(string $id)
     {
-        $folio = Folio::with(['booking', 'guest'])->where('id', $id)->first();
+        $folio = Folio::with(['booking', 'guest', 'event' => function($query) {
+          return $query->with('guest');
+        }])->where('id', $id)->first();
         $serviceCategories = ServiceCategory::with(['services' => function($query) {
             return $query->orderBy('name', 'asc');
         }])->orderBy('name', 'asc')->get();

@@ -3,6 +3,7 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import AddTransactionForm from "@/Pages/Admin/FolioTransactions/Partials/AddTransactionForm.vue";
 import UpdateBookingForm from "@/Pages/Admin/Bookings/Partials/UpdateBookingForm.vue";
 import UpdateGuestForm from "@/Pages/Admin/Guests/Partials/UpdateGuestForm.vue";
+import UpdateEventForm from "@/Pages/Admin/Events/Partials/UpdateEventForm.vue";
 import SectionBorder from "@/Components/SectionBorder.vue";
 import FolioTransactionsList from "./Partials/FolioTransactionsList.vue";
 
@@ -47,6 +48,8 @@ const props = defineProps({
         <SectionBorder />
 
         <UpdateBookingForm :booking="folio.booking" v-if="folio.booking" />
+
+        <UpdateEventForm :event="folio.event" v-if="folio.event" />
       </div>
     </div>
   </AppLayout>

@@ -12,14 +12,16 @@ import dayjs from "dayjs";
 const props = defineProps({
   guests: Array,
   bookings: Array,
+  events: Array,
 });
 
 const hasBooking = ref(false);
 
 const form = useForm({
-  folio_type: '',
+  folio_type: "",
   guest_id: 0,
   booking_id: 0,
+  event_id: 0,
 });
 
 const createFolio = () => {
@@ -93,8 +95,24 @@ const createFolio = () => {
           <InputError :message="form.errors.guest_id" class="mt-2" />
         </div>
       </template>
-      <template v-else>
-
+      <template v-if="form.folio_type === 'event'">
+        <div class="col-span-6 sm:col-span-4">
+          <InputLabel for="event_id" value="Events" />
+          <select
+            class="block w-full mt-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+            v-model="form.event_id"
+            required
+            name="event_id"
+            id="event_id"
+          >
+            <option value="0" disabled selected>Select Event</option>
+            <option v-for="(event, index) in props.events" :value="event.id">
+              {{ event.name }} -
+              {{ event.guest.last_name }}, {{ event.guest.first_name }} - {{ event.start_date }}
+            </option>
+          </select>
+          <InputError :message="form.errors.event_id" class="mt-2" />
+        </div>
       </template>
     </template>
 

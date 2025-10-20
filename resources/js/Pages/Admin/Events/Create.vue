@@ -1,25 +1,23 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import CreateFolioForm from '@/Pages/Admin/Folios/Partials/CreateFolioForm.vue';
+import CreateEventForm from '@/Pages/Admin/Events/Partials/CreateEventForm.vue';
 
 const props = defineProps({
   guests: Array,
-  bookings: Array,
-  events: Array,
 });
 </script>
 
 <template>
-    <AppLayout title="Create Folio">
+    <AppLayout title="Create Event">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Create Folio
+                Create Event
             </h2>
         </template>
 
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <CreateFolioForm :events="events" :guests="guests" :bookings="bookings" />
+                <CreateEventForm :guests="guests"/>
             </div>
         </div>
     </AppLayout>

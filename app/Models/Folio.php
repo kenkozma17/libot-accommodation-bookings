@@ -32,6 +32,10 @@ class Folio extends Model
         return $this->belongsTo(Booking::class);
     }
 
+    public function event(): BelongsTo {
+      return $this->belongsTo(Event::class);
+    }
+
     public function transactions(): HasMany {
         return $this->hasMany(FolioTransaction::class)->orderBy('created_at', 'desc');
     }
