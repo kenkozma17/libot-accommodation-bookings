@@ -110,7 +110,7 @@ class FolioController extends Controller
             return redirect()->route('folios.index');
           }
         } else {
-          session()->flash('flash.banner', 'Selected booking already has folio!');
+          session()->flash('flash.banner', 'Selected event already has folio!');
           session()->flash('flash.bannerStyle', 'danger');
           return redirect()->route('folios.create');
         }

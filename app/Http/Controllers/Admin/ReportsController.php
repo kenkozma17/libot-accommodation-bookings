@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\DailyRemittanceExport;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Folio;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Controller
 {
@@ -22,6 +24,11 @@ class ReportsController extends Controller
     public function generateReport(Request $request) {
         $month = Carbon::parse($request->month)->month;
         $year = $request->year;
+
+        if($request->report_type === 'daily') {
+          $date = $request->date;
+          return Excel::download(new DailyRemittanceExport($date), 'remit.xlsx');
+        }
 
         // Fetch all income for month, year
         $folios = Folio::with([

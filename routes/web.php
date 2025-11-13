@@ -114,9 +114,9 @@ Route::middleware([
       ->name('purchase-order.generate');
     Route::resource('purchase-order', AdminPurchaseOrderController::class);
 
-    Route::group(['middleware' => ['can:manage reports']], function() {
-        Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
-        Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
-            ->name('reports.generate');
-    });
+    // Route::group(['middleware' => ['can:manage reports']], function() {
+    Route::resource('/reports', AdminReportsController::class, ['names' => 'reports']);
+    Route::get('/reports-generate', [AdminReportsController::class, 'generateReport'])
+        ->name('reports.generate');
+    // });
 });

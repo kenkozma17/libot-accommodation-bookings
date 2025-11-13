@@ -18,7 +18,7 @@ class Folio extends Model
     protected $fillable = ['guest_id', 'booking_id'];
     protected $with = ['guest', 'booking'];
 
-    protected $appends = ['total', 'date'];
+    protected $appends = ['total', 'date', 'meals_total', 'cash_total', 'gcash_maya_total', 'card_total'];
 
     public function getDateAttribute() {
         return Carbon::parse($this->created_at)->format('M d, Y');
@@ -38,6 +38,50 @@ class Folio extends Model
 
     public function transactions(): HasMany {
         return $this->hasMany(FolioTransaction::class)->orderBy('created_at', 'desc');
+    }
+
+    public function getCardTotalAttribute() {
+      $total = 0;
+      foreach($this->transactions as $transaction) {
+        if($transaction->payment_method === 'Credit/Debit Card') {
+          $total += (int) $transaction->amount;
+        }
+      }
+
+      return 'P' . number_format($total, 2);
+    }
+
+    public function getGcashMayaTotalAttribute() {
+      $total = 0;
+      foreach($this->transactions as $transaction) {
+        if($transaction->payment_method === 'Gcash' || $transaction->payment_method === 'Maya') {
+          $total += (int) $transaction->amount;
+        }
+      }
+
+      return 'P' . number_format($total, 2);
+    }
+
+    public function getCashTotalAttribute() {
+      $total = 0;
+      foreach($this->transactions as $transaction) {
+        if($transaction->payment_method === 'Cash') {
+          $total += (int) $transaction->amount;
+        }
+      }
+
+      return 'P' . number_format($total, 2);
+    }
+
+    public function getMealsTotalAttribute() {
+      $total = 0;
+      foreach($this->transactions as $transaction) {
+        if($transaction->service->category->name === 'Restaurant') {
+          $total += (int) $transaction->amount;
+        }
+      }
+
+      return 'P' . number_format($total, 2);
     }
 
     public function getTotalAttribute() {
