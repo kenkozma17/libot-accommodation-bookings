@@ -18,7 +18,20 @@ class Folio extends Model
     protected $fillable = ['guest_id', 'booking_id'];
     protected $with = ['guest', 'booking'];
 
-    protected $appends = ['total', 'date', 'meals_total', 'cash_total', 'gcash_maya_total', 'card_total'];
+    protected $appends = [
+      'total',
+      'date',
+      'meals_total',
+      'entrance_total',
+      'rental_total',
+      'downpayment_total',
+      'pool_total',
+      'cash_total',
+      'gcash_maya_total',
+      'card_total',
+      'discount_total',
+      'gross_total',
+    ];
 
     public function getDateAttribute() {
         return Carbon::parse($this->created_at)->format('M d, Y');
@@ -40,57 +53,81 @@ class Folio extends Model
         return $this->hasMany(FolioTransaction::class)->orderBy('created_at', 'desc');
     }
 
-    public function getCardTotalAttribute() {
+    public function getTotalFromMethod($method) {
       $total = 0;
       foreach($this->transactions as $transaction) {
-        if($transaction->payment_method === 'Credit/Debit Card') {
-          $total += (int) $transaction->amount;
+        if($transaction->payment_method === $method) {
+          $total += (float) $transaction->amount;
         }
       }
 
-      return 'P' . number_format($total, 2);
+      return number_format($total, 2);
+    }
+
+    public function getCardTotalAttribute() {
+      return $this->getTotalFromMethod('Credit/Debit Card');
     }
 
     public function getGcashMayaTotalAttribute() {
-      $total = 0;
-      foreach($this->transactions as $transaction) {
-        if($transaction->payment_method === 'Gcash' || $transaction->payment_method === 'Maya') {
-          $total += (int) $transaction->amount;
-        }
-      }
-
-      return 'P' . number_format($total, 2);
+      return $this->getTotalFromMethod('Gcash') + $this->getTotalFromMethod('Maya');
     }
 
     public function getCashTotalAttribute() {
+      return $this->getTotalFromMethod('Cash');
+    }
+
+    public function getTotalFromCategory($category) {
       $total = 0;
       foreach($this->transactions as $transaction) {
-        if($transaction->payment_method === 'Cash') {
+        if($transaction->service->category->name === $category) {
           $total += (int) $transaction->amount;
         }
       }
 
-      return 'P' . number_format($total, 2);
+      return number_format($total, 2);
+    }
+
+    public function getDownPaymentTotalAttribute() {
+      return $this->getTotalFromCategory('Down Payment');
+    }
+
+    public function getDiscountTotalAttribute() {
+      return $this->getTotalFromCategory('Discount');
+    }
+
+    public function getPoolTotalAttribute() {
+      return $this->getTotalFromCategory('Pool');
+    }
+
+    public function getRentalTotalAttribute() {
+      return $this->getTotalFromCategory('Rental');
+    }
+
+    public function getEntranceTotalAttribute() {
+      return $this->getTotalFromCategory('Entrance');
     }
 
     public function getMealsTotalAttribute() {
-      $total = 0;
-      foreach($this->transactions as $transaction) {
-        if($transaction->service->category->name === 'Restaurant') {
-          $total += (int) $transaction->amount;
-        }
-      }
+      return $this->getTotalFromCategory('Restaurant');
+    }
 
-      return 'P' . number_format($total, 2);
+    public function getGrossTotalAttribute() {
+      $bookingTotal = ($this->booking) ? $this->booking->total_price : 0;
+      $totals = [
+        $bookingTotal,
+        $this->meals_total,
+        $this->entrance_total,
+        $this->rental_total,
+        $this->pool_total
+      ];
+      return array_sum($totals);
     }
 
     public function getTotalAttribute() {
         $total = 0;
         foreach($this->transactions as $transaction) {
-            $total += (int) $transaction->amount;
+            $total += (float) $transaction->amount;
         }
         return 'P' . number_format($total, 2);
     }
-
-
 }

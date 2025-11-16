@@ -78,7 +78,7 @@ class FolioController extends Controller
       $folio = new Folio;
       $folio->registration_number = $this->generateRegNumber();
 
-      if($request->booking_id) {
+      if($request->folio_type === 'accommodation') {
         $doesFolioExist = Folio::where('booking_id', $request->booking_id)->first();
         if(!$doesFolioExist) {
           if( $request->guest_id !== 0) {
@@ -97,7 +97,7 @@ class FolioController extends Controller
           session()->flash('flash.bannerStyle', 'danger');
           return redirect()->route('folios.create');
         }
-      } else {
+      } elseif($request->folio_type === 'event') {
         $doesFolioExist = Folio::where('event_id', $request->event_id)->first();
         if(!$doesFolioExist) {
           $event = Event::find($request->event_id);

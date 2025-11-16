@@ -42,23 +42,23 @@ class DailyRemittanceExport implements FromQuery, WithHeadings, WithMapping
       return [
         $folio->created_at,
         $folio->registration_number,
-        $folio->guest->first_name . ' ' . $folio->guest->last_name,
+        $folio->geust ? $folio->guest->first_name . ' ' . $folio->guest->last_name : 'N/A',
         $folio->booking ? $folio->booking->rate_per_night : "",
         $folio->booking ? $folio->booking->stay_length_number : "",
         "", # Intentionally blank
         $folio->booking ? $folio->booking->total_price : "",
         $folio->meals_total,
-        "Entrance", # Entrance Category
-        "Rental", # Rental Category
-        "Pool", # Pool Category
-        $folio->total, # Get sum of items from line 49 to 53
-        "Deposit", # Downpayment category
-        "Discount", # Create a special discount category
-        "Net", # Gross less deposit, discount
+        $folio->entrance_total, # Entrance Category
+        $folio->rental_total, # Rental Category
+        $folio->pool_total, # Pool Category
+        $folio->gross_total, # Get sum of items from line 49 to 53
+        $folio->downpayment_total, # Downpayment category
+        $folio->discount_total, # Create a special discount category
+        (float) ($folio->gross_total - $folio->downpayment_total - $folio->discount_total), # Gross less deposit, discount
         $folio->cash_total,
         $folio->gcash_maya_total,
         $folio->card_total,
-        "Receivables" # Net subtracted by cash, gcash/maya and card
+        "" # Intentionally blank
       ];
     }
 

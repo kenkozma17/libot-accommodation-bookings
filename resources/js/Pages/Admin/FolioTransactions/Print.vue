@@ -1,134 +1,125 @@
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
 import UpdateTransactionForm from "@/Pages/Admin/FolioTransactions/Partials/UpdateTransactionForm.vue";
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
+import AuthenticationCardLogo from "@/Components/AuthenticationCardLogo.vue";
 
 const props = defineProps({
   folio: Object,
-  totalExpenses: String,
+  gross: String,
+  total: String,
+  discount: String,
+  balance: String,
 });
 </script>
 
 <template>
-  <div class="mx-auto py-10 px-4">
-    <div class="flex justify-center w-full mb-4">
-        <AuthenticationCardLogo />
-    </div>
-    <div class="">
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-        List of Guest Transactions
-      </h2>
-      <p class="mb-2">
-        Guest:
-        {{ folio.guest ? folio.guest.full_name : folio.booking.guest.full_name }}
-      </p>
-      <p v-if="folio.booking" class="mb-4">
-        Guest Stay: {{ folio.booking.check_in_formatted }} -
-        {{ folio.booking.check_out_formatted }}
-      </p>
-      <table class="bg-white border">
-        <thead class="bg-gray-200">
-          <tr>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Date
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Paid?
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Name
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Reg. No.
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Receipt. No.
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Payment Method
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Price
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Quantity
-            </th>
-            <th
-              class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
-            >
-              Sub-total
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Main Row -->
-          <template v-if="props.folio.transactions">
-            <tr
-              v-for="(transaction, tIndex) in props.folio.transactions"
-              :key="transaction.id"
-              class="hover:bg-gray-300"
-              :class="tIndex % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'"
-            >
-              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
-                {{ transaction.date }}
-              </td>
-              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
-                {{ transaction.is_paid ? 'Yes' : 'No' }}
-              </td>
-              <td class="px-6 py-2 pl-10 text-gray-600 text-sm text-nowrap">
-                {{ transaction.service_name }}
-              </td>
-              <td class="px-6 py-2 text-gray-600 text-sm">
-                {{ folio.registration_number }}
-              </td>
-              <td class="px-6 py-2 text-gray-600 text-sm">
-                {{ transaction.receipt_number }}
-              </td>
-              <td class="px-6 py-2 text-gray-600 text-sm">
-                {{ transaction.payment_method }}
-              </td>
-              <td class="px-6 py-2 text-gray-600 text-sm">
-                {{ transaction.formatted_price }}
-              </td>
-              <td class="px-6 py-2 text-gray-600 text-sm">{{ transaction.quantity }}</td>
-              <td class="px-6 py-2 font-semibold">
-                {{ transaction.formatted_amount }}
-              </td>
+  <div class="max-w-[1250px] mx-auto">
+    <div class="mx-auto py-[45px] px-[35px] bg-white">
+      <div class="flex justify-between w-full mb-4">
+        <img src="/logo.png" class="w-[200px]" alt="" />
+        <div>
+          <h2 class="font-bold text-[2.5rem]">Invoice</h2>
+          <p>
+            Brgy. Batag <br/> Virac, Catanduanes <br />
+            Philippines
+          </p>
+        </div>
+      </div>
+      <div class="mt-8 flex justify-between">
+        <div>
+          <p class="font-semibold">Billed To:</p>
+          <p>{{folio.guest ? folio.guest.full_name : folio.booking.guest.full_name}}</p>
+        </div>
+        <div class="mr-[100px]">
+          <p class="font-semibold">Invoice Number:</p>
+          <p class="font-semibold">Invoice Date:</p>
+        </div>
+      </div>
+      <div class="mt-8">
+        <p v-if="folio.booking">
+          <span class="font-semibold">Guest Stay:</span> {{ folio.booking.check_in_formatted }} -
+          {{ folio.booking.check_out_formatted }}
+        </p>
+        <p class="mb-4">
+          <span class="font-semibold">Reg. No:</span> {{ folio.registration_number }}
+        </p>
+        <table class="bg-white border w-full">
+          <thead class="bg-gray-200">
+            <tr>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Date
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Description
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Price
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Quantity
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Settled
+              </th>
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-sm"
+              >
+                Amount
+              </th>
             </tr>
-          </template>
-          <!-- Total Row -->
-          <tr class="main-row cursor-pointer bg-gray-100 hover:bg-gray-300">
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2"></td>
-            <td class="px-6 py-2">Total</td>
-            <td class="px-6 py-2 font-bold">
-              {{ props.totalExpenses }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="mt-10">Guest Name and Signature: <span class="w-32 h-2 border-b border-b-black inline-block"></span></p>
+          </thead>
+          <tbody>
+            <!-- Main Row -->
+            <template v-if="props.folio.transactions">
+              <tr
+                v-for="(transaction, tIndex) in props.folio.transactions"
+                :key="transaction.id"
+                class="border"
+                :class="tIndex % 2 === 0 ? 'bg-gray-50' : 'bg-gray-100'"
+              >
+                <td class="px-6 py-2 text-gray-600 text-sm text-nowrap">
+                  {{ transaction.date }}
+                </td>
+                <td class="px-6 py-2 text-gray-600 text-sm text-nowrap">
+                  {{ transaction.service_name }}
+                </td>
+                <td class="px-6 py-2">{{ transaction.formatted_price }}</td>
+                <td class="px-6 py-2">
+                  {{ transaction.quantity }}
+                </td>
+                <td class="px-6 py-2">
+                  {{ transaction.is_paid ? '✅' : '' }}
+                </td>
+                <td class="px-6 py-2 text-gray-600 text-sm">
+                  {{ transaction.formatted_amount }}
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <div class="flex flex-col items-end mt-4">
+          <div class="w-[200px]">
+            <p><span class="font-bold">Sub-Total:</span> {{props.gross}}</p>
+            <p><span class="font-bold">Discount:</span> {{ props.discount }}</p>
+            <p><span class="font-bold">Total:</span> {{props.total}}</p>
+            <p class="mt-4"><span class="font-bold">Balance Due: </span>{{props.balance}}</p>
+          </div>
+        </div>
+        <p class="mt-10">
+          Guest Name and Signature:
+          <span class="w-32 h-2 border-b border-b-black inline-block"></span>
+        </p>
+      </div>
     </div>
   </div>
 </template>

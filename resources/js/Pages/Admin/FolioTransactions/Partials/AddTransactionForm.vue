@@ -28,6 +28,10 @@ const isManualPayment = computed(() => {
     return form.service.slug === 'down-payment' || form.service.slug === 'manual-payment' || form.service.slug === 'adjustment' || form.service.slug === 'discount';
 });
 
+const isSeniorDiscount = computed(() => {
+  return form.service.slug === 'senior-discount';
+});
+
 const createFolioTransaction = () => {
   form.post(route("folio-transactions.store"), {
     errorBag: "createFolioTransaction",
@@ -72,7 +76,7 @@ const createFolioTransaction = () => {
         </select>
         <InputError :message="form.errors.services" class="mt-2" />
       </div>
-      <div class="col-span-6 sm:col-span-4" v-if="isManualPayment">
+      <div class="col-span-6 sm:col-span-4" v-if="isManualPayment || isSeniorDiscount">
         <InputLabel for="amount" value="Amount" />
         <TextInput
           required
