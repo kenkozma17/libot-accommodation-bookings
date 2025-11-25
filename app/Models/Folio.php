@@ -80,7 +80,7 @@ class Folio extends Model
       $total = 0;
       foreach($this->transactions as $transaction) {
         if($transaction->service->category->name === $category) {
-          $total += (int) $transaction->amount;
+          $total += (float) $transaction->amount;
         }
       }
 

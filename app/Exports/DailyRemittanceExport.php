@@ -36,9 +36,7 @@ class DailyRemittanceExport implements FromQuery, WithHeadings, WithMapping
 
   public function map($folio): array
     {
-
       # Get booking data
-
       return [
         $folio->created_at,
         $folio->registration_number,

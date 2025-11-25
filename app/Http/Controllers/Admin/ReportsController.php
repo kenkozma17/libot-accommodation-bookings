@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Exports\DailyRemittanceExport;
+use App\Exports\MonthlyRemittanceExport;
 use App\Http\Controllers\Controller;
 use App\Models\Expense;
 use App\Models\Folio;
+use App\Models\FolioTransaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -22,27 +24,35 @@ class ReportsController extends Controller
     }
 
     public function generateReport(Request $request) {
-        $month = Carbon::parse($request->month)->month;
+        $month = Carbon::parse($request->month);
         $year = $request->year;
 
         if($request->report_type === 'daily') {
           $date = $request->date;
           return Excel::download(new DailyRemittanceExport($date), 'remit.xlsx');
+        } else {
+          return Excel::download(
+            new MonthlyRemittanceExport(
+              Carbon::parse($request->month . $year)->firstOfMonth()->format('Y-m-d'),
+              Carbon::parse($request->month . $year)->lastOfMonth()->format('Y-m-d')),
+              'monthly-remitttance.xlsx'
+            );
         }
 
-        // Fetch all income for month, year
+        // OLD CODE BELOW
+
         $folios = Folio::with([
             'guest',
             'booking',
             'transactions' => function($query) use ($month, $year) {
                 $query->whereMonth('date_placed', $month)
-                      ->whereYear('date_placed', $year)
-                      ->where('is_paid', true);
+                  ->whereYear('date_placed', $year)
+                  ->where('is_paid', true);
             }
         ])->whereHas('transactions', function($query) use ($month, $year) {
             $query->whereMonth('date_placed', $month)
-                  ->whereYear('date_placed', $year);
-        })->get();
+              ->whereYear('date_placed', $year);
+        })->groupBy('created_at');
 
         $totalIncome = 0; $totalCashPayments = 0; $totalCardPayments = 0; $totalGcashPayments = 0; $totalPaymayaPayments = 0; $totalCheckPayments = 0;
         foreach($folios as $folio) {
