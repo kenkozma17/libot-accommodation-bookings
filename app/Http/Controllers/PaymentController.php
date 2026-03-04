@@ -49,7 +49,7 @@ class PaymentController extends Controller
   public function handlePayMongoPaymentSuccess(Request $request) {
     $response = $request->all();
     if($response['data']['attributes']['type'] === 'checkout_session.payment.paid') {
-      $payMongoPayment = $response['data']['attributes']['data'];
+      $payMongoPayment = $response['data']['attributes']['data']['attributes']['payments'][0];
       $bookingConfirmation = $payMongoPayment['attributes']['metadata']['booking_confirmation'];
       $booking = Booking::where('booking_confirmation', $bookingConfirmation)->first();
 
@@ -61,10 +61,10 @@ class PaymentController extends Controller
       $payment = Payment::where('booking_id', $booking->id)->first();
       $payment->update([
         'payment_method' => $paymentMethod,
-        'paymongo_payment_id' => $payMongoPayment['attributes']['payments'][0]['id'],
-        'receipt_number' => $payMongoPayment['attributes']['payments'][0]['id'],
+        'paymongo_payment_id' => $payMongoPayment['id'],
+        'receipt_number' => $payMongoPayment['id'],
         'payment_source' => $paymentMethod,
-        'currency_code' => $payMongoPayment['attributes']['payments'][0]['attributes']['currency'],
+        'currency_code' => $payMongoPayment['attributes']['currency'],
         'payment_status' => 'PAID'
       ]);
 
