@@ -8,6 +8,7 @@ use App\Models\Guest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Booking;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 class BookingDetailsController extends Controller
@@ -22,25 +23,32 @@ class BookingDetailsController extends Controller
     }
 
     public function store(Request $request) {
-      try {
         $data = $request->all();
         $guest = $data['contactDetails'];
-        $validated = $request->validate([
-          'contactDetails.firstName' => 'required',
-          'contactDetails.lastName' => 'required',
-          'contactDetails.email' => 'required',
-          'contactDetails.phone' => 'required|min:12',
-          'contactDetails.terms' => 'accepted',
-          ],
-          $this->validationMessages()
+        $validator = Validator::make(
+        $request->all(),
+            [
+                'contactDetails.firstName' => 'required',
+                'contactDetails.lastName' => 'required',
+                'contactDetails.email' => 'required|email',
+                'contactDetails.phone' => 'required|min:12',
+                'contactDetails.terms' => 'accepted',
+            ],
+            $this->validationMessages()
         );
 
+        if ($validator->fails()) {
+            return redirect('/booking-details?id=' . $request->input('room.id'))
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $guest = $request->input('contactDetails');
+
         $this->createGuest($guest);
-    
+
         return redirect('/payment');
-      } catch(Throwable $e) {
-        report(e);
-      }
+
     }
 
     public function createGuest($guest) {
@@ -63,7 +71,7 @@ class BookingDetailsController extends Controller
         report($e);
       }
     }
-  
+
     public function validationMessages(): array
     {
         return [

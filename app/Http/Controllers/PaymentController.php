@@ -151,7 +151,7 @@ class PaymentController extends Controller
     $room = Room::find($booking['room']['id']);
     $guest = $booking['guests'];
     $newPayment = Payment::create([
-      'payment_amount' => $room->rate * $booking['stayCount'],
+      'payment_amount' => ($room->rate + $room->extra_occupant_rate) * $booking['stayCount'],
       'payment_status' => 'PENDING',
       'payment_date' => Carbon::now(),
       'payment_method' => null,

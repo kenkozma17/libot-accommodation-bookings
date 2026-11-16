@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class RoomSelectionController extends Controller
 {
-    
+
   public function index(Request $request) {
     $bookingDetails = $request->all();
     if(isset($bookingDetails['dates']['start']) && isset($bookingDetails['dates']['end'])) {
@@ -20,7 +20,7 @@ class RoomSelectionController extends Controller
       $guests = $bookingDetails['guests'];
       $guestCount = (int) $guests['adults'] + (int) $guests['children'];
 
-      $rooms = Room::where('max_occupancy', '>=', $guestCount)
+      $rooms = Room::whereRaw('(max_occupancy + extra_occupant) >= ?', [$guestCount])
         ->where('is_available', true)
         ->orderBy('rate', 'asc')
         ->whereDoesntHave('unavailableDates', function (Builder $query) use ($start, $end) {
@@ -33,7 +33,7 @@ class RoomSelectionController extends Controller
           // Handles unavailable blocked dates. Room is unavailable for the whole date.
           $query->orWhereBetween('start_date', [$start, $end])
             ->whereNull('end_date');
-          
+
       })->paginate(config('pagination.max'))->withQueryString();
 
 

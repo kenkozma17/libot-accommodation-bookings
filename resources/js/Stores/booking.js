@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import dayjs from 'dayjs';
 
 export const useBookingStore = defineStore('booking', {
-  state: () => ({ 
+  state: () => ({
     dates: {
       start: null,
       end: null,
@@ -26,7 +26,9 @@ export const useBookingStore = defineStore('booking', {
       description: null,
       images: [],
       rate: null,
-      currency: 'PHP'
+      currency: 'PHP',
+      max_occupancy: null,
+      extra_occupant_rate: null,
     }
    }),
    getters: {
@@ -51,14 +53,23 @@ export const useBookingStore = defineStore('booking', {
       return 0;
     },
     guestsCount(state) {
-      return `${(Number(state.guests.adults) + 
+      return `${(Number(state.guests.adults) +
         Number(state.guests.children))} Guests`;
     },
     guestsCountDetailed(state) {
-      return `${state.guests.adults} Adult(s), ${state.guests.children} Child(s)`
+      return `${state.guests.adults} Adult(s), ${state.guests.children} Child(s)`;
+    },
+    hasExtraGuest(state) {
+        return (Number(state.guests.adults) + Number(state.guests.children)) > Number(state.room.max_occupancy);
+    },
+    extraOccupantRate(state) {
+        return state.room.extra_occupant_rate;
+    },
+    hasAddOns(state) {
+        return this.hasExtraGuest;
     },
     subTotal(state) {
-      return state.room.rate * this.stayCount;
+      return (Number(state.room.rate) + Number(this.extraOccupantRate)) * this.stayCount;
     }
    },
    actions: {

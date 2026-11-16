@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@popperjs/core": "^2.11.8",
+        "@vitejs/devtools": "^0.8.3",
         "dayjs": "^1.11.9",
         "pinia": "^2.1.4",
         "pinia-plugin-persistedstate": "^3.1.0",

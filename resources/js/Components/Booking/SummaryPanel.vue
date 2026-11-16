@@ -57,6 +57,18 @@ const bookingStore = useBookingStore();
                             {{ bookingStore.guestsCountDetailed }}
                         </span>
                     </div>
+
+                    <div class="mt-2.5" v-if="bookingStore.hasAddOns">
+                        <p class="text-[.85rem] font-bold">Add-Ons</p>
+                        <span class="text-[.7rem]" v-if="bookingStore.hasExtraGuest">
+                            Extra Guest + Mattress ({{ bookingStore.stayCount }} nights x PHP {{ bookingStore.extraOccupantRate?.toLocaleString() }})
+                        </span>
+                    </div>
+
+                    <div class="mt-2.5">
+                        <p class="text-[.85rem] font-bold">Incidental Deposit</p>
+                        <span class="text-[.7rem] leading-2 inline-block">An incidental deposit of PHP 1,000 will be collected upon check-in to cover any unexpected charges or damages. Refundable upon check-out.</span>
+                    </div>
                 </div>
             </div>
         </div>
