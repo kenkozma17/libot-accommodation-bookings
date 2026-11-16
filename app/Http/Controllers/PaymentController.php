@@ -150,8 +150,15 @@ class PaymentController extends Controller
   public function createPayment($booking, $bookingId, $guestId) {
     $room = Room::find($booking['room']['id']);
     $guest = $booking['guests'];
+    $amount = $room->rate;
+
+    // If additional guest exists, add extra occupant rate.
+    if(($guest['adults'] + $guest['children']) > $room->max_occupancy) {
+        $amount = $room->rate + $room->extra_occupant_rate;
+    }
+
     $newPayment = Payment::create([
-      'payment_amount' => ($room->rate + $room->extra_occupant_rate) * $booking['stayCount'],
+      'payment_amount' => $amount * $booking['stayCount'],
       'payment_status' => 'PENDING',
       'payment_date' => Carbon::now(),
       'payment_method' => null,
@@ -187,7 +194,13 @@ class PaymentController extends Controller
     $guest = $data['reservation']['guests'];
 
     $room = Room::find($data['reservation']['room']['id']);
-    $totalPriceInCents = (int) bcmul($room->rate * $data['reservation']['stayCount'], 100);
+    $amount = $room->rate;
+
+    if(($newBooking->adults_count + $newBooking->children_count) > $room->max_occupancy) {
+        $amount = $room->rate + $room->extra_occupant_rate;
+    }
+
+    $totalPriceInCents = (int) bcmul($amount * $data['reservation']['stayCount'], 100);
     $paymentData = json_encode([
       'data' => [
         'attributes' => [
