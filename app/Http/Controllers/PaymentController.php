@@ -113,6 +113,16 @@ class PaymentController extends Controller
 
   public function createBooking($booking) {
     $guest = Guest::where('email', $booking['guests']['contactDetails']['email'])->first();
+
+    if($booking['hasExtraGuest']) {
+        array_unshift($booking['selected_add_ons'], [
+            'id' => 999,
+            'name' => 'Extra Guest + Mattress',
+            'description' => '',
+            'rate' => $booking['room']['extra_occupant_rate'] * $booking['stayCount']
+        ]);
+    }
+
     $newBooking = Booking::create([
         'booking_confirmation' => Str::random(7),
         'check_in' => $booking['dates']['start'],
@@ -125,7 +135,8 @@ class PaymentController extends Controller
         'children_count' => $booking['guests']['children'],
         'guest_id' => $guest->id,
         'room_id' => $booking['room']['id'],
-        'payment_id' => null
+        'payment_id' => null,
+        'add_ons' => $booking['selected_add_ons'],
     ]);
 
     (new BotLogger())->logMessage(env("APP_ENV") . " Environment - " . env("APP_NAME") . " ⏳ A guest (" . $guest->full_name . ") created a booking (" . $newBooking->booking_confirmation .") but hasn't paid yet.");

@@ -57,6 +57,17 @@
       </ul>
     </div>
 
+    @if(!empty($booking->add_ons))
+        <div class="mt-4">
+            <h2 class="font-bold">Add Ons</h2>
+            <ul>
+                @foreach($booking->add_ons as $addOn)
+                    <li>{{ $addOn['name'] }} - PHP {{ number_format($addOn['rate']) }} @if($addOn['id'] == 999){{ 'for ' . $booking->stay_length }}@endif</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="mt-4">
       <h2 class="font-bold">Reminders</h2>
       <p>Check In: 2:00pm</p>

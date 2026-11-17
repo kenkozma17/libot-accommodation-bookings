@@ -15,6 +15,7 @@ const form = useForm({
         guests: bookingStore.guests,
         room: bookingStore.room,
         selected_add_ons: bookingStore.selected_add_ons,
+        hasExtraGuest: bookingStore.hasExtraGuest,
         stayCount: bookingStore.stayCount,
     },
 });

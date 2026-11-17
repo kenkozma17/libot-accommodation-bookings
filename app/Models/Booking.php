@@ -28,6 +28,7 @@ class Booking extends Model
       'guest_id',
       'room_id',
       'payment_id',
+      'add_ons'
     ];
 
     protected $with = [
@@ -41,6 +42,10 @@ class Booking extends Model
       'created_at_formatted',
       'rate_per_night_formatted',
       'stay_length'
+    ];
+
+    protected $casts = [
+        'add_ons' => 'array',
     ];
 
     public function room(): BelongsTo {
