@@ -153,7 +153,8 @@ class PaymentController extends Controller
     $amount = $room->rate;
 
     // If additional guest exists, add extra occupant rate.
-    if(($guest['adults'] + $guest['children']) > $room->max_occupancy) {
+    $hasExtraGuest = ($guest['adults'] + $guest['children']) > $room->max_occupancy;
+    if($hasExtraGuest) {
         $amount = $room->rate + $room->extra_occupant_rate;
     }
 
@@ -191,16 +192,34 @@ class PaymentController extends Controller
   }
 
   public function getPaymentPayload($data, $newBooking) {
+    $lineItems = [];
     $guest = $data['reservation']['guests'];
-
     $room = Room::find($data['reservation']['room']['id']);
-    $amount = $room->rate;
 
-    if(($newBooking->adults_count + $newBooking->children_count) > $room->max_occupancy) {
-        $amount = $room->rate + $room->extra_occupant_rate;
+    // If additional guest exists, add extra occupant rate.
+    $hasExtraGuest = ($newBooking->adults_count + $newBooking->children_count) > $room->max_occupancy;
+    if($hasExtraGuest) {
+        $totalExtraGuestRateInCents = (int) bcmul($room->extra_occupant_rate * $data['reservation']['stayCount'], 100);
+        $lineItems[] =
+            [
+                'currency' => 'PHP',
+                'amount' => $totalExtraGuestRateInCents,
+                'name' => 'Extra Guest + Mattress',
+                'quantity' => 1,
+            ];
     }
 
-    $totalPriceInCents = (int) bcmul($amount * $data['reservation']['stayCount'], 100);
+    // Add room line item to first index
+    $totalPriceInCents = (int) bcmul($room->rate * $data['reservation']['stayCount'], 100);
+    $roomLineItem =
+        [
+            'currency' => 'PHP',
+            'amount' => $totalPriceInCents,
+            'name' => $room->name,
+            'quantity' => 1
+        ];
+    array_unshift($lineItems, $roomLineItem);
+
     $paymentData = json_encode([
       'data' => [
         'attributes' => [
@@ -216,12 +235,7 @@ class PaymentController extends Controller
           'metadata' => [
             'booking_confirmation' => $newBooking->booking_confirmation
           ],
-          'line_items' => [[
-            'currency' => 'PHP',
-            'amount' => $totalPriceInCents,
-            'name' => $room->name,
-            'quantity' => 1
-          ]],
+          'line_items' => $lineItems,
           'payment_method_types' => ['card', 'paymaya', 'gcash'],
           'description' => $data['reservation']['stayCount'] . ' night(s) stay in ' . $room->name . ' at ' . env('APP_NAME'),
         ]
