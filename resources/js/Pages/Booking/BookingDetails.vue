@@ -27,6 +27,10 @@ let contactDetails = reactive({
     requests: null,
 });
 
+const setAddOn = (addOn) => {
+    bookingStore.setAddOn(addOn);
+}
+
 function submitContact() {
     bookingStore.setContactDetails(contactDetails);
     router.post(
@@ -164,6 +168,27 @@ const validationErrors = computed(() => {
                                 v-model="contactDetails.phone"
                             >
                             </vue-tel-input>
+                        </div>
+                        <div class="input-field flex flex-col mt-4">
+                            <span class="text-[.75rem] font-bold">Optional Add-Ons</span>
+                            <p class="text-[.75rem] mb-2">Select any of the following add-ons for an enhanced stay.</p>
+                            <ul class="grid md:grid-cols-3 grid-cols-1 gap-[.25rem]">
+                                <li v-for="addOn in bookingStore.addOns" :key="addOn.id">
+                                    <div @click="setAddOn(addOn)"
+                                        class="border-2 p-2 rounded hover:border-green-700 cursor-pointer"
+                                        :class="bookingStore.selected_add_ons.some(item => item.id === addOn.id) ? 'border-green-700' : 'border-light-brown'">
+                                        <p class="text-[.75rem] font-bold">
+                                            {{addOn.name}}
+                                        </p>
+                                        <p class="text-[.70rem]">{{addOn.description}}</p>
+                                        <p class="text-[.75rem] font-semibold mt-2">PHP {{addOn.rate.toLocaleString()}}</p>
+                                        <span v-if="bookingStore.selected_add_ons.some(item => item.id === addOn.id)"
+                                            class="text-[.70rem] font-semibold text-red-600 hover:underline">Remove</span>
+                                        <span v-else
+                                            class="text-[.70rem] font-semibold text-green-600 hover:underline">Add</span>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                         <div class="input-field flex flex-col mt-4">
                             <span class="text-[.75rem] font-bold mb-1"

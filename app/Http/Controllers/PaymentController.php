@@ -194,7 +194,20 @@ class PaymentController extends Controller
   public function getPaymentPayload($data, $newBooking) {
     $lineItems = [];
     $guest = $data['reservation']['guests'];
+    $selectedAddOns = $data['reservation']['selected_add_ons'];
     $room = Room::find($data['reservation']['room']['id']);
+
+    // Add add ons if they exist
+    if(!empty($selectedAddOns)) {
+        foreach($selectedAddOns as $addOn) {
+            $lineItems[] = [
+                'currency' => 'PHP',
+                'amount' => (int) bcmul($addOn['rate'], 100),
+                'name' => $addOn['name'],
+                'quantity' => 1,
+            ];
+        }
+    }
 
     // If additional guest exists, add extra occupant rate.
     $hasExtraGuest = ($newBooking->adults_count + $newBooking->children_count) > $room->max_occupancy;

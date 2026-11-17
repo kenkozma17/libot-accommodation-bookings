@@ -60,9 +60,15 @@ const bookingStore = useBookingStore();
 
                     <div class="mt-2.5" v-if="bookingStore.hasAddOns">
                         <p class="text-[.85rem] font-bold">Add-Ons</p>
-                        <span class="text-[.7rem]" v-if="bookingStore.hasExtraGuest">
+                        <span class="text-[.7rem] block" v-if="bookingStore.hasExtraGuest">
                             Extra Guest + Mattress ({{ bookingStore.stayCount }} nights x PHP {{ bookingStore.extraOccupantRate?.toLocaleString() }})
                         </span>
+
+                        <template v-if="bookingStore.selected_add_ons.length">
+                            <span class="text-[.7rem] block" v-for="addOn in bookingStore.selected_add_ons">
+                                {{ addOn.name }} (PHP {{ addOn.rate.toLocaleString() }})
+                            </span>
+                        </template>
                     </div>
 
                     <div class="mt-2.5">

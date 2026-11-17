@@ -29,7 +29,28 @@ export const useBookingStore = defineStore('booking', {
       currency: 'PHP',
       max_occupancy: null,
       extra_occupant_rate: null,
-    }
+    },
+    add_ons: [
+        {
+            id: 1,
+            name: 'Airport Transfer',
+            description: 'Convenient pickup and drop off service.',
+            rate: 800,
+        },
+        {
+            id: 2,
+            name: 'Car Rental',
+            description: 'Explore Catanduanes at your own pace.',
+            rate: 1500,
+        },
+        {
+            id: 3,
+            name: 'Extra Breakfast',
+            description: 'Enjoy an additional breakfast.',
+            rate: 250,
+        },
+    ],
+    selected_add_ons: []
    }),
    getters: {
     checkInDate(state) {
@@ -63,13 +84,27 @@ export const useBookingStore = defineStore('booking', {
         return (Number(state.guests.adults) + Number(state.guests.children)) > Number(state.room.max_occupancy);
     },
     extraOccupantRate(state) {
-        return state.room.extra_occupant_rate;
+        if(this.hasExtraGuest) {
+            return state.room.extra_occupant_rate;
+        }
+        return 0;
     },
     hasAddOns(state) {
-        return this.hasExtraGuest;
+        return this.hasExtraGuest || state.selected_add_ons.length > 0;
+    },
+    addOns(state) {
+        return state.add_ons;
+    },
+    selectedAddOnsTotal(state) {
+        if(state.selected_add_ons.length) {
+            return state.selected_add_ons.reduce((total, addOn) => {
+                return total + Number(addOn.rate);
+            }, 0);
+        }
+        return 0;
     },
     subTotal(state) {
-      return (Number(state.room.rate) + Number(this.extraOccupantRate)) * this.stayCount;
+      return ((Number(state.room.rate) + Number(this.extraOccupantRate))  * this.stayCount) + Number(this.selectedAddOnsTotal);
     }
    },
    actions: {
@@ -101,7 +136,19 @@ export const useBookingStore = defineStore('booking', {
         rate: null,
         currency: 'PHP'
       };
-    }
+      this.selected_add_ons = [];
+    },
+    setAddOn(addOn) {
+        const index = this.selected_add_ons.findIndex(
+            item => item.id === addOn.id
+        );
+
+        if (index !== -1) {
+            this.selected_add_ons.splice(index, 1);
+        } else {
+            this.selected_add_ons.push(addOn);
+        }
+    },
    },
    persist: true,
 })
