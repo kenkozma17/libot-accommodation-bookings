@@ -33,21 +33,21 @@ export const useBookingStore = defineStore('booking', {
     add_ons: [
         {
             id: 1,
-            name: 'Airport Transfer',
-            description: 'Convenient pickup and drop off service.',
-            rate: 800,
+            name: 'Airport Pickup - 4 Pax',
+            description: 'Convenient pickup service.',
+            rate: 500,
         },
         {
             id: 2,
-            name: 'Car Rental',
-            description: 'Explore Catanduanes at your own pace.',
-            rate: 1500,
+            name: 'Airport Dropoff - 4 Pax',
+            description: 'Convenient drop off service.',
+            rate: 350,
         },
         {
             id: 3,
             name: 'Extra Breakfast',
             description: 'Enjoy an additional breakfast.',
-            rate: 250,
+            rate: 300,
         },
     ],
     selected_add_ons: []
