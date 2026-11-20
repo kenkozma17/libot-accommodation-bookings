@@ -160,6 +160,7 @@ class PaymentController extends Controller
 
   public function createPayment($booking, $bookingId, $guestId) {
     $room = Room::find($booking['room']['id']);
+    $selectedAddOns = $booking['selected_add_ons'];
     $guest = $booking['guests'];
     $amount = $room->rate;
 
@@ -167,6 +168,13 @@ class PaymentController extends Controller
     $hasExtraGuest = ($guest['adults'] + $guest['children']) > $room->max_occupancy;
     if($hasExtraGuest) {
         $amount = $room->rate + $room->extra_occupant_rate;
+    }
+
+    // Add add ons if they exist
+    if(!empty($selectedAddOns)) {
+        foreach($selectedAddOns as $addOn) {
+            $amount += $addOn['rate'];
+        }
     }
 
     $newPayment = Payment::create([

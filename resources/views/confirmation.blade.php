@@ -62,7 +62,7 @@
             <h2 class="font-bold">Add Ons</h2>
             <ul>
                 @foreach($booking->add_ons as $addOn)
-                    <li>{{ $addOn['name'] }} - PHP {{ number_format($addOn['rate']) }} @if($addOn['id'] == 999){{ 'for ' . $booking->stay_length }}@endif</li>
+                    <li>{{ $addOn['name'] }} - PHP {{ number_format($addOn['rate']) }} @if($addOn['id'] == 999){{ 'x ' . $booking->stay_length }}@endif</li>
                 @endforeach
             </ul>
         </div>
