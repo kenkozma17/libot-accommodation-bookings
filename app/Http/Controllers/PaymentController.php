@@ -171,14 +171,15 @@ class PaymentController extends Controller
     }
 
     // Add add ons if they exist
+    $addOnAmount = 0;
     if(!empty($selectedAddOns)) {
         foreach($selectedAddOns as $addOn) {
-            $amount += $addOn['rate'];
+            $addOnAmount += $addOn['rate'];
         }
     }
 
     $newPayment = Payment::create([
-      'payment_amount' => $amount * $booking['stayCount'],
+      'payment_amount' => ($amount * $booking['stayCount']) + $addOnAmount,
       'payment_status' => 'PENDING',
       'payment_date' => Carbon::now(),
       'payment_method' => null,
